@@ -1,17 +1,17 @@
 <?php
 
-namespace FlexPHP\Schema;
+namespace FlexPHP\Schema\Constants;
 
 interface Keyword
 {
     /**
-     * Table properties
+     * Schema properties
      */
     const TITLE = 'Title';
     const ATTRIBUTES = 'Attributes';
 
     /**
-     * Column properties
+     * Attribute properties
      */
     const NAME = 'Name';
     const DATATYPE = 'DataType';

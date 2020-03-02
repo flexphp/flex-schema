@@ -2,9 +2,8 @@ table:
   Title: Table Name
   Attributes:
     column1:
-      Name: Primary Column
-      DataType: integer
+      Name: BadColumn
     column2:
-      Name: String Column
+      Name: OkColumn
       DataType: string
       Constraints: '[''required'' => true, ''maxlength'' => ''255'']'

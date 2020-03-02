@@ -17,7 +17,7 @@ Change between frameworks when you need. Keep It Simple, SOLID and DRY with Flex
 Install the package with Composer:
 
 ```bash
-git clone --depth=1 git@github.com:flexphp/flex-schema.git library
+composer require flexphp/schema
 ```
 
 ## License

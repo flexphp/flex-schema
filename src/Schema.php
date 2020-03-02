@@ -2,8 +2,11 @@
 
 namespace FlexPHP\Schema;
 
+use FlexPHP\Schema\Constants\Keyword;
+use FlexPHP\Schema\Exception\AttributeValidationException;
 use FlexPHP\Schema\Exception\InvalidFileSchemaException;
 use FlexPHP\Schema\Exception\InvalidSchemaException;
+use FlexPHP\Schema\Validations\AttributeValidation;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -70,13 +73,13 @@ class Schema implements SchemaInterface
             throw new InvalidSchemaException("Schema {$name}:attributes must be an array");
         }
 
-        foreach ($attributes as $attributeName => $attribute) {
-            if (!isset($attribute[Keyword::NAME])
-                || !isset($attribute[Keyword::DATATYPE])
-                || !isset($attribute[Keyword::CONSTRAINTS])
-            ) {
-                throw new InvalidSchemaException("Schema {$attributeName}:attribute[$attributeName] is invalid");
+        try {
+            foreach ($attributes as $attribute) {
+                $validation = new AttributeValidation($attribute);
+                $validation->validate();
             }
+        } catch (AttributeValidationException $e) {
+            throw new InvalidSchemaException("Schema {$name}:attributes are invalid");
         }
 
         $this->name = $name;

@@ -2,7 +2,7 @@
 
 namespace FlexPHP\Schema\Tests;
 
-use FlexPHP\Schema\Keyword;
+use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use Symfony\Component\Yaml\Yaml;
 
@@ -70,7 +70,7 @@ class SchemaTest extends TestCase
     public function testItSchemaFromArrayWithTableAttributesInvalidThrowException()
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attribute[column3] is');
+        $this->expectExceptionMessage(':attributes are invalid');
 
         $array = (new Yaml())->parseFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]['column3'][Keyword::DATATYPE]);
@@ -120,7 +120,7 @@ class SchemaTest extends TestCase
     public function testItSchemaFromFileFormatErrorThrowException()
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attribute[column1] is');
+        $this->expectExceptionMessage(':attributes are invalid');
 
         $schema = new Schema();
         $schema->fromFile(sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
