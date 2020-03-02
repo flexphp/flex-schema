@@ -9,9 +9,24 @@ use Symfony\Component\Yaml\Yaml;
 
 class Schema implements SchemaInterface
 {
+    /**
+     * @var array<array>
+     */
     private $schema;
-    private $table;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $title;
+
+    /**
+     * @var array<array>
+     */
     private $attributes;
 
     public function fromArray(array $schema): void
@@ -37,42 +52,41 @@ class Schema implements SchemaInterface
             throw new InvalidSchemaException('Schema is empty');
         }
 
-        $table = key($this->schema) ?? null;
+        $name = key($this->schema) ?? null;
 
-        if (!is_string($table)) {
+        if (!is_string($name)) {
             throw new InvalidSchemaException('Schema name must be a string');
         }
 
-        $title = $this->schema[$table][Keyword::TITLE] ?? null;
+        $title = $this->schema[$name][Keyword::TITLE] ?? null;
 
         if (!is_string($title)) {
-            throw new InvalidSchemaException("Schema {$table}:title must be a string");
+            throw new InvalidSchemaException("Schema {$name}:title must be a string");
         }
 
-        $attributes = $this->schema[$table][Keyword::ATTRIBUTES] ?? null;
+        $attributes = $this->schema[$name][Keyword::ATTRIBUTES] ?? null;
 
         if (!is_array($attributes)) {
-            throw new InvalidSchemaException("Schema {$table}:attributes must be an array");
+            throw new InvalidSchemaException("Schema {$name}:attributes must be an array");
         }
 
-        foreach($attributes as $name => $attribute) {
+        foreach ($attributes as $name => $attribute) {
             if (!isset($attribute[Keyword::NAME])
                 || !isset($attribute[Keyword::DATATYPE])
                 || !isset($attribute[Keyword::CONSTRAINTS])
             ) {
-                throw new InvalidSchemaException("Schema {$table}:attribute[$name] is invalid");
+                throw new InvalidSchemaException("Schema {$name}:attribute[$name] is invalid");
             }
         }
 
-        $this->isValid = true;
-        $this->table = $table;
+        $this->name = $name;
         $this->title = $title;
         $this->attributes = $attributes;
     }
 
-    public function table(): string
+    public function name(): string
     {
-        return $this->table;
+        return $this->name;
     }
 
     public function title(): string
