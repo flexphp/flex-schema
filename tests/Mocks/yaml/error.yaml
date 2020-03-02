@@ -1,0 +1,10 @@
+table:
+  Title: Table Name
+  Attributes:
+    column1:
+      Name: Primary Column
+      DataType: integer
+    column2:
+      Name: String Column
+      DataType: string
+      Constraints: '[''required'' => true, ''maxlength'' => ''255'']'

@@ -1,0 +1,23 @@
+table:
+  Title: Table Name
+  Attributes:
+    column1:
+      Name: Primary Column
+      DataType: integer
+      Constraints: '[''required'', ''type'' => ''number'']'
+    column2:
+      Name: String Column
+      DataType: string
+      Constraints: '[''required'' => true, ''maxlength'' => ''255'']'
+    column3:
+      Name: Text Column
+      DataType: text
+      Constraints: '[''required'' => true, ''type'' => ''textarea'', ''length'' => [''min'' => 10, ''max'' => 512]]'
+    column4:
+      Name: Boolean Column
+      DataType: boolean
+      Constraints: '[''required'' => false]'
+    column5:
+      Name: DateTime Column
+      DataType: datetime
+      Constraints: ''
