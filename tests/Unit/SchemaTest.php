@@ -88,7 +88,7 @@ class SchemaTest extends TestCase
         $schema->fromArray($array);
         $schema->validate();
 
-        $this->assertEquals('table', $schema->table());
+        $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
     }
@@ -133,7 +133,7 @@ class SchemaTest extends TestCase
         $schema->fromFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $schema->validate();
 
-        $this->assertEquals('table', $schema->table());
+        $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
     }

@@ -70,12 +70,12 @@ class Schema implements SchemaInterface
             throw new InvalidSchemaException("Schema {$name}:attributes must be an array");
         }
 
-        foreach ($attributes as $name => $attribute) {
+        foreach ($attributes as $attributeName => $attribute) {
             if (!isset($attribute[Keyword::NAME])
                 || !isset($attribute[Keyword::DATATYPE])
                 || !isset($attribute[Keyword::CONSTRAINTS])
             ) {
-                throw new InvalidSchemaException("Schema {$name}:attribute[$name] is invalid");
+                throw new InvalidSchemaException("Schema {$attributeName}:attribute[$attributeName] is invalid");
             }
         }
 
