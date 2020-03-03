@@ -1,22 +1,37 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema\Validations;
 
 use Exception;
 use FlexPHP\Schema\Constants\Keyword;
-use FlexPHP\Schema\Exception\AttributeValidationException;
+use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validators\PropertyConstraintsValidator;
 use FlexPHP\Schema\Validators\PropertyDataTypeValidator;
 use FlexPHP\Schema\Validators\PropertyNameValidator;
 use FlexPHP\Schema\Validators\PropertyTypeValidator;
 use Symfony\Component\Validator\ConstraintViolationList;
 
-class AttributeValidation implements ValidationInterface
+class SchemaAttributeValidation implements ValidationInterface
 {
     /**
      * @var array
      */
     protected $properties;
+
+    /**
+     * @var array
+     */
+    protected $requiredProperties = [
+        Keyword::NAME,
+        Keyword::DATATYPE,
+    ];
 
     /**
      * @var array
@@ -31,18 +46,10 @@ class AttributeValidation implements ValidationInterface
     /**
      * @var array
      */
-    protected $requiredProperties = [
-        Keyword::NAME,
-        Keyword::DATATYPE,
-    ];
-
-    /**
-     * @var array
-     */
     private $validators = [
-        Keyword::NAME => PropertyNameValidator::class,
-        Keyword::DATATYPE => PropertyDataTypeValidator::class,
-        Keyword::TYPE => PropertyTypeValidator::class,
+        Keyword::NAME        => PropertyNameValidator::class,
+        Keyword::DATATYPE    => PropertyDataTypeValidator::class,
+        Keyword::TYPE        => PropertyTypeValidator::class,
         Keyword::CONSTRAINTS => PropertyConstraintsValidator::class,
     ];
 
@@ -53,7 +60,7 @@ class AttributeValidation implements ValidationInterface
 
     public function validate(): void
     {
-        $notAllowedProperties = [];
+        $notAllowedProperties         = [];
         $requiredPropertiesNotPresent = [];
 
         foreach ($this->properties as $name => $value) {
@@ -63,27 +70,27 @@ class AttributeValidation implements ValidationInterface
         }
 
         if (!empty($notAllowedProperties)) {
-            throw new AttributeValidationException('Properties unknow: ' . implode(', ', $notAllowedProperties));
+            throw new InvalidSchemaAttributeException('Properties unknow: ' . \implode(', ', $notAllowedProperties));
         }
 
         foreach ($this->requiredProperties as $property) {
-            if (!\in_array($property, array_keys($this->properties))) {
+            if (!\in_array($property, \array_keys($this->properties))) {
                 $requiredPropertiesNotPresent[] = $property;
             }
         }
 
         if (!empty($requiredPropertiesNotPresent)) {
-            throw new AttributeValidationException(
-                'Required properties are missing: ' . implode(', ', $requiredPropertiesNotPresent)
+            throw new InvalidSchemaAttributeException(
+                'Required properties are missing: ' . \implode(', ', $requiredPropertiesNotPresent)
             );
         }
 
         foreach ($this->properties as $property => $value) {
-            if (in_array($property, array_keys($this->validators))) {
+            if (\in_array($property, \array_keys($this->validators))) {
                 $violations = $this->validateProperty($property, $value);
 
-                if (0 !== count($violations)) {
-                    throw new AttributeValidationException(sprintf("%1\$s:\n%2\$s", $property, $violations));
+                if (0 !== \count($violations)) {
+                    throw new InvalidSchemaAttributeException(\sprintf("%1\$s:\n%2\$s", $property, $violations));
                 }
             }
         }
@@ -97,10 +104,10 @@ class AttributeValidation implements ValidationInterface
     private function validateProperty(string $property, $value): ConstraintViolationList
     {
         try {
-            $validator = new $this->validators[$property];
+            $validator  = new $this->validators[$property];
             $violations = $validator->validate($value);
         } catch (Exception $e) {
-            throw new AttributeValidationException(sprintf("%1\$s:\n%2\$s", $property, $e->getMessage()));
+            throw new InvalidSchemaAttributeException(\sprintf('%1$s: %2$s', $property, $e->getMessage()));
         }
 
         return $violations;

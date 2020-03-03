@@ -1,5 +1,12 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema;
 
 interface SchemaInterface
@@ -8,36 +15,26 @@ interface SchemaInterface
      * Schema in array format
      *
      * @param array<array> $schema
-     * @return void
      */
     public function fromArray(array $schema): void;
 
     /**
      * Filename from schema file
-     *
-     * @param string $filename
-     * @return void
      */
     public function fromFile(string $filename): void;
 
     /**
      * Instance vars from input loaded
-     *
-     * @return void
      */
-    public function validate(): void;
+    public function load(): void;
 
     /**
      * Get internal name from schema
-     *
-     * @return string
      */
     public function name(): string;
 
     /**
      * Get name used to show it a user
-     *
-     * @return string
      */
     public function title(): string;
 

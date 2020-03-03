@@ -1,12 +1,18 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema;
 
 use FlexPHP\Schema\Constants\Keyword;
-use FlexPHP\Schema\Exception\AttributeValidationException;
 use FlexPHP\Schema\Exception\InvalidFileSchemaException;
 use FlexPHP\Schema\Exception\InvalidSchemaException;
-use FlexPHP\Schema\Validations\AttributeValidation;
+use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -40,7 +46,7 @@ class Schema implements SchemaInterface
     public function fromFile(string $filename): void
     {
         try {
-            $yaml = new Yaml();
+            $yaml   = new Yaml();
             $schema = $yaml->parseFile($filename);
         } catch (ParseException $e) {
             throw new InvalidFileSchemaException();
@@ -49,42 +55,15 @@ class Schema implements SchemaInterface
         $this->schema = $schema;
     }
 
-    public function validate(): void
+    public function load(): void
     {
         if (empty($this->schema)) {
             throw new InvalidSchemaException('Schema is empty');
         }
 
-        $name = key($this->schema) ?? null;
-
-        if (!is_string($name)) {
-            throw new InvalidSchemaException('Schema name must be a string');
-        }
-
-        $title = $this->schema[$name][Keyword::TITLE] ?? null;
-
-        if (!is_string($title)) {
-            throw new InvalidSchemaException("Schema {$name}:title must be a string");
-        }
-
-        $attributes = $this->schema[$name][Keyword::ATTRIBUTES] ?? null;
-
-        if (!is_array($attributes)) {
-            throw new InvalidSchemaException("Schema {$name}:attributes must be an array");
-        }
-
-        try {
-            foreach ($attributes as $attribute) {
-                $validation = new AttributeValidation($attribute);
-                $validation->validate();
-            }
-        } catch (AttributeValidationException $e) {
-            throw new InvalidSchemaException("Schema {$name}:attributes are invalid");
-        }
-
-        $this->name = $name;
-        $this->title = $title;
-        $this->attributes = $attributes;
+        $this->setName((string) \key($this->schema) ?? null);
+        $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? null);
+        $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? null);
     }
 
     public function name(): string
@@ -100,5 +79,49 @@ class Schema implements SchemaInterface
     public function attributes(): array
     {
         return $this->attributes;
+    }
+
+    private function setName(?string $name): void
+    {
+        if (!\is_string($name)) {
+            throw new InvalidSchemaException('Schema name must be a string');
+        }
+
+        if (empty(\trim($name))) {
+            throw new InvalidSchemaException('Schema name is required');
+        }
+
+        $this->name = $name;
+    }
+
+    private function setTitle(?string $title): void
+    {
+        if (!\is_string($title)) {
+            throw new InvalidSchemaException(\sprintf('Schema %s:title must be a string', $this->name()));
+        }
+
+        if (empty(\trim($title))) {
+            throw new InvalidSchemaException(\sprintf('Schema %s:title is required', $this->name()));
+        }
+
+        $this->title = $title;
+    }
+
+    private function setAttributes(?array $attributes): void
+    {
+        if (!\is_array($attributes)) {
+            throw new InvalidSchemaException(\sprintf('Schema %s:attributes must be an array', $this->name()));
+        }
+
+        if (empty($attributes)) {
+            throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
+        }
+
+        foreach ($attributes as $attribute) {
+            $validation = new SchemaAttributeValidation($attribute);
+            $validation->validate();
+        }
+
+        $this->attributes = $attributes;
     }
 }

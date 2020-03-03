@@ -9,6 +9,6 @@
  */
 namespace FlexPHP\Schema\Exception;
 
-class InvalidFileSchemaException extends \Exception implements SchemaExceptionInterface
+class InvalidSchemaAttributeException extends \Exception implements SchemaExceptionInterface
 {
 }

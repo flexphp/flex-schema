@@ -1,22 +1,29 @@
-<?php
-
-namespace FlexPHP\Schema\Tests\Domain\Validations;
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+namespace FlexPHP\Schema\Tests\Validations;
 
 use FlexPHP\Schema\Constants\Keyword;
-use FlexPHP\Schema\Exception\AttributeValidationException;
-use FlexPHP\Schema\Validations\AttributeValidation;
+use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
+use FlexPHP\Schema\Tests\TestCase;
+use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 use FlexPHP\Schema\Validators\PropertyDataTypeValidator;
 use FlexPHP\Schema\Validators\PropertyTypeValidator;
-use FlexPHP\Schema\Tests\TestCase;
 
-class AttributeValidationTest extends TestCase
+class SchemaAttributeValidationTest extends TestCase
 {
     public function testItPropertyUnknowThrownException(): void
     {
-        $this->expectException(AttributeValidationException::class);
+        $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('unknow');
 
-        $validation = new AttributeValidation([
+        $validation = new SchemaAttributeValidation([
             'UnknowProperty' => 'Test',
         ]);
 
@@ -28,11 +35,11 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyNameNotValidThrownException($name): void
     {
-        $this->expectException(AttributeValidationException::class);
+        $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Name:');
 
-        $validation = new AttributeValidation([
-            Keyword::NAME => $name,
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => $name,
             Keyword::DATATYPE => 'string',
         ]);
 
@@ -44,8 +51,8 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyNameOk($name): void
     {
-        $validation = new AttributeValidation([
-            Keyword::NAME => $name,
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => $name,
             Keyword::DATATYPE => 'string',
         ]);
 
@@ -59,11 +66,11 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyDataTypeNotValidThrownException($dataType): void
     {
-        $this->expectException(AttributeValidationException::class);
+        $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('DataType:');
 
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => 'foo',
             Keyword::DATATYPE => $dataType,
         ]);
 
@@ -75,8 +82,8 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyDataTypeOk($dataType): void
     {
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => 'foo',
             Keyword::DATATYPE => $dataType,
         ]);
 
@@ -90,13 +97,13 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyTypeNotValidThrownException($type): void
     {
-        $this->expectException(AttributeValidationException::class);
+        $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Type:');
 
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => 'foo',
             Keyword::DATATYPE => 'string',
-            Keyword::TYPE => $type,
+            Keyword::TYPE     => $type,
         ]);
 
         $validation->validate();
@@ -107,10 +114,10 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyTypeOk($type): void
     {
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME     => 'foo',
             Keyword::DATATYPE => 'string',
-            Keyword::TYPE => $type,
+            Keyword::TYPE     => $type,
         ]);
 
         $validation->validate();
@@ -123,12 +130,12 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyConstraintsNotValidThrownException($constraints): void
     {
-        $this->expectException(AttributeValidationException::class);
+        $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Constraints:');
 
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME        => 'foo',
+            Keyword::DATATYPE    => 'string',
             Keyword::CONSTRAINTS => $constraints,
         ]);
 
@@ -140,9 +147,9 @@ class AttributeValidationTest extends TestCase
      */
     public function testItPropertyConstraintsOk($constraints): void
     {
-        $validation = new AttributeValidation([
-            Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME        => 'foo',
+            Keyword::DATATYPE    => 'string',
             Keyword::CONSTRAINTS => $constraints,
         ]);
 
@@ -157,7 +164,7 @@ class AttributeValidationTest extends TestCase
             ['#Name'],
             ['1Name'],
             ['Name$'],
-            [str_repeat('N', 65)],
+            [\str_repeat('N', 65)],
             [''],
         ];
     }
@@ -170,7 +177,7 @@ class AttributeValidationTest extends TestCase
             ['Name_Test'],
             ['name_test'],
             ['_name'],
-            [str_repeat('N', 64)],
+            [\str_repeat('N', 64)],
             ['N'],
         ];
     }
@@ -191,7 +198,7 @@ class AttributeValidationTest extends TestCase
 
     public function propertyDataTypeValid(): array
     {
-        return array_map(function ($dataType) {
+        return \array_map(function ($dataType) {
             return [$dataType];
         }, PropertyDataTypeValidator::ALLOWED_DATATYPES);
     }
@@ -211,7 +218,7 @@ class AttributeValidationTest extends TestCase
 
     public function propertyTypeValid(): array
     {
-        return array_map(function ($dataType) {
+        return \array_map(function ($dataType) {
             return [$dataType];
         }, PropertyTypeValidator::ALLOWED_TYPES);
     }
@@ -232,21 +239,21 @@ class AttributeValidationTest extends TestCase
             [['equalto' => null]],
             [['type' => 'unknow']],
             [['check' => [
-                'min' => rand(5, 10),
+                'min' => \rand(5, 10),
             ]]],
             [['check' => [
-                'min' => rand(5, 10),
-                'max' => rand(0, 4),
+                'min' => \rand(5, 10),
+                'max' => \rand(0, 4),
             ]]],
             [['length' => [
-                'max' => rand(0, 5),
+                'max' => \rand(0, 5),
             ]]],
             [['length' => [
-                'min' => rand(5, 10),
-                'max' => rand(0, 5),
+                'min' => \rand(5, 10),
+                'max' => \rand(0, 5),
             ]]],
             [['length' => [
-                'min' => rand(5, 10),
+                'min' => \rand(5, 10),
             ], 'type' => 'text']],
         ];
     }
@@ -268,23 +275,23 @@ class AttributeValidationTest extends TestCase
             [['required' => true]],
             [['required' => false]],
             [['minlength' => 0]],
-            [['minlength' => rand(0, 9)]],
-            [['maxlength' => rand(1, 9)]],
+            [['minlength' => \rand(0, 9)]],
+            [['maxlength' => \rand(1, 9)]],
             [['mincheck' => 0]],
-            [['mincheck' => rand(1, 9)]],
-            [['maxcheck' => rand(1, 9)]],
+            [['mincheck' => \rand(1, 9)]],
+            [['maxcheck' => \rand(1, 9)]],
             [['min' => 0]],
-            [['min' => rand(1, 9)]],
-            [['max' => rand(1, 9)]],
+            [['min' => \rand(1, 9)]],
+            [['max' => \rand(1, 9)]],
             [['equalto' => 'foo']],
             [['type' => 'text']],
             [['check' => [
-                'min' => rand(0, 4),
-                'max' => rand(5, 10),
+                'min' => \rand(0, 4),
+                'max' => \rand(5, 10),
             ]]],
             [['length' => [
-                'min' => rand(0, 4),
-                'max' => rand(5, 10),
+                'min' => \rand(0, 4),
+                'max' => \rand(5, 10),
             ]]],
         ];
     }

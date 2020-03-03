@@ -1,5 +1,12 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema\Tests;
 
 use FlexPHP\Schema\Constants\Keyword;
@@ -8,7 +15,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class SchemaTest extends TestCase
 {
-    public function testItSchemaFromArrayEmptyThrowException()
+    public function testItSchemaFromArrayEmptyThrowException(): void
     {
         $this->expectException(\ArgumentCountError::class);
 
@@ -16,7 +23,7 @@ class SchemaTest extends TestCase
         $schema->fromArray();
     }
 
-    public function testItSchemaFromArrayInvalidArgumentThrowException()
+    public function testItSchemaFromArrayInvalidArgumentThrowException(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -24,7 +31,7 @@ class SchemaTest extends TestCase
         $schema->fromArray(null);
     }
 
-    public function testItSchemaFromArrayEmptyNotThrowException()
+    public function testItSchemaFromArrayEmptyNotThrowException(): void
     {
         $schema = new Schema();
         $schema->fromArray([]);
@@ -32,68 +39,83 @@ class SchemaTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testItSchemaFromArrayEmptyValidateThrowException()
+    public function testItSchemaFromArrayEmptyValidateThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
 
         $schema = new Schema();
         $schema->fromArray([]);
-        $schema->validate();
+        $schema->load();
     }
 
-    public function testItSchemaFromArrayWithoutTableNameThrowException()
+    public function testItSchemaFromArrayWithoutTitleThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':title must');
+        $this->expectExceptionMessage(':title');
 
-        $array = (new Yaml())->parseFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::TITLE]);
 
         $schema = new Schema();
         $schema->fromArray($array);
-        $schema->validate();
+        $schema->load();
     }
 
-    public function testItSchemaFromArrayWithoutTableAttributesThrowException()
+    /**
+     * @dataProvider getTitleInvalid
+     */
+    public function testItSchemaFromArrayTitleInvalidThrowException($title): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage(':title');
+
+        $array                          = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array['table'][Keyword::TITLE] = $title;
+
+        $schema = new Schema();
+        $schema->fromArray($array);
+        $schema->load();
+    }
+
+    public function testItSchemaFromArrayWithoutTableAttributesThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
         $this->expectExceptionMessage(':attributes must');
 
-        $array = (new Yaml())->parseFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]);
 
         $schema = new Schema();
         $schema->fromArray($array);
-        $schema->validate();
+        $schema->load();
     }
 
-    public function testItSchemaFromArrayWithTableAttributesInvalidThrowException()
+    public function testItSchemaFromArrayWithTableAttributesInvalidThrowException(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes are invalid');
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
 
-        $array = (new Yaml())->parseFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]['column3'][Keyword::DATATYPE]);
 
         $schema = new Schema();
         $schema->fromArray($array);
-        $schema->validate();
+        $schema->load();
     }
 
-    public function testItSchemaFromArrayOk()
+    public function testItSchemaFromArrayOk(): void
     {
-        $array = (new Yaml())->parseFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
 
         $schema = new Schema();
         $schema->fromArray($array);
-        $schema->validate();
+        $schema->load();
 
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
     }
 
-    public function testItSchemaFromFileEmptyThrowException()
+    public function testItSchemaFromFileEmptyThrowException(): void
     {
         $this->expectException(\ArgumentCountError::class);
 
@@ -101,7 +123,7 @@ class SchemaTest extends TestCase
         $schema->fromFile();
     }
 
-    public function testItSchemaFromFileInvalidArgumentThrowException()
+    public function testItSchemaFromFileInvalidArgumentThrowException(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -109,7 +131,7 @@ class SchemaTest extends TestCase
         $schema->fromFile(null);
     }
 
-    public function testItSchemaFromFileNotExistsThrowException()
+    public function testItSchemaFromFileNotExistsThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidFileSchemaException::class);
 
@@ -117,24 +139,32 @@ class SchemaTest extends TestCase
         $schema->fromFile('/path/error');
     }
 
-    public function testItSchemaFromFileFormatErrorThrowException()
+    public function testItSchemaFromFileFormatErrorThrowException(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes are invalid');
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
 
         $schema = new Schema();
-        $schema->fromFile(sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
-        $schema->validate();
+        $schema->fromFile(\sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
+        $schema->load();
     }
 
-    public function testItSchemaFromFileOk()
+    public function testItSchemaFromFileOk(): void
     {
         $schema = new Schema();
-        $schema->fromFile(sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
-        $schema->validate();
+        $schema->fromFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $schema->load();
 
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
+    }
+
+    public function getTitleInvalid(): array
+    {
+        return [
+            [null],
+            [''],
+            [' '],
+        ];
     }
 }

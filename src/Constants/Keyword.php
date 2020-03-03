@@ -1,5 +1,12 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema\Constants;
 
 interface Keyword
@@ -7,14 +14,18 @@ interface Keyword
     /**
      * Schema properties
      */
-    const TITLE = 'Title';
-    const ATTRIBUTES = 'Attributes';
+    public const TITLE = 'Title';
+
+    public const ATTRIBUTES = 'Attributes';
 
     /**
      * Attribute properties
      */
-    const NAME = 'Name';
-    const DATATYPE = 'DataType';
-    const TYPE = 'Type';
-    const CONSTRAINTS = 'Constraints';
+    public const NAME = 'Name';
+
+    public const DATATYPE = 'DataType';
+
+    public const TYPE = 'Type';
+
+    public const CONSTRAINTS = 'Constraints';
 }

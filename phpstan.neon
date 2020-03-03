@@ -1,5 +1,3 @@
 parameters:
     inferPrivatePropertyTypeFromConstructor: true
     checkMissingIterableValueType: false
-    excludes_analyse:
-        - '%currentWorkingDirectory%/src/tmp/*'

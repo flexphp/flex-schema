@@ -1,5 +1,12 @@
-<?php
-
+<?php declare(strict_types = 1);
+/*
+ * This file is part of FlexPHP.
+ *
+ * (c) Freddie Gar <freddie.gar@outlook.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace FlexPHP\Schema\Validators;
 
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
@@ -19,7 +26,7 @@ use Symfony\Component\Validator\Validation;
  */
 class PropertyConstraintsValidator
 {
-    const ALLOWED_RULES = [
+    public const ALLOWED_RULES = [
         'required',
         'minlength',
         'maxlength',
@@ -45,19 +52,19 @@ class PropertyConstraintsValidator
             return $violations;
         }
 
-        if (is_string($constraints)) {
+        if (\is_string($constraints)) {
             $constraints = $this->getConstraintsFromString($constraints);
         }
 
-        if (!is_array($constraints)) {
+        if (!\is_array($constraints)) {
             throw new InvalidArgumentException('Constraints: Format not supported');
         }
 
         $validator = Validation::createValidator();
 
         foreach ($constraints as $rule => $options) {
-            if (is_string($options) && $options == 'required') {
-                $rule = $options;
+            if (\is_string($options) && $options == 'required') {
+                $rule    = $options;
                 $options = true;
             }
 
@@ -66,11 +73,11 @@ class PropertyConstraintsValidator
                 new Choice(self::ALLOWED_RULES),
             ]);
 
-            if (count($errors) === 0) {
+            if (\count($errors) === 0) {
                 $errors = $this->validateRule($rule, $options);
             }
 
-            if (count($errors) !== 0) {
+            if (\count($errors) !== 0) {
                 foreach ($errors as $error) {
                     $violations->add($error);
                 }
@@ -87,7 +94,7 @@ class PropertyConstraintsValidator
 
         if (\is_null($_constraints) && \strpos($constraints, '[') === 0) {
             // Array syntax
-            eval(sprintf('$_constraints = %1$s;', $constraints));
+            eval(\sprintf('$_constraints = %1$s;', $constraints));
         }
 
         if (!\is_array($_constraints)) {
@@ -100,7 +107,7 @@ class PropertyConstraintsValidator
                     $_rule = \explode(':', $_constraint);
 
                     if (\count($_rule) == 2) {
-                        list($_name, $_options) = $_rule;
+                        [$_name, $_options]   = $_rule;
                         $_constraints[$_name] = $_options;
                     } else {
                         $_constraints[$_rule[0]] = true;
@@ -126,26 +133,32 @@ class PropertyConstraintsValidator
         switch ($rule) {
             case 'required':
                 $errors = (new RequiredConstraintValidator())->validate($options);
+
                 break;
             case 'max':
             case 'maxlength':
             case 'maxcheck':
                 $errors = (new MaxConstraintValidator())->validate($options);
+
                 break;
             case 'min':
             case 'minlength':
             case 'mincheck':
                 $errors = (new MinConstraintValidator())->validate($options);
+
                 break;
             case 'equalto':
                 $errors = (new EqualToConstraintValidator())->validate($options);
+
                 break;
             case 'type':
                 $errors = (new PropertyTypeValidator())->validate($options);
+
                 break;
             case 'length':
             case 'check':
                 $errors = (new RangeConstraintValidator())->validate($options);
+
                 break;
         }
 
