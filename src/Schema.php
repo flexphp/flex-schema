@@ -61,7 +61,7 @@ class Schema implements SchemaInterface
             throw new InvalidSchemaException('Schema is empty');
         }
 
-        $this->setName((string) \key($this->schema) ?? null);
+        $this->setName((string)\key($this->schema) ?? '');
         $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? null);
         $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? []);
     }
