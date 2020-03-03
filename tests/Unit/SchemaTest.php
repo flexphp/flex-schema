@@ -97,7 +97,7 @@ class SchemaTest extends TestCase
     public function testItSchemaFromArrayWithoutTableAttributesThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes must');
+        $this->expectExceptionMessage(':attributes are');
 
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]);
@@ -113,7 +113,7 @@ class SchemaTest extends TestCase
     public function testItSchemaFromArrayAttributesInvalidThrowException($attributes): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes ');
+        $this->expectExceptionMessage(':attributes are');
 
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $array['table'][Keyword::ATTRIBUTES] = $attributes;

@@ -63,7 +63,7 @@ class Schema implements SchemaInterface
 
         $this->setName((string) \key($this->schema) ?? null);
         $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? null);
-        $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? null);
+        $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? []);
     }
 
     public function name(): string
@@ -81,12 +81,8 @@ class Schema implements SchemaInterface
         return $this->attributes;
     }
 
-    private function setName(?string $name): void
+    private function setName(string $name): void
     {
-        if (!\is_string($name)) {
-            throw new InvalidSchemaException('Schema name must be a string');
-        }
-
         if (empty(\trim($name))) {
             throw new InvalidSchemaException('Schema name is required');
         }
@@ -107,12 +103,8 @@ class Schema implements SchemaInterface
         $this->title = $title;
     }
 
-    private function setAttributes(?array $attributes): void
+    private function setAttributes(array $attributes): void
     {
-        if (!\is_array($attributes)) {
-            throw new InvalidSchemaException(\sprintf('Schema %s:attributes must be an array', $this->name()));
-        }
-
         if (empty($attributes)) {
             throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
         }
