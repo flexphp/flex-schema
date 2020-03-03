@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /*
  * This file is part of FlexPHP.
  *
@@ -46,7 +46,7 @@ class Schema implements SchemaInterface
     public function fromFile(string $filename): void
     {
         try {
-            $yaml   = new Yaml();
+            $yaml = new Yaml();
             $schema = $yaml->parseFile($filename);
         } catch (ParseException $e) {
             throw new InvalidFileSchemaException();

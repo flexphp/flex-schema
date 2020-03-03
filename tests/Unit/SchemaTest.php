@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /*
  * This file is part of FlexPHP.
  *
@@ -69,7 +69,7 @@ class SchemaTest extends TestCase
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
         $this->expectExceptionMessage(':title');
 
-        $array                          = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $array['table'][Keyword::TITLE] = $title;
 
         $schema = new Schema();

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /*
  * This file is part of FlexPHP.
  *
@@ -42,7 +42,6 @@ class PropertyConstraintsValidator
 
     /**
      * @param mixed $constraints
-     * @return ConstraintViolationListInterface
      */
     public function validate($constraints): ConstraintViolationListInterface
     {
@@ -64,7 +63,7 @@ class PropertyConstraintsValidator
 
         foreach ($constraints as $rule => $options) {
             if (\is_string($options) && $options == 'required') {
-                $rule    = $options;
+                $rule = $options;
                 $options = true;
             }
 
@@ -107,7 +106,7 @@ class PropertyConstraintsValidator
                     $_rule = \explode(':', $_constraint);
 
                     if (\count($_rule) == 2) {
-                        [$_name, $_options]   = $_rule;
+                        [$_name, $_options] = $_rule;
                         $_constraints[$_name] = $_options;
                     } else {
                         $_constraints[$_rule[0]] = true;
@@ -122,9 +121,7 @@ class PropertyConstraintsValidator
     }
 
     /**
-     * @param string $rule
      * @param mixed $options
-     * @return ConstraintViolationListInterface
      */
     private function validateRule(string $rule, $options): ConstraintViolationListInterface
     {

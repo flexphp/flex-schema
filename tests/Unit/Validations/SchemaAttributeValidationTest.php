@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /*
  * This file is part of FlexPHP.
  *
@@ -39,7 +39,7 @@ class SchemaAttributeValidationTest extends TestCase
         $this->expectExceptionMessage('Name:');
 
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => $name,
+            Keyword::NAME => $name,
             Keyword::DATATYPE => 'string',
         ]);
 
@@ -52,7 +52,7 @@ class SchemaAttributeValidationTest extends TestCase
     public function testItPropertyNameOk($name): void
     {
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => $name,
+            Keyword::NAME => $name,
             Keyword::DATATYPE => 'string',
         ]);
 
@@ -70,7 +70,7 @@ class SchemaAttributeValidationTest extends TestCase
         $this->expectExceptionMessage('DataType:');
 
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => 'foo',
+            Keyword::NAME => 'foo',
             Keyword::DATATYPE => $dataType,
         ]);
 
@@ -83,7 +83,7 @@ class SchemaAttributeValidationTest extends TestCase
     public function testItPropertyDataTypeOk($dataType): void
     {
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => 'foo',
+            Keyword::NAME => 'foo',
             Keyword::DATATYPE => $dataType,
         ]);
 
@@ -101,9 +101,9 @@ class SchemaAttributeValidationTest extends TestCase
         $this->expectExceptionMessage('Type:');
 
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => 'foo',
+            Keyword::NAME => 'foo',
             Keyword::DATATYPE => 'string',
-            Keyword::TYPE     => $type,
+            Keyword::TYPE => $type,
         ]);
 
         $validation->validate();
@@ -115,9 +115,9 @@ class SchemaAttributeValidationTest extends TestCase
     public function testItPropertyTypeOk($type): void
     {
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME     => 'foo',
+            Keyword::NAME => 'foo',
             Keyword::DATATYPE => 'string',
-            Keyword::TYPE     => $type,
+            Keyword::TYPE => $type,
         ]);
 
         $validation->validate();
@@ -134,8 +134,8 @@ class SchemaAttributeValidationTest extends TestCase
         $this->expectExceptionMessage('Constraints:');
 
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME        => 'foo',
-            Keyword::DATATYPE    => 'string',
+            Keyword::NAME => 'foo',
+            Keyword::DATATYPE => 'string',
             Keyword::CONSTRAINTS => $constraints,
         ]);
 
@@ -148,8 +148,8 @@ class SchemaAttributeValidationTest extends TestCase
     public function testItPropertyConstraintsOk($constraints): void
     {
         $validation = new SchemaAttributeValidation([
-            Keyword::NAME        => 'foo',
-            Keyword::DATATYPE    => 'string',
+            Keyword::NAME => 'foo',
+            Keyword::DATATYPE => 'string',
             Keyword::CONSTRAINTS => $constraints,
         ]);
 

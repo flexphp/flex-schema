@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /*
  * This file is part of FlexPHP.
  *
@@ -47,9 +47,9 @@ class SchemaAttributeValidation implements ValidationInterface
      * @var array
      */
     private $validators = [
-        Keyword::NAME        => PropertyNameValidator::class,
-        Keyword::DATATYPE    => PropertyDataTypeValidator::class,
-        Keyword::TYPE        => PropertyTypeValidator::class,
+        Keyword::NAME => PropertyNameValidator::class,
+        Keyword::DATATYPE => PropertyDataTypeValidator::class,
+        Keyword::TYPE => PropertyTypeValidator::class,
         Keyword::CONSTRAINTS => PropertyConstraintsValidator::class,
     ];
 
@@ -60,7 +60,7 @@ class SchemaAttributeValidation implements ValidationInterface
 
     public function validate(): void
     {
-        $notAllowedProperties         = [];
+        $notAllowedProperties = [];
         $requiredPropertiesNotPresent = [];
 
         foreach ($this->properties as $name => $value) {
@@ -97,14 +97,12 @@ class SchemaAttributeValidation implements ValidationInterface
     }
 
     /**
-     * @param string $property
      * @param mixed $value
-     * @return ConstraintViolationList
      */
     private function validateProperty(string $property, $value): ConstraintViolationList
     {
         try {
-            $validator  = new $this->validators[$property];
+            $validator = new $this->validators[$property];
             $violations = $validator->validate($value);
         } catch (Exception $e) {
             throw new InvalidSchemaAttributeException(\sprintf('%1$s: %2$s', $property, $e->getMessage()));
