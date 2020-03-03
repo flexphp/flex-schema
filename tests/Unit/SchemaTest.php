@@ -48,6 +48,23 @@ class SchemaTest extends TestCase
         $schema->load();
     }
 
+    /**
+     * @dataProvider getNameInvalid
+     */
+    public function testItSchemaFromArrayNameInvalidThrowException($name): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage('name is');
+
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array[$name] = $array['table'];
+        unset($array['table']);
+
+        $schema = new Schema();
+        $schema->fromArray($array);
+        $schema->load();
+    }
+
     public function testItSchemaFromArrayWithoutTitleThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
@@ -84,6 +101,22 @@ class SchemaTest extends TestCase
 
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]);
+
+        $schema = new Schema();
+        $schema->fromArray($array);
+        $schema->load();
+    }
+
+    /**
+     * @dataProvider getAttributesInvalid
+     */
+    public function testItSchemaFromArrayAttributesInvalidThrowException($attributes): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage(':attributes ');
+
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array['table'][Keyword::ATTRIBUTES] = $attributes;
 
         $schema = new Schema();
         $schema->fromArray($array);
@@ -159,12 +192,29 @@ class SchemaTest extends TestCase
         $this->assertIsArray($schema->attributes());
     }
 
+    public function getNameInvalid(): array
+    {
+        return [
+            [null],
+            [''],
+            [' '],
+        ];
+    }
+
     public function getTitleInvalid(): array
     {
         return [
             [null],
             [''],
             [' '],
+        ];
+    }
+
+    public function getAttributesInvalid(): array
+    {
+        return [
+            [null],
+            [[]],
         ];
     }
 }
