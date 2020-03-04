@@ -33,10 +33,17 @@ interface SchemaInterface
      */
     public function name(): string;
 
+    public function setName(string $name): void;
+
     /**
      * Get name used to show it a user
      */
     public function title(): string;
+
+    /**
+     * Set name used to show it a user
+     */
+    public function setTitle(string $title): void;
 
     /**
      * Get attributes's schema
@@ -44,4 +51,11 @@ interface SchemaInterface
      * @return array<array>
      */
     public function attributes(): array;
+
+    /**
+     * Set attributes used by schmea
+     *
+     * @param array<SchemaAttribute> $attributes
+     */
+    public function setAttributes(array $attributes): void;
 }

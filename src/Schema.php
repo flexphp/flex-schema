@@ -62,7 +62,7 @@ class Schema implements SchemaInterface
         }
 
         $this->setName((string)\key($this->schema) ?? '');
-        $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? null);
+        $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? '');
         $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? []);
     }
 
@@ -71,17 +71,7 @@ class Schema implements SchemaInterface
         return $this->name;
     }
 
-    public function title(): string
-    {
-        return $this->title;
-    }
-
-    public function attributes(): array
-    {
-        return $this->attributes;
-    }
-
-    private function setName(string $name): void
+    public function setName(string $name): void
     {
         if (empty(\trim($name))) {
             throw new InvalidSchemaException('Schema name is required');
@@ -90,12 +80,13 @@ class Schema implements SchemaInterface
         $this->name = $name;
     }
 
-    private function setTitle(?string $title): void
+    public function title(): string
     {
-        if (!\is_string($title)) {
-            throw new InvalidSchemaException(\sprintf('Schema %s:title must be a string', $this->name()));
-        }
+        return $this->title;
+    }
 
+    public function setTitle(string $title): void
+    {
         if (empty(\trim($title))) {
             throw new InvalidSchemaException(\sprintf('Schema %s:title is required', $this->name()));
         }
@@ -103,7 +94,12 @@ class Schema implements SchemaInterface
         $this->title = $title;
     }
 
-    private function setAttributes(array $attributes): void
+    public function attributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes): void
     {
         if (empty($attributes)) {
             throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
