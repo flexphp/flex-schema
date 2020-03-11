@@ -58,7 +58,7 @@ class PropertyConstraintsValidator
                 continue;
             }
 
-            if (\is_string($options) && $options == Rule::REQUIRED) {
+            if (\is_string($options) && $options === Rule::REQUIRED) {
                 $rule = $options;
                 $options = true;
             }

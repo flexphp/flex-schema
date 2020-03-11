@@ -9,7 +9,6 @@
  */
 namespace FlexPHP\Schema\Tests;
 
-use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\SchemaAttribute;
 
 class SchemaAttributeTest extends TestCase
@@ -92,5 +91,44 @@ class SchemaAttributeTest extends TestCase
             'type' => 'number',
         ], $schemaAttribute->constraints());
         $this->assertEquals($type, $schemaAttribute->type());
+    }
+
+    public function testItSchemaAttributePropertiesSetConstraintsAsArray(): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+        $constraints = [
+            'required' => true,
+            'minlength' => 1,
+            'maxlength' => '2',
+            'mincheck' => 3,
+            'maxcheck' => '4',
+            'min' => 5,
+            'max' => '6',
+            'equalto' => '#foo',
+            'type' => 'number',
+        ];
+        $type = 'text';
+
+        $schemaAttribute = new SchemaAttribute();
+        $schemaAttribute->setName($name);
+        $schemaAttribute->setDataType($dataType);
+        $schemaAttribute->setConstraints($constraints);
+        $schemaAttribute->setType($type);
+        $schemaAttribute->validate();
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals($constraints, $schemaAttribute->constraints());
+        $this->assertEquals($type, $schemaAttribute->type());
+
+        $this->assertTrue($schemaAttribute->isRequired());
+        $this->assertEquals($constraints['minlength'], $schemaAttribute->minLength());
+        $this->assertEquals($constraints['maxlength'], $schemaAttribute->maxLength());
+        $this->assertEquals($constraints['mincheck'], $schemaAttribute->minCheck());
+        $this->assertEquals($constraints['maxcheck'], $schemaAttribute->maxCheck());
+        $this->assertEquals($constraints['min'], $schemaAttribute->min());
+        $this->assertEquals($constraints['max'], $schemaAttribute->max());
+        $this->assertEquals($constraints['equalto'], $schemaAttribute->equalTo());
     }
 }

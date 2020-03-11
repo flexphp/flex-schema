@@ -6,4 +6,4 @@ table:
     column2:
       Name: OkColumn
       DataType: string
-      Constraints: '[''required'' => true, ''maxlength'' => ''255'']'
+      Constraints: required:true|maxlength:255

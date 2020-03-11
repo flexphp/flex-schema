@@ -10,6 +10,7 @@
 namespace FlexPHP\Schema;
 
 use FlexPHP\Schema\Constants\Keyword;
+use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
@@ -31,7 +32,7 @@ class SchemaAttribute implements SchemaAttributeInterface
     private $dataType;
 
     /**
-     * @var array<array>
+     * @var array<mixed>
      */
     private $constraints;
 
@@ -111,6 +112,58 @@ class SchemaAttribute implements SchemaAttributeInterface
     {
         $this->type = $type;
         $this->properties[Keyword::TYPE] = $this->type;
+    }
+
+    public function isRequired(): bool
+    {
+        return (bool)($this->constraints[Rule::REQUIRED] ?? null);
+    }
+
+    public function minLength(): ?int
+    {
+        return isset($this->constraints[Rule::MINLENGTH])
+            ? (int)$this->constraints[Rule::MINLENGTH]
+            : null;
+    }
+
+    public function maxLength(): ?int
+    {
+        return isset($this->constraints[Rule::MAXLENGTH])
+            ? (int)$this->constraints[Rule::MAXLENGTH]
+            : null;
+    }
+
+    public function minCheck(): ?int
+    {
+        return isset($this->constraints[Rule::MINCHECK])
+            ? (int)$this->constraints[Rule::MINCHECK]
+            : null;
+    }
+
+    public function maxCheck(): ?int
+    {
+        return isset($this->constraints[Rule::MAXCHECK])
+            ? (int)$this->constraints[Rule::MAXCHECK]
+            : null;
+    }
+
+    public function min(): ?int
+    {
+        return isset($this->constraints[Rule::MIN])
+            ? (int)$this->constraints[Rule::MIN]
+            : null;
+    }
+
+    public function max(): ?int
+    {
+        return isset($this->constraints[Rule::MAX])
+            ? (int)$this->constraints[Rule::MAX]
+            : null;
+    }
+
+    public function equalTo(): ?string
+    {
+        return $this->constraints[Rule::EQUALTO] ?? null;
     }
 
     private function getConstraintsFromString(string $constraints): array

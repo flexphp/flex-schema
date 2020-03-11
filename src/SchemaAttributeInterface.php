@@ -34,4 +34,20 @@ interface SchemaAttributeInterface
     public function type(): string;
 
     public function setType(string $type): void;
+
+    public function isRequired(): bool;
+
+    public function minLength(): ?int;
+
+    public function maxLength(): ?int;
+
+    public function minCheck(): ?int;
+
+    public function maxCheck(): ?int;
+
+    public function min(): ?int;
+
+    public function max(): ?int;
+
+    public function equalTo(): ?string;
 }
