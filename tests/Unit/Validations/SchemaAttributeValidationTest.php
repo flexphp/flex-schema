@@ -226,10 +226,10 @@ class SchemaAttributeValidationTest extends TestCase
     public function propertyConstraintsNotValid(): array
     {
         return [
-            ['_REQUIRED'],
-            ['REQUIRED'],
-            ['Required'],
-            [1],
+            [['_REQUIRED']],
+            [['REQUIRED']],
+            [['Required']],
+            [[1]],
             [['minlength' => null]],
             [['maxlength' => []]],
             [['mincheck' => -1]],
@@ -264,13 +264,6 @@ class SchemaAttributeValidationTest extends TestCase
             [null],
             [''],
             [[]],
-            ['required'],
-            ['required|min:8'], // Using |
-            ["['required']"], // Array syntax
-            ["['required','min'=>8]"], // Array syntax multiple
-            ['["required"]'], // JSON simple
-            ['{"required":true}'], // JSON complex
-            ['{"required":true,"min":8}'], // JSON complex multiple
             [['required']],
             [['required' => true]],
             [['required' => false]],

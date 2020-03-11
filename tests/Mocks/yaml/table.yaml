@@ -4,20 +4,24 @@ table:
     column1:
       Name: PrimaryColumn
       DataType: integer
-      Constraints: '[''required'', ''type'' => ''number'']'
+      Constraints: required|type:number
     column2:
       Name: StringColumn
       DataType: string
-      Constraints: '[''required'' => true, ''maxlength'' => ''255'']'
+      Constraints: required:true|maxlength:255
     column3:
       Name: TextColumn
       DataType: text
-      Constraints: '[''required'' => true, ''type'' => ''textarea'', ''length'' => [''min'' => 10, ''max'' => 512]]'
+      Constraints: required:true|type:textarea|minlength:10|maxlength:512
     column4:
       Name: BooleanColumn
       DataType: boolean
-      Constraints: '[''required'' => false]'
+      Constraints: required:false
     column5:
       Name: DateTimeColumn
+      DataType: datetime
+      Constraints: 
+    column6:
+      Name: DateTimeColumn2
       DataType: datetime
       Constraints: ''

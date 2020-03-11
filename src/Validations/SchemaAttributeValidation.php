@@ -9,7 +9,6 @@
  */
 namespace FlexPHP\Schema\Validations;
 
-use Exception;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validators\PropertyConstraintsValidator;
@@ -44,7 +43,7 @@ class SchemaAttributeValidation implements ValidationInterface
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $validators = [
         Keyword::NAME => PropertyNameValidator::class,
@@ -60,8 +59,29 @@ class SchemaAttributeValidation implements ValidationInterface
 
     public function validate(): void
     {
+        $this->validateAllowedProperties();
+
+        $this->validateRequiredProperties();
+
+        $this->validateRulesProperties();
+    }
+
+    public function validateRulesProperties(): void
+    {
+        foreach ($this->properties as $property => $value) {
+            if (\in_array($property, \array_keys($this->validators))) {
+                $violations = $this->validateProperty($property, $value);
+
+                if (0 !== \count($violations)) {
+                    throw new InvalidSchemaAttributeException(\sprintf("%1\$s:\n%2\$s", $property, $violations));
+                }
+            }
+        }
+    }
+
+    public function validateAllowedProperties(): void
+    {
         $notAllowedProperties = [];
-        $requiredPropertiesNotPresent = [];
 
         foreach ($this->properties as $name => $value) {
             if (!\in_array($name, $this->allowedProperties)) {
@@ -72,6 +92,11 @@ class SchemaAttributeValidation implements ValidationInterface
         if (!empty($notAllowedProperties)) {
             throw new InvalidSchemaAttributeException('Properties unknow: ' . \implode(', ', $notAllowedProperties));
         }
+    }
+
+    public function validateRequiredProperties(): void
+    {
+        $requiredPropertiesNotPresent = [];
 
         foreach ($this->requiredProperties as $property) {
             if (!\in_array($property, \array_keys($this->properties))) {
@@ -84,16 +109,6 @@ class SchemaAttributeValidation implements ValidationInterface
                 'Required properties are missing: ' . \implode(', ', $requiredPropertiesNotPresent)
             );
         }
-
-        foreach ($this->properties as $property => $value) {
-            if (\in_array($property, \array_keys($this->validators))) {
-                $violations = $this->validateProperty($property, $value);
-
-                if (0 !== \count($violations)) {
-                    throw new InvalidSchemaAttributeException(\sprintf("%1\$s:\n%2\$s", $property, $violations));
-                }
-            }
-        }
     }
 
     /**
@@ -101,13 +116,8 @@ class SchemaAttributeValidation implements ValidationInterface
      */
     private function validateProperty(string $property, $value): ConstraintViolationList
     {
-        try {
-            $validator = new $this->validators[$property];
-            $violations = $validator->validate($value);
-        } catch (Exception $e) {
-            throw new InvalidSchemaAttributeException(\sprintf('%1$s: %2$s', $property, $e->getMessage()));
-        }
+        $validator = new $this->validators[$property];
 
-        return $violations;
+        return $validator->validate($value);
     }
 }
