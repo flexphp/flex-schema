@@ -14,7 +14,6 @@ use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RangeConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RequiredConstraintValidator;
-use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolationList;

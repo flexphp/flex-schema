@@ -27,9 +27,9 @@ interface SchemaAttributeInterface
     public function constraints(): array;
 
     /**
-     * @param array<array> $constraints
+     * @param mixed $constraints
      */
-    public function setConstraints(array $constraints): void;
+    public function setConstraints($constraints): void;
 
     public function type(): string;
 

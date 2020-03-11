@@ -66,7 +66,7 @@ class SchemaAttributeValidation implements ValidationInterface
         $this->validateRulesProperties();
     }
 
-    public function validateRulesProperties(): void
+    private function validateRulesProperties(): void
     {
         foreach ($this->properties as $property => $value) {
             if (\in_array($property, \array_keys($this->validators))) {
@@ -79,7 +79,7 @@ class SchemaAttributeValidation implements ValidationInterface
         }
     }
 
-    public function validateAllowedProperties(): void
+    private function validateAllowedProperties(): void
     {
         $notAllowedProperties = [];
 
@@ -94,7 +94,7 @@ class SchemaAttributeValidation implements ValidationInterface
         }
     }
 
-    public function validateRequiredProperties(): void
+    private function validateRequiredProperties(): void
     {
         $requiredPropertiesNotPresent = [];
 
