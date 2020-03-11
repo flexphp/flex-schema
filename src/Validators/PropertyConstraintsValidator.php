@@ -9,6 +9,7 @@
  */
 namespace FlexPHP\Schema\Validators;
 
+use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
@@ -26,17 +27,17 @@ use Symfony\Component\Validator\Validation;
 class PropertyConstraintsValidator
 {
     public const ALLOWED_RULES = [
-        'required',
-        'minlength',
-        'maxlength',
-        'length',
-        'mincheck',
-        'maxcheck',
-        'check',
-        'min',
-        'max',
-        'equalto',
-        'type',
+        Rule::REQUIRED,
+        Rule::MINLENGTH,
+        Rule::MAXLENGTH,
+        Rule::LENGTH,
+        Rule::MINCHECK,
+        Rule::MAXCHECK,
+        Rule::CHECK,
+        Rule::MIN,
+        Rule::MAX,
+        Rule::EQUALTO,
+        Rule::TYPE,
     ];
 
     /**
@@ -57,7 +58,7 @@ class PropertyConstraintsValidator
                 continue;
             }
 
-            if (\is_string($options) && $options == 'required') {
+            if (\is_string($options) && $options == Rule::REQUIRED) {
                 $rule = $options;
                 $options = true;
             }
@@ -89,32 +90,32 @@ class PropertyConstraintsValidator
         $errors = new ConstraintViolationList();
 
         switch ($rule) {
-            case 'required':
+            case Rule::REQUIRED:
                 $errors = (new RequiredConstraintValidator())->validate($options);
 
                 break;
-            case 'max':
-            case 'maxlength':
-            case 'maxcheck':
+            case Rule::MAX:
+            case Rule::MAXLENGTH:
+            case Rule::MAXCHECK:
                 $errors = (new MaxConstraintValidator())->validate($options);
 
                 break;
-            case 'min':
-            case 'minlength':
-            case 'mincheck':
+            case Rule::MIN:
+            case Rule::MINLENGTH:
+            case Rule::MINCHECK:
                 $errors = (new MinConstraintValidator())->validate($options);
 
                 break;
-            case 'equalto':
+            case Rule::EQUALTO:
                 $errors = (new EqualToConstraintValidator())->validate($options);
 
                 break;
-            case 'type':
+            case Rule::TYPE:
                 $errors = (new PropertyTypeValidator())->validate($options);
 
                 break;
-            case 'length':
-            case 'check':
+            case Rule::LENGTH:
+            case Rule::CHECK:
                 $errors = (new RangeConstraintValidator())->validate($options);
 
                 break;
