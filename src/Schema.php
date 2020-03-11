@@ -12,7 +12,6 @@ namespace FlexPHP\Schema;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Exception\InvalidFileSchemaException;
 use FlexPHP\Schema\Exception\InvalidSchemaException;
-use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -34,7 +33,7 @@ class Schema implements SchemaInterface
     private $title;
 
     /**
-     * @var array<array>
+     * @var array<int,SchemaAttributeInterface>
      */
     private $attributes;
 
@@ -105,11 +104,15 @@ class Schema implements SchemaInterface
             throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
         }
 
+        $schemaAttributes = [];
+
         foreach ($attributes as $attribute) {
-            $validation = new SchemaAttributeValidation($attribute);
-            $validation->validate();
+            $schemaAttribute = new SchemaAttribute($attribute);
+            $schemaAttribute->validate();
+
+            $schemaAttributes[] = $schemaAttribute;
         }
 
-        $this->attributes = $attributes;
+        $this->attributes = $schemaAttributes;
     }
 }

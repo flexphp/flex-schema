@@ -48,14 +48,14 @@ interface SchemaInterface
     /**
      * Get attributes's schema
      *
-     * @return array<array>
+     * @return array<SchemaAttributeInterface>
      */
     public function attributes(): array;
 
     /**
      * Set attributes used by schmea
      *
-     * @param array<SchemaAttribute> $attributes
+     * @param array<array> $attributes
      */
     public function setAttributes(array $attributes): void;
 }
