@@ -11,6 +11,9 @@ namespace FlexPHP\Schema;
 
 interface SchemaAttributeInterface
 {
+    /**
+     * @param null|array|string $constraints
+     */
     public function __construct(string $name, string $dataType, $constraints = null);
 
     public function name(): string;

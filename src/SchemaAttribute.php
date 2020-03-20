@@ -13,7 +13,7 @@ use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
-class SchemaAttribute implements SchemaAttributeInterface
+final class SchemaAttribute implements SchemaAttributeInterface
 {
     /**
      * @var string
@@ -30,6 +30,9 @@ class SchemaAttribute implements SchemaAttributeInterface
      */
     private $constraints = [];
 
+    /**
+     * @param mixed $constraints
+     */
     public function __construct(string $name, string $dataType, $constraints = null)
     {
         $this->setName($name);
@@ -142,6 +145,9 @@ class SchemaAttribute implements SchemaAttributeInterface
         $this->dataType = $dataType;
     }
 
+    /**
+     * @param mixed $constraints
+     */
     private function setConstraints($constraints): void
     {
         if (!empty($constraints)) {
