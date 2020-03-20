@@ -12,28 +12,26 @@ namespace FlexPHP\Schema;
 interface SchemaInterface
 {
     /**
-     * Schema in array format
+     * Schema load from array format
      *
      * @param array<array> $schema
      */
-    public function fromArray(array $schema): void;
+    public static function fromArray(array $schema): self;
 
     /**
      * Filename from schema file
      */
-    public function fromFile(string $filename): void;
+    public static function fromFile(string $schemafile): self;
 
     /**
-     * Instance vars from input loaded
+     * @param array<SchemaAttributeInterface> $attributes
      */
-    public function load(): void;
+    public function __construct(string $name, string $title, array $attributes);
 
     /**
      * Get internal name from schema
      */
     public function name(): string;
-
-    public function setName(string $name): void;
 
     /**
      * Get name used to show it a user
@@ -41,21 +39,9 @@ interface SchemaInterface
     public function title(): string;
 
     /**
-     * Set name used to show it a user
-     */
-    public function setTitle(string $title): void;
-
-    /**
      * Get attributes's schema
      *
      * @return array<SchemaAttributeInterface>
      */
     public function attributes(): array;
-
-    /**
-     * Set attributes used by schmea
-     *
-     * @param array<array> $attributes
-     */
-    public function setAttributes(array $attributes): void;
 }

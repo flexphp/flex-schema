@@ -11,45 +11,80 @@ namespace FlexPHP\Schema\Tests;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
+use FlexPHP\Schema\SchemaAttributeInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class SchemaTest extends TestCase
 {
-    public function testItSchemaFromArrayEmptyThrowException(): void
-    {
-        $this->expectException(\ArgumentCountError::class);
-
-        $schema = new Schema();
-        $schema->fromArray();
-    }
-
-    public function testItSchemaFromArrayInvalidArgumentThrowException(): void
-    {
-        $this->expectException(\TypeError::class);
-
-        $schema = new Schema();
-        $schema->fromArray(null);
-    }
-
-    public function testItSchemaFromArrayEmptyNotThrowException(): void
-    {
-        $schema = new Schema();
-        $schema->fromArray([]);
-
-        $this->assertTrue(true);
-    }
-
-    public function testItSchemaFromArrayEmptyValidateThrowException(): void
+    /**
+     * @dataProvider getNameInvalid
+     *
+     * @param mixed $name
+     */
+    public function testItSchemaNameInvalidThrowException($name): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage('name is');
 
-        $schema = new Schema();
-        $schema->fromArray([]);
-        $schema->load();
+        new Schema($name, 'title', []);
+    }
+
+    /**
+     * @dataProvider getTitleInvalid
+     *
+     * @param mixed $title
+     */
+    public function testItSchemaTitleInvalidThrowException($title): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage(':title');
+
+        new Schema('name', $title, []);
+    }
+
+    /**
+     * @dataProvider getAttributesInvalid
+     *
+     * @param mixed $attributes
+     */
+    public function testItSchemaAttributesInvalidThrowException($attributes): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage(':attributes are');
+
+        new Schema('name', 'title', $attributes);
+    }
+
+    public function testItSchemaSetOk(): void
+    {
+        $name = 'name';
+        $title = 'title';
+        $attributes = [
+            [
+                Keyword::NAME => 'foo',
+                Keyword::DATATYPE => 'string',
+            ],
+            [
+                Keyword::NAME => 'bar',
+                Keyword::DATATYPE => 'integer',
+            ],
+        ];
+
+        $schema = new Schema($name, $title, $attributes);
+
+        $this->assertEquals($name, $schema->name());
+        $this->assertEquals($title, $schema->title());
+        $this->assertIsArray($schema->attributes());
+
+        foreach ($schema->attributes() as $attribute) {
+            $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
+        }
     }
 
     /**
      * @dataProvider getNameInvalid
+     *
+     * @param mixed $name
      */
     public function testItSchemaFromArrayNameInvalidThrowException($name): void
     {
@@ -60,9 +95,7 @@ class SchemaTest extends TestCase
         $array[$name] = $array['table'];
         unset($array['table']);
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     public function testItSchemaFromArrayWithoutTitleThrowException(): void
@@ -73,13 +106,13 @@ class SchemaTest extends TestCase
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::TITLE]);
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     /**
      * @dataProvider getTitleInvalid
+     *
+     * @param mixed $title
      */
     public function testItSchemaFromArrayTitleInvalidThrowException($title): void
     {
@@ -89,9 +122,7 @@ class SchemaTest extends TestCase
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $array['table'][Keyword::TITLE] = $title;
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     public function testItSchemaFromArrayWithoutTableAttributesThrowException(): void
@@ -102,13 +133,13 @@ class SchemaTest extends TestCase
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]);
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     /**
      * @dataProvider getAttributesInvalid
+     *
+     * @param mixed $attributes
      */
     public function testItSchemaFromArrayAttributesInvalidThrowException($attributes): void
     {
@@ -118,9 +149,7 @@ class SchemaTest extends TestCase
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $array['table'][Keyword::ATTRIBUTES] = $attributes;
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     public function testItSchemaFromArrayWithTableAttributesInvalidThrowException(): void
@@ -130,62 +159,37 @@ class SchemaTest extends TestCase
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]['column3'][Keyword::DATATYPE]);
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        Schema::fromArray($array);
     }
 
     public function testItSchemaFromArrayOk(): void
     {
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
 
-        $schema = new Schema();
-        $schema->fromArray($array);
-        $schema->load();
+        $schema = Schema::fromArray($array);
 
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
     }
 
-    public function testItSchemaFromFileEmptyThrowException(): void
-    {
-        $this->expectException(\ArgumentCountError::class);
-
-        $schema = new Schema();
-        $schema->fromFile();
-    }
-
-    public function testItSchemaFromFileInvalidArgumentThrowException(): void
-    {
-        $this->expectException(\TypeError::class);
-
-        $schema = new Schema();
-        $schema->fromFile(null);
-    }
-
     public function testItSchemaFromFileNotExistsThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidFileSchemaException::class);
 
-        $schema = new Schema();
-        $schema->fromFile('/path/error');
+        Schema::fromFile('/path/error');
     }
 
     public function testItSchemaFromFileFormatErrorThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
 
-        $schema = new Schema();
-        $schema->fromFile(\sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
-        $schema->load();
+        Schema::fromFile(\sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
     }
 
     public function testItSchemaFromFileOk(): void
     {
-        $schema = new Schema();
-        $schema->fromFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
-        $schema->load();
+        $schema = Schema::fromFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
 
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
@@ -195,7 +199,6 @@ class SchemaTest extends TestCase
     public function getNameInvalid(): array
     {
         return [
-            [null],
             [''],
             [' '],
         ];
@@ -204,7 +207,6 @@ class SchemaTest extends TestCase
     public function getTitleInvalid(): array
     {
         return [
-            [null],
             [''],
             [' '],
         ];
@@ -213,7 +215,6 @@ class SchemaTest extends TestCase
     public function getAttributesInvalid(): array
     {
         return [
-            [null],
             [[]],
         ];
     }

@@ -15,13 +15,8 @@ use FlexPHP\Schema\Exception\InvalidSchemaException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
-class Schema implements SchemaInterface
+final class Schema implements SchemaInterface
 {
-    /**
-     * @var array<array>
-     */
-    private $schema;
-
     /**
      * @var string
      */
@@ -37,32 +32,32 @@ class Schema implements SchemaInterface
      */
     private $attributes;
 
-    public function fromArray(array $schema): void
+    public static function fromArray(array $schema): SchemaInterface
     {
-        $this->schema = $schema;
+        $name = (string)\key($schema) ?? '';
+        $title = $schema[$name][Keyword::TITLE] ?? '';
+        $attributes = $schema[$name][Keyword::ATTRIBUTES] ?? [];
+
+        return new self($name, $title, $attributes);
     }
 
-    public function fromFile(string $filename): void
+    public static function fromFile(string $schemafile): SchemaInterface
     {
         try {
             $yaml = new Yaml();
-            $schema = $yaml->parseFile($filename);
+            $schema = $yaml->parseFile($schemafile);
         } catch (ParseException $e) {
             throw new InvalidFileSchemaException();
         }
 
-        $this->schema = $schema;
+        return self::fromArray($schema);
     }
 
-    public function load(): void
+    public function __construct(string $name, string $title, array $attributes)
     {
-        if (empty($this->schema)) {
-            throw new InvalidSchemaException('Schema is empty');
-        }
-
-        $this->setName((string)\key($this->schema) ?? '');
-        $this->setTitle($this->schema[$this->name()][Keyword::TITLE] ?? '');
-        $this->setAttributes($this->schema[$this->name()][Keyword::ATTRIBUTES] ?? []);
+        $this->setName($name);
+        $this->setTitle($title);
+        $this->setAttributes($attributes);
     }
 
     public function name(): string
@@ -70,7 +65,17 @@ class Schema implements SchemaInterface
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function title(): string
+    {
+        return $this->title;
+    }
+
+    public function attributes(): array
+    {
+        return $this->attributes;
+    }
+
+    private function setName(string $name): void
     {
         if (empty(\trim($name))) {
             throw new InvalidSchemaException('Schema name is required');
@@ -79,12 +84,7 @@ class Schema implements SchemaInterface
         $this->name = $name;
     }
 
-    public function title(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): void
+    private function setTitle(string $title): void
     {
         if (empty(\trim($title))) {
             throw new InvalidSchemaException(\sprintf('Schema %s:title is required', $this->name()));
@@ -93,12 +93,7 @@ class Schema implements SchemaInterface
         $this->title = $title;
     }
 
-    public function attributes(): array
-    {
-        return $this->attributes;
-    }
-
-    public function setAttributes(array $attributes): void
+    private function setAttributes(array $attributes): void
     {
         if (empty($attributes)) {
             throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
@@ -107,10 +102,11 @@ class Schema implements SchemaInterface
         $schemaAttributes = [];
 
         foreach ($attributes as $attribute) {
-            $schemaAttribute = new SchemaAttribute($attribute);
-            $schemaAttribute->validate();
+            $name = $attribute[Keyword::NAME] ?? '';
+            $dataType = $attribute[Keyword::DATATYPE] ?? '';
+            $constraints = $attribute[Keyword::CONSTRAINTS] ?? '';
 
-            $schemaAttributes[] = $schemaAttribute;
+            $schemaAttributes[] = new SchemaAttribute($name, $dataType, $constraints);
         }
 
         $this->attributes = $schemaAttributes;
