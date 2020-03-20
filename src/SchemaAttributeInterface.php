@@ -11,29 +11,18 @@ namespace FlexPHP\Schema;
 
 interface SchemaAttributeInterface
 {
-    public function validate(): void;
+    public function __construct(string $name, string $dataType, $constraints = null);
 
     public function name(): string;
 
-    public function setName(string $name): void;
-
     public function dataType(): string;
 
-    public function setDataType(string $dataType): void;
-
     /**
-     * @return array<array>
+     * @return array<string, mixed>
      */
     public function constraints(): array;
 
-    /**
-     * @param mixed $constraints
-     */
-    public function setConstraints($constraints): void;
-
-    public function type(): string;
-
-    public function setType(string $type): void;
+    public function type(): ?string;
 
     public function isRequired(): bool;
 

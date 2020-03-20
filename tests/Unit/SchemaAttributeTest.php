@@ -13,34 +13,12 @@ use FlexPHP\Schema\SchemaAttribute;
 
 class SchemaAttributeTest extends TestCase
 {
-    public function testItSchemaAttributeInvalidInvalidThrowException(): void
-    {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
-        $this->expectExceptionMessage('is empty');
-
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->validate();
-    }
-
-    public function testItSchemaAttributeWithIncompleteRequirePropertiesThrowException(): void
-    {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
-        $this->expectExceptionMessage('are missing');
-
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName('foo');
-        $schemaAttribute->validate();
-    }
-
     public function testItSchemaAttributeWithInvalidNamePropertiesThrowException(): void
     {
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Name:');
 
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName('');
-        $schemaAttribute->setDataType('string');
-        $schemaAttribute->validate();
+        new SchemaAttribute('', 'string');
     }
 
     public function testItSchemaAttributeWithInvalidDataTypePropertiesThrowException(): void
@@ -48,10 +26,7 @@ class SchemaAttributeTest extends TestCase
         $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('DataType:');
 
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName('foo');
-        $schemaAttribute->setDataType('bar');
-        $schemaAttribute->validate();
+        new SchemaAttribute('foo', 'bar');
     }
 
     public function testItSchemaAttributeWithRequiredPropertiesSetValues(): void
@@ -59,28 +34,19 @@ class SchemaAttributeTest extends TestCase
         $name = 'foo';
         $dataType = 'string';
 
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName($name);
-        $schemaAttribute->setDataType($dataType);
-        $schemaAttribute->validate();
+        $schemaAttribute = new SchemaAttribute($name, $dataType);
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
     }
 
-    public function testItSchemaAttributePropertiesSetValues(): void
+    public function testItSchemaAttributeSetConstratinsAsString(): void
     {
         $name = 'foo';
         $dataType = 'string';
         $constraints = 'required|min:8|max:10|type:number';
-        $type = 'text';
 
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName($name);
-        $schemaAttribute->setDataType($dataType);
-        $schemaAttribute->setConstraints($constraints);
-        $schemaAttribute->setType($type);
-        $schemaAttribute->validate();
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraints);
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
@@ -90,10 +56,9 @@ class SchemaAttributeTest extends TestCase
             'max' => 10,
             'type' => 'number',
         ], $schemaAttribute->constraints());
-        $this->assertEquals($type, $schemaAttribute->type());
     }
 
-    public function testItSchemaAttributePropertiesSetConstraintsAsArray(): void
+    public function testItSchemaAttributeSetConstraintsAsArray(): void
     {
         $name = 'foo';
         $dataType = 'string';
@@ -108,19 +73,12 @@ class SchemaAttributeTest extends TestCase
             'equalto' => '#foo',
             'type' => 'number',
         ];
-        $type = 'text';
 
-        $schemaAttribute = new SchemaAttribute();
-        $schemaAttribute->setName($name);
-        $schemaAttribute->setDataType($dataType);
-        $schemaAttribute->setConstraints($constraints);
-        $schemaAttribute->setType($type);
-        $schemaAttribute->validate();
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraints);
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
         $this->assertEquals($constraints, $schemaAttribute->constraints());
-        $this->assertEquals($type, $schemaAttribute->type());
 
         $this->assertTrue($schemaAttribute->isRequired());
         $this->assertEquals($constraints['minlength'], $schemaAttribute->minLength());
@@ -130,5 +88,6 @@ class SchemaAttributeTest extends TestCase
         $this->assertEquals($constraints['min'], $schemaAttribute->min());
         $this->assertEquals($constraints['max'], $schemaAttribute->max());
         $this->assertEquals($constraints['equalto'], $schemaAttribute->equalTo());
+        $this->assertEquals($constraints['type'], $schemaAttribute->type());
     }
 }

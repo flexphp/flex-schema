@@ -11,16 +11,10 @@ namespace FlexPHP\Schema;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
-use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
 class SchemaAttribute implements SchemaAttributeInterface
 {
-    /**
-     * @var array<string>
-     */
-    private $properties = [];
-
     /**
      * @var string
      */
@@ -32,33 +26,17 @@ class SchemaAttribute implements SchemaAttributeInterface
     private $dataType;
 
     /**
-     * @var array<mixed>
+     * @var array<string, mixed>
      */
-    private $constraints;
+    private $constraints = [];
 
-    /**
-     * @var string
-     */
-    private $type;
-
-    public function __construct(array $properties = [])
+    public function __construct(string $name, string $dataType, $constraints = null)
     {
-        if (!empty($properties)) {
-            foreach ($properties as $name => $property) {
-                if (\method_exists($this, 'set' . $name)) {
-                    $this->{'set' . $name}($property);
-                }
-            }
-        }
-    }
+        $this->setName($name);
+        $this->setDataType($dataType);
+        $this->setConstraints($constraints);
 
-    public function validate(): void
-    {
-        if (empty($this->properties)) {
-            throw new InvalidSchemaAttributeException('Schema attribute is empty');
-        }
-
-        (new SchemaAttributeValidation($this->properties))->validate();
+        $this->validate();
     }
 
     public function name(): string
@@ -66,21 +44,9 @@ class SchemaAttribute implements SchemaAttributeInterface
         return $this->name;
     }
 
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-        $this->properties[Keyword::NAME] = $this->name;
-    }
-
     public function dataType(): string
     {
         return $this->dataType;
-    }
-
-    public function setDataType(string $dataType): void
-    {
-        $this->dataType = $dataType;
-        $this->properties[Keyword::DATATYPE] = $this->dataType;
     }
 
     public function constraints(): array
@@ -88,30 +54,9 @@ class SchemaAttribute implements SchemaAttributeInterface
         return $this->constraints;
     }
 
-    /**
-     * Constraints can be array or string
-     *
-     * @param mixed $constraints
-     */
-    public function setConstraints($constraints): void
+    public function type(): ?string
     {
-        if (\is_string($constraints)) {
-            $constraints = $this->getConstraintsFromString($constraints);
-        }
-
-        $this->constraints = $constraints;
-        $this->properties[Keyword::CONSTRAINTS] = $this->constraints;
-    }
-
-    public function type(): string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): void
-    {
-        $this->type = $type;
-        $this->properties[Keyword::TYPE] = $this->type;
+        return $this->constraints[Rule::TYPE] ?? null;
     }
 
     public function isRequired(): bool
@@ -164,6 +109,58 @@ class SchemaAttribute implements SchemaAttributeInterface
     public function equalTo(): ?string
     {
         return $this->constraints[Rule::EQUALTO] ?? null;
+    }
+
+    private function validate(): void
+    {
+        $properties = $this->getProperties();
+
+        (new SchemaAttributeValidation($properties))->validate();
+    }
+
+    private function getProperties(): array
+    {
+        $properties = [
+            Keyword::NAME => $this->name(),
+            Keyword::DATATYPE => $this->dataType(),
+        ];
+
+        if (\count($this->constraints()) > 0) {
+            $properties[Keyword::CONSTRAINTS] = $this->constraints();
+        }
+
+        return $properties;
+    }
+
+    private function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    private function setDataType(string $dataType): void
+    {
+        $this->dataType = $dataType;
+    }
+
+    private function setConstraints($constraints): void
+    {
+        if (!empty($constraints)) {
+            if (\is_string($constraints)) {
+                $this->setConstraintsFromString($constraints);
+            } else {
+                $this->setConstraintsFromArray($constraints);
+            }
+        }
+    }
+
+    private function setConstraintsFromString(string $constraints): void
+    {
+        $this->constraints = $this->getConstraintsFromString($constraints);
+    }
+
+    private function setConstraintsFromArray(array $constraints): void
+    {
+        $this->constraints = $constraints;
     }
 
     private function getConstraintsFromString(string $constraints): array
