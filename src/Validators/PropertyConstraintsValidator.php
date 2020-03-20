@@ -41,9 +41,9 @@ class PropertyConstraintsValidator
     ];
 
     /**
-     * @param mixed $constraints
+     * @param array<string, mixed> $constraints
      */
-    public function validate($constraints): ConstraintViolationListInterface
+    public function validate(array $constraints): ConstraintViolationListInterface
     {
         $violations = new ConstraintViolationList();
 
@@ -54,10 +54,6 @@ class PropertyConstraintsValidator
         $validator = Validation::createValidator();
 
         foreach ($constraints as $rule => $options) {
-            if ($rule === '') {
-                continue;
-            }
-
             if (\is_string($options) && $options === Rule::REQUIRED) {
                 $rule = $options;
                 $options = true;

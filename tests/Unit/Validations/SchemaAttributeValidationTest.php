@@ -18,6 +18,17 @@ use FlexPHP\Schema\Validators\PropertyTypeValidator;
 
 class SchemaAttributeValidationTest extends TestCase
 {
+    public function testItPropertyRequireThrownException(): void
+    {
+        $this->expectException(InvalidSchemaAttributeException::class);
+
+        $validation = new SchemaAttributeValidation([
+            Keyword::NAME => 'Test',
+        ]);
+
+        $validation->validate();
+    }
+
     public function testItPropertyUnknowThrownException(): void
     {
         $this->expectException(InvalidSchemaAttributeException::class);
@@ -261,8 +272,6 @@ class SchemaAttributeValidationTest extends TestCase
     public function propertyConstraintsValid(): array
     {
         return [
-            [null],
-            [''],
             [[]],
             [['required']],
             [['required' => true]],
