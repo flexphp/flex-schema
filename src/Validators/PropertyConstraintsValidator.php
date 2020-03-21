@@ -46,10 +46,6 @@ class PropertyConstraintsValidator
     {
         $violations = new ConstraintViolationList();
 
-        if (empty($constraints)) {
-            return $violations;
-        }
-
         $validator = Validation::createValidator();
 
         foreach ($constraints as $rule => $options) {
@@ -57,15 +53,11 @@ class PropertyConstraintsValidator
                 new Choice(self::ALLOWED_RULES),
             ]);
 
-            if (\count($errors) === 0) {
+            if (!\count($errors)) {
                 $errors = $this->validateRule($rule, $options);
             }
 
-            if (\count($errors) !== 0) {
-                foreach ($errors as $error) {
-                    $violations->add($error);
-                }
-            }
+            $violations->addAll($errors);
         }
 
         return $violations;

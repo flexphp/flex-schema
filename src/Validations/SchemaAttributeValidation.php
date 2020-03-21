@@ -66,6 +66,30 @@ class SchemaAttributeValidation implements ValidationInterface
         $this->validateRulesProperties();
     }
 
+    private function validateAllowedProperties(): void
+    {
+        $notAllowedProperties = \array_filter(\array_keys($this->properties), function ($name) {
+            return !\in_array($name, $this->allowedProperties);
+        });
+
+        if (!empty($notAllowedProperties)) {
+            throw new InvalidSchemaAttributeException('Properties unknow: ' . \implode(', ', $notAllowedProperties));
+        }
+    }
+
+    private function validateRequiredProperties(): void
+    {
+        $requiredProperties = \array_filter($this->requiredProperties, function ($requiredProperty) {
+            return !\in_array($requiredProperty, \array_keys($this->properties));
+        });
+
+        if (!empty($requiredProperties)) {
+            throw new InvalidSchemaAttributeException(
+                'Required properties are missing: ' . \implode(', ', $requiredProperties)
+            );
+        }
+    }
+
     private function validateRulesProperties(): void
     {
         foreach ($this->properties as $property => $value) {
@@ -76,38 +100,6 @@ class SchemaAttributeValidation implements ValidationInterface
                     throw new InvalidSchemaAttributeException(\sprintf("%1\$s:\n%2\$s", $property, $violations));
                 }
             }
-        }
-    }
-
-    private function validateAllowedProperties(): void
-    {
-        $notAllowedProperties = [];
-
-        foreach ($this->properties as $name => $value) {
-            if (!\in_array($name, $this->allowedProperties)) {
-                $notAllowedProperties[] = $name;
-            }
-        }
-
-        if (!empty($notAllowedProperties)) {
-            throw new InvalidSchemaAttributeException('Properties unknow: ' . \implode(', ', $notAllowedProperties));
-        }
-    }
-
-    private function validateRequiredProperties(): void
-    {
-        $requiredPropertiesNotPresent = [];
-
-        foreach ($this->requiredProperties as $property) {
-            if (!\in_array($property, \array_keys($this->properties))) {
-                $requiredPropertiesNotPresent[] = $property;
-            }
-        }
-
-        if (!empty($requiredPropertiesNotPresent)) {
-            throw new InvalidSchemaAttributeException(
-                'Required properties are missing: ' . \implode(', ', $requiredPropertiesNotPresent)
-            );
         }
     }
 

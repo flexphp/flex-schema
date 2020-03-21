@@ -156,22 +156,20 @@ final class SchemaAttribute implements SchemaAttributeInterface
     {
         $_constraints = \explode('|', $constraints);
 
-        if (\count($_constraints)) {
-            /** @var string $_constraint */
-            foreach ($_constraints as $index => $_constraint) {
-                $_rule = \explode(':', $_constraint);
+        /** @var mixed $_constraint */
+        foreach ($_constraints as $index => $_constraint) {
+            $_rule = \explode(':', $_constraint);
 
-                if (\count($_rule) === 2) {
-                    [$_name, $_options] = $_rule;
-                    $_constraints[$_name] = \preg_match('/^false$/i', $_options)
+            if (\count($_rule) === 2) {
+                [$_name, $_options] = $_rule;
+                $_constraints[$_name] = \preg_match('/^false$/i', $_options)
                         ? false
                         : $_options;
-                } else {
-                    $_constraints[$_rule[0]] = true;
-                }
-
-                unset($_constraints[$index]);
+            } else {
+                $_constraints[$_rule[0]] = true;
             }
+
+            unset($_constraints[$index]);
         }
 
         return $_constraints;
@@ -180,7 +178,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
     private function getConstraintsCast(array $constraints): array
     {
         foreach ($constraints as $name => $value) {
-            if (\is_int($name) && \is_string($value)) {
+            if (\is_int($name)) {
                 $constraints[$value] = true;
                 unset($constraints[$name]);
             } else {
