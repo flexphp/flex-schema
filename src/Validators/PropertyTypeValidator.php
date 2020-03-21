@@ -36,12 +36,11 @@ class PropertyTypeValidator
      * @param string $type
      * @return ConstraintViolationListInterface
      */
-    public function validate($type): ConstraintViolationListInterface
+    public function validate(string $type): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
         return $validator->validate($type, [
-            new NotBlank(),
             new Choice(self::ALLOWED_TYPES),
         ]);
     }

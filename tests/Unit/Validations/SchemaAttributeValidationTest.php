@@ -172,24 +172,29 @@ class SchemaAttributeValidationTest extends TestCase
     public function propertyNameNotValid(): array
     {
         return [
-            ['#Name'],
+            [''],
+            [' '],
+            ['_'],
+            ['_name'],
+            ['name_'],
             ['1Name'],
+            ['$Name'],
+            ['Na$me'],
             ['Name$'],
             [\str_repeat('N', 65)],
-            [''],
         ];
     }
 
     public function propertyNameValid(): array
     {
         return [
+            ['n'],
+            ['N'],
             ['Name'],
             ['N123'],
             ['Name_Test'],
             ['name_test'],
-            ['_name'],
             [\str_repeat('N', 64)],
-            ['N'],
         ];
     }
 
@@ -201,9 +206,6 @@ class SchemaAttributeValidationTest extends TestCase
             ['barchar'],
             ['interger'],
             ['int'],
-            [null],
-            [[]],
-            [1],
         ];
     }
 
@@ -237,9 +239,13 @@ class SchemaAttributeValidationTest extends TestCase
     public function propertyConstraintsNotValid(): array
     {
         return [
+            [['']],
+            [['required']],
             [['_REQUIRED']],
             [['REQUIRED']],
             [['Required']],
+            [['required' => null]],
+            [['required' => '']],
             [[1]],
             [['minlength' => null]],
             [['maxlength' => []]],
@@ -260,12 +266,20 @@ class SchemaAttributeValidationTest extends TestCase
                 'max' => \rand(0, 5),
             ]]],
             [['length' => [
-                'min' => \rand(5, 10),
+                'min' => null,
                 'max' => \rand(0, 5),
             ]]],
             [['length' => [
                 'min' => \rand(5, 10),
-            ], 'type' => 'text']],
+                'max' => \rand(0, 4),
+            ]]],
+            [['length' => [
+                'min' => \rand(0, 5),
+                'max' => null,
+            ]]],
+            [['length' => [
+                'min' => \rand(5, 10),
+            ]]],
         ];
     }
 
@@ -273,9 +287,10 @@ class SchemaAttributeValidationTest extends TestCase
     {
         return [
             [[]],
-            [['required']],
             [['required' => true]],
             [['required' => false]],
+            [['required' => 'true']],
+            [['required' => 'false']],
             [['minlength' => 0]],
             [['minlength' => \rand(0, 9)]],
             [['maxlength' => \rand(1, 9)]],

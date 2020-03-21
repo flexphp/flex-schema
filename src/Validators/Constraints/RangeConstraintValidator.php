@@ -9,11 +9,7 @@
  */
 namespace FlexPHP\Schema\Validators\Constraints;
 
-use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Positive;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -26,16 +22,16 @@ class RangeConstraintValidator
     {
         $validator = Validation::createValidator();
 
-        return $validator->validate($rule, new Collection([
-            'min' => [
-                new NotBlank(),
-                new PositiveOrZero(),
-            ],
-            'max' => [
-                new NotBlank(),
-                new Positive(),
-                new GreaterThanOrEqual($rule['min'] ?? 0),
-            ],
-        ]));
+        if (($errors = (new MinConstraintValidator)->validate($rule['min'] ?? null))->count()) {
+            return $errors;
+        }
+
+        if (($errors = (new MaxConstraintValidator)->validate($rule['max'] ?? null))->count()) {
+            return $errors;
+        }
+
+        return $validator->validate($rule['max'], [
+            new GreaterThanOrEqual($rule['min']),
+        ]);
     }
 }

@@ -63,10 +63,12 @@ class SchemaTest extends TestCase
             [
                 Keyword::NAME => 'foo',
                 Keyword::DATATYPE => 'string',
+                Keyword::CONSTRAINTS => 'required:true',
             ],
             [
                 Keyword::NAME => 'bar',
                 Keyword::DATATYPE => 'integer',
+                Keyword::CONSTRAINTS => 'required:false|min:8|max:10',
             ],
         ];
 
@@ -75,10 +77,15 @@ class SchemaTest extends TestCase
         $this->assertEquals($name, $schema->name());
         $this->assertEquals($title, $schema->title());
         $this->assertIsArray($schema->attributes());
+        $this->assertSame(2, count($schema->attributes()));
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
         }
+
+        $this->assertSame(false, $attribute->isRequired());
+        $this->assertSame(8, $attribute->min());
+        $this->assertSame(10, $attribute->max());
     }
 
     /**
@@ -171,6 +178,10 @@ class SchemaTest extends TestCase
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
+
+        foreach ($schema->attributes() as $attribute) {
+            $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
+        }
     }
 
     public function testItSchemaFromFileNotExistsThrowException(): void
@@ -194,6 +205,10 @@ class SchemaTest extends TestCase
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertIsArray($schema->attributes());
+
+        foreach ($schema->attributes() as $attribute) {
+            $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
+        }
     }
 
     public function getNameInvalid(): array

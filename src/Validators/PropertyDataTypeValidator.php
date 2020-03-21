@@ -45,15 +45,11 @@ class PropertyDataTypeValidator
      * @param string $dataType
      * @return ConstraintViolationListInterface
      */
-    public function validate($dataType): ConstraintViolationListInterface
+    public function validate(string $dataType): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
         return $validator->validate($dataType, [
-            new NotBlank(),
-            new Regex([
-                'pattern' => '/^[a-z_]*$/',
-            ]),
             new Choice(self::ALLOWED_DATATYPES),
         ]);
     }

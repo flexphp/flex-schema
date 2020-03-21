@@ -16,7 +16,6 @@ use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RangeConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RequiredConstraintValidator;
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
@@ -54,13 +53,7 @@ class PropertyConstraintsValidator
         $validator = Validation::createValidator();
 
         foreach ($constraints as $rule => $options) {
-            if (\is_string($options) && $options === Rule::REQUIRED) {
-                $rule = $options;
-                $options = true;
-            }
-
             $errors = $validator->validate($rule, [
-                new NotBlank(),
                 new Choice(self::ALLOWED_RULES),
             ]);
 

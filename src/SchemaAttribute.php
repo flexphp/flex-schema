@@ -69,44 +69,32 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     public function minLength(): ?int
     {
-        return isset($this->constraints[Rule::MINLENGTH])
-            ? (int)$this->constraints[Rule::MINLENGTH]
-            : null;
+        return $this->constraints[Rule::MINLENGTH] ?? null;
     }
 
     public function maxLength(): ?int
     {
-        return isset($this->constraints[Rule::MAXLENGTH])
-            ? (int)$this->constraints[Rule::MAXLENGTH]
-            : null;
+        return $this->constraints[Rule::MAXLENGTH] ?? null;
     }
 
     public function minCheck(): ?int
     {
-        return isset($this->constraints[Rule::MINCHECK])
-            ? (int)$this->constraints[Rule::MINCHECK]
-            : null;
+        return $this->constraints[Rule::MINCHECK] ?? null;
     }
 
     public function maxCheck(): ?int
     {
-        return isset($this->constraints[Rule::MAXCHECK])
-            ? (int)$this->constraints[Rule::MAXCHECK]
-            : null;
+        return $this->constraints[Rule::MAXCHECK] ?? null;
     }
 
     public function min(): ?int
     {
-        return isset($this->constraints[Rule::MIN])
-            ? (int)$this->constraints[Rule::MIN]
-            : null;
+        return $this->constraints[Rule::MIN] ?? null;
     }
 
     public function max(): ?int
     {
-        return isset($this->constraints[Rule::MAX])
-            ? (int)$this->constraints[Rule::MAX]
-            : null;
+        return $this->constraints[Rule::MAX] ?? null;
     }
 
     public function equalTo(): ?string
@@ -123,16 +111,11 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     private function getProperties(): array
     {
-        $properties = [
+        return [
             Keyword::NAME => $this->name(),
             Keyword::DATATYPE => $this->dataType(),
+            Keyword::CONSTRAINTS => $this->constraints(),
         ];
-
-        if (\count($this->constraints()) > 0) {
-            $properties[Keyword::CONSTRAINTS] = $this->constraints();
-        }
-
-        return $properties;
     }
 
     private function setName(string $name): void
@@ -161,26 +144,28 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     private function setConstraintsFromString(string $constraints): void
     {
-        $this->constraints = $this->getConstraintsFromString($constraints);
+        $this->setConstraintsFromArray($this->getConstraintsFromString($constraints));
     }
 
     private function setConstraintsFromArray(array $constraints): void
     {
-        $this->constraints = $constraints;
+        $this->constraints = $this->getConstraintsCast($constraints);
     }
 
     private function getConstraintsFromString(string $constraints): array
     {
         $_constraints = \explode('|', $constraints);
 
-        if (\count($_constraints) > 0) {
+        if (\count($_constraints)) {
             /** @var string $_constraint */
             foreach ($_constraints as $index => $_constraint) {
                 $_rule = \explode(':', $_constraint);
 
-                if (\count($_rule) == 2) {
+                if (\count($_rule) === 2) {
                     [$_name, $_options] = $_rule;
-                    $_constraints[$_name] = $_options;
+                    $_constraints[$_name] = \preg_match('/^false$/i', $_options)
+                        ? false
+                        : $_options;
                 } else {
                     $_constraints[$_rule[0]] = true;
                 }
@@ -190,5 +175,19 @@ final class SchemaAttribute implements SchemaAttributeInterface
         }
 
         return $_constraints;
+    }
+
+    private function getConstraintsCast(array $constraints): array
+    {
+        foreach ($constraints as $name => $value) {
+            if (\is_int($name) && \is_string($value)) {
+                $constraints[$value] = true;
+                unset($constraints[$name]);
+            } else {
+                $constraints[$name] = \is_numeric($value) ? (int)$value : $value;
+            }
+        }
+
+        return $constraints;
     }
 }

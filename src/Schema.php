@@ -34,7 +34,8 @@ final class Schema implements SchemaInterface
 
     public static function fromArray(array $schema): SchemaInterface
     {
-        $name = (string)\key($schema) ?? '';
+        /** @var string $name */
+        $name = \key($schema) ?? '';
         $title = $schema[$name][Keyword::TITLE] ?? '';
         $attributes = $schema[$name][Keyword::ATTRIBUTES] ?? [];
 
