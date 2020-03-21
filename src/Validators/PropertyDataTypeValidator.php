@@ -10,8 +10,6 @@
 namespace FlexPHP\Schema\Validators;
 
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -41,10 +39,6 @@ class PropertyDataTypeValidator
         'object',
     ];
 
-    /**
-     * @param string $dataType
-     * @return ConstraintViolationListInterface
-     */
     public function validate(string $dataType): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();

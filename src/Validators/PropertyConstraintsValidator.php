@@ -40,6 +40,23 @@ class PropertyConstraintsValidator
     ];
 
     /**
+     * @var array
+     */
+    private $validators = [
+        Rule::REQUIRED => RequiredConstraintValidator::class,
+        Rule::MAX => MaxConstraintValidator::class,
+        Rule::MAXLENGTH => MaxConstraintValidator::class,
+        Rule::MAXCHECK => MaxConstraintValidator::class,
+        Rule::MIN => MinConstraintValidator::class,
+        Rule::MINLENGTH => MinConstraintValidator::class,
+        Rule::MINCHECK => MinConstraintValidator::class,
+        Rule::EQUALTO => EqualToConstraintValidator::class,
+        Rule::TYPE => PropertyTypeValidator::class,
+        Rule::LENGTH => RangeConstraintValidator::class,
+        Rule::CHECK => RangeConstraintValidator::class,
+    ];
+
+    /**
      * @param array<string, mixed> $constraints
      */
     public function validate(array $constraints): ConstraintViolationListInterface
@@ -68,40 +85,6 @@ class PropertyConstraintsValidator
      */
     private function validateRule(string $rule, $options): ConstraintViolationListInterface
     {
-        $errors = new ConstraintViolationList();
-
-        switch ($rule) {
-            case Rule::REQUIRED:
-                $errors = (new RequiredConstraintValidator())->validate($options);
-
-                break;
-            case Rule::MAX:
-            case Rule::MAXLENGTH:
-            case Rule::MAXCHECK:
-                $errors = (new MaxConstraintValidator())->validate($options);
-
-                break;
-            case Rule::MIN:
-            case Rule::MINLENGTH:
-            case Rule::MINCHECK:
-                $errors = (new MinConstraintValidator())->validate($options);
-
-                break;
-            case Rule::EQUALTO:
-                $errors = (new EqualToConstraintValidator())->validate($options);
-
-                break;
-            case Rule::TYPE:
-                $errors = (new PropertyTypeValidator())->validate($options);
-
-                break;
-            case Rule::LENGTH:
-            case Rule::CHECK:
-                $errors = (new RangeConstraintValidator())->validate($options);
-
-                break;
-        }
-
-        return $errors;
+        return (new $this->validators[$rule])->validate($options);
     }
 }
