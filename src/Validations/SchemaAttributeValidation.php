@@ -15,7 +15,7 @@ use FlexPHP\Schema\Validators\PropertyConstraintsValidator;
 use FlexPHP\Schema\Validators\PropertyDataTypeValidator;
 use FlexPHP\Schema\Validators\PropertyNameValidator;
 use FlexPHP\Schema\Validators\PropertyTypeValidator;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class SchemaAttributeValidation implements ValidationInterface
 {
@@ -96,8 +96,10 @@ class SchemaAttributeValidation implements ValidationInterface
             if (\in_array($property, \array_keys($this->validators))) {
                 $violations = $this->validateProperty($property, $value);
 
-                if (0 !== \count($violations)) {
-                    throw new InvalidSchemaAttributeException(\sprintf("%1\$s:\n%2\$s", $property, $violations));
+                if (\count($violations)) {
+                    throw new InvalidSchemaAttributeException(
+                        \sprintf("%1\$s:\n%2\$s", $property, $violations->get(0)->getPropertyPath())
+                    );
                 }
             }
         }
@@ -106,7 +108,7 @@ class SchemaAttributeValidation implements ValidationInterface
     /**
      * @param mixed $value
      */
-    private function validateProperty(string $property, $value): ConstraintViolationList
+    private function validateProperty(string $property, $value): ConstraintViolationListInterface
     {
         $validator = new $this->validators[$property];
 
