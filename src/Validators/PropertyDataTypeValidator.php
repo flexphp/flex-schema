@@ -44,7 +44,10 @@ class PropertyDataTypeValidator
         $validator = Validation::createValidator();
 
         return $validator->validate($dataType, [
-            new Choice(self::ALLOWED_DATATYPES),
+            new Choice([
+                'choices' => self::ALLOWED_DATATYPES,
+                'message' => 'is not valid datatype.',
+            ]),
         ]);
     }
 }

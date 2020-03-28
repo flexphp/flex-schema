@@ -97,8 +97,10 @@ class SchemaAttributeValidation implements ValidationInterface
                 $violations = $this->validateProperty($property, $value);
 
                 if (\count($violations)) {
+                    $valueProperty = \is_array($value) ? \json_encode($value) : $value;
+
                     throw new InvalidSchemaAttributeException(
-                        \sprintf("%1\$s:\n%2\$s", $property, $violations->get(0)->getPropertyPath())
+                        \sprintf('%1$s: [%2$s] %3$s', $property, $valueProperty, $violations->get(0)->getMessage())
                     );
                 }
             }

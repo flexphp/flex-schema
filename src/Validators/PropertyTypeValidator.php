@@ -10,7 +10,6 @@
 namespace FlexPHP\Schema\Validators;
 
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -32,16 +31,15 @@ class PropertyTypeValidator
         'pattern',
     ];
 
-    /**
-     * @param string $type
-     * @return ConstraintViolationListInterface
-     */
     public function validate(string $type): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
         return $validator->validate($type, [
-            new Choice(self::ALLOWED_TYPES),
+            new Choice([
+                'choices' => self::ALLOWED_TYPES,
+                'message' => 'is not valid type.',
+            ]),
         ]);
     }
 }

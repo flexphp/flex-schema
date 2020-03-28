@@ -67,7 +67,10 @@ class PropertyConstraintsValidator
 
         foreach ($constraints as $rule => $options) {
             $errors = $validator->validate($rule, [
-                new Choice(self::ALLOWED_RULES),
+                new Choice([
+                    'choices' => self::ALLOWED_RULES,
+                    'message' => 'is not valid rule.',
+                ]),
             ]);
 
             if (!\count($errors)) {
