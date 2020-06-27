@@ -34,6 +34,11 @@ interface SchemaInterface
     public function name(): string;
 
     /**
+     * Get icon from schema
+     */
+    public function icon(): ?string;
+
+    /**
      * Get name used to show it a user
      */
     public function title(): string;

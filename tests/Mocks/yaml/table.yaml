@@ -1,5 +1,6 @@
 table:
   Title: Table Name
+  Icon: fas fa-icon
   Attributes:
     column1:
       Name: PrimaryColumn

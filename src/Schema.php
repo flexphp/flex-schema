@@ -23,6 +23,11 @@ final class Schema implements SchemaInterface
     private $name;
 
     /**
+     * @var null|string
+     */
+    private $icon;
+
+    /**
      * @var string
      */
     private $title;
@@ -38,8 +43,9 @@ final class Schema implements SchemaInterface
         $name = \key($schema) ?? '';
         $title = $schema[$name][Keyword::TITLE] ?? '';
         $attributes = $schema[$name][Keyword::ATTRIBUTES] ?? [];
+        $icon = $schema[$name][Keyword::ICON] ?? null;
 
-        return new self($name, $title, $attributes);
+        return new self($name, $title, $attributes, $icon);
     }
 
     public static function fromFile(string $schemafile): SchemaInterface
@@ -54,16 +60,22 @@ final class Schema implements SchemaInterface
         return self::fromArray($schema);
     }
 
-    public function __construct(string $name, string $title, array $attributes)
+    public function __construct(string $name, string $title, array $attributes, ?string $icon = null)
     {
         $this->setName($name);
         $this->setTitle($title);
         $this->setAttributes($attributes);
+        $this->setIcon($icon);
     }
 
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function icon(): ?string
+    {
+        return $this->icon;
     }
 
     public function title(): string
@@ -83,6 +95,11 @@ final class Schema implements SchemaInterface
         }
 
         $this->name = $name;
+    }
+
+    private function setIcon(?string $icon): void
+    {
+        $this->icon = $icon;
     }
 
     private function setTitle(string $title): void

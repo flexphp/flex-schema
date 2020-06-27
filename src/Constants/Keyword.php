@@ -14,6 +14,8 @@ interface Keyword
     /**
      * Schema properties
      */
+    public const ICON = 'Icon';
+
     public const TITLE = 'Title';
 
     public const ATTRIBUTES = 'Attributes';
