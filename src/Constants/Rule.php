@@ -32,4 +32,6 @@ interface Rule
     public const EQUALTO = 'equalto';
 
     public const TYPE = 'type';
+
+    public const PATTERN = 'pattern';
 }

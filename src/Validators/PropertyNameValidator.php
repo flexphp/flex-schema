@@ -38,9 +38,12 @@ class PropertyNameValidator
                 'min' => $this->minLength,
                 'max' => $this->maxLength,
                 'allowEmptyString' => false,
+                'minMessage' => 'must be least {{ limit }} characters long.',
+                'maxMessage' => 'must be max {{ limit }} characters.',
             ]),
             new Regex([
                 'pattern' => '/^(?=[^_0-9].*)\w*[^_\W]$/',
+                'message' => 'is not valid. Only accept letters, numbers and underscore (except at beginning nor end).',
             ]),
         ]);
     }

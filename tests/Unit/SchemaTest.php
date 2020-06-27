@@ -77,11 +77,13 @@ class SchemaTest extends TestCase
         $this->assertEquals($name, $schema->name());
         $this->assertEquals($title, $schema->title());
         $this->assertIsArray($schema->attributes());
-        $this->assertSame(2, count($schema->attributes()));
+        $this->assertSame(2, \count($schema->attributes()));
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
         }
+
+        $attribute = $schema->attributes()[1];
 
         $this->assertSame(false, $attribute->isRequired());
         $this->assertSame(8, $attribute->min());

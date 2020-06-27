@@ -44,7 +44,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyNameNotValid
      */
-    public function testItPropertyNameNotValidThrownException($name): void
+    public function testItPropertyNameNotValidThrownException(string $name): void
     {
         $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Name:');
@@ -60,7 +60,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyNameValid
      */
-    public function testItPropertyNameOk($name): void
+    public function testItPropertyNameOk(string $name): void
     {
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => $name,
@@ -75,7 +75,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyDataTypeNotValid
      */
-    public function testItPropertyDataTypeNotValidThrownException($dataType): void
+    public function testItPropertyDataTypeNotValidThrownException(string $dataType): void
     {
         $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('DataType:');
@@ -91,7 +91,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyDataTypeValid
      */
-    public function testItPropertyDataTypeOk($dataType): void
+    public function testItPropertyDataTypeOk(string $dataType): void
     {
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => 'foo',
@@ -106,7 +106,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyDataTypeNotValid
      */
-    public function testItPropertyTypeNotValidThrownException($type): void
+    public function testItPropertyTypeNotValidThrownException(string $type): void
     {
         $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Type:');
@@ -123,7 +123,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyTypeValid
      */
-    public function testItPropertyTypeOk($type): void
+    public function testItPropertyTypeOk(string $type): void
     {
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => 'foo',
@@ -139,7 +139,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyConstraintsNotValid
      */
-    public function testItPropertyConstraintsNotValidThrownException($constraints): void
+    public function testItPropertyConstraintsNotValidThrownException(array $constraints): void
     {
         $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Constraints:');
@@ -156,7 +156,7 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyConstraintsValid
      */
-    public function testItPropertyConstraintsOk($constraints): void
+    public function testItPropertyConstraintsOk(array $constraints): void
     {
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => 'foo',

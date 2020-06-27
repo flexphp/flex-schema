@@ -167,6 +167,46 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getCheckConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expectedMin
+     * @param mixed $expectedMax
+     */
+    public function testItSchemaAttributeCheckConstraints($constraint, $expectedMin, $expectedMax): void
+    {
+        $name = 'check';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expectedMin, $schemaAttribute->minCheck());
+        $this->assertSame($expectedMax, $schemaAttribute->maxCheck());
+    }
+
+    /**
+     * @dataProvider getLengthConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expectedMin
+     * @param mixed $expectedMax
+     */
+    public function testItSchemaAttributeLengthConstraints($constraint, $expectedMin, $expectedMax): void
+    {
+        $name = 'length';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expectedMin, $schemaAttribute->minLength());
+        $this->assertSame($expectedMax, $schemaAttribute->maxLength());
+    }
+
+    /**
      * @dataProvider getEqualToConstraint
      *
      * @param mixed $constraint
@@ -358,6 +398,30 @@ class SchemaAttributeTest extends TestCase
             ['maxcheck:4', 4],
             [['maxcheck' => 4], 4],
             [['maxcheck' => '4'], 4],
+        ];
+    }
+
+    public function getCheckConstraint(): array
+    {
+        return [
+            ['', null, null],
+            ['check:3,4', 3, 4],
+            [['check' => [
+                'min' => 5,
+                'max' => 6,
+            ]], 5, 6],
+        ];
+    }
+
+    public function getLengthConstraint(): array
+    {
+        return [
+            ['', null, null],
+            ['length:30,40', 30, 40],
+            [['length' => [
+                'min' => 5,
+                'max' => 60,
+            ]], 5, 60],
         ];
     }
 

@@ -102,20 +102,18 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $this->constraints[Rule::EQUALTO] ?? null;
     }
 
-    private function validate(): void
-    {
-        $properties = $this->getProperties();
-
-        (new SchemaAttributeValidation($properties))->validate();
-    }
-
-    private function getProperties(): array
+    public function properties(): array
     {
         return [
             Keyword::NAME => $this->name(),
             Keyword::DATATYPE => $this->dataType(),
             Keyword::CONSTRAINTS => $this->constraints(),
         ];
+    }
+
+    private function validate(): void
+    {
+        (new SchemaAttributeValidation($this->properties()))->validate();
     }
 
     private function setName(string $name): void
@@ -162,9 +160,17 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
             if (\count($_rule) === 2) {
                 [$_name, $_options] = $_rule;
-                $_constraints[$_name] = \preg_match('/^false$/i', $_options)
-                        ? false
-                        : $_options;
+
+                if (\strpos($_options, ',') !== false) { // Range
+                    [$min, $max] = \explode(',', $_options);
+                    $_options = \compact('min', 'max');
+                } elseif (\preg_match('/^false$/i', $_options)) { // False as string
+                    $_options = false;
+                } elseif (\preg_match('/^true$/i', $_options)) { // True as string
+                    $_options = true;
+                }
+
+                $_constraints[$_name] = $_options;
             } else {
                 $_constraints[$_rule[0]] = true;
             }
@@ -180,6 +186,10 @@ final class SchemaAttribute implements SchemaAttributeInterface
         foreach ($constraints as $name => $value) {
             if (\is_int($name)) {
                 $constraints[$value] = true;
+                unset($constraints[$name]);
+            } elseif ($name === 'check' || $name === 'length') {
+                $constraints['min' . $name] = (int)$value['min'];
+                $constraints['max' . $name] = (int)$value['max'];
                 unset($constraints[$name]);
             } else {
                 $constraints[$name] = \is_numeric($value) ? (int)$value : $value;

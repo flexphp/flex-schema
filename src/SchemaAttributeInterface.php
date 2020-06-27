@@ -25,6 +25,11 @@ interface SchemaAttributeInterface
      */
     public function constraints(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function properties(): array;
+
     public function type(): ?string;
 
     public function isRequired(): bool;
