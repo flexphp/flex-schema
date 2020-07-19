@@ -64,7 +64,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     public function isRequired(): bool
     {
-        return (bool)($this->constraints[Rule::REQUIRED] ?? null);
+        return (bool)($this->constraints[Rule::REQUIRED] ?? false);
     }
 
     public function minLength(): ?int
@@ -104,12 +104,17 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     public function isPk(): bool
     {
-        return (bool)($this->constraints[Rule::PK] ?? null);
+        return (bool)($this->constraints[Rule::PK] ?? false);
+    }
+
+    public function isAi(): bool
+    {
+        return (bool)($this->constraints[Rule::AI] ?? false);
     }
 
     public function isFk(): bool
     {
-        return (bool)($this->constraints[Rule::FK] ?? null);
+        return (bool)($this->constraints[Rule::FK] ?? false);
     }
 
     public function fkTable(): ?string
