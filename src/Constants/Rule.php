@@ -37,5 +37,7 @@ interface Rule
 
     public const PK = 'pk';
 
+    public const AI = 'ai';
+
     public const PATTERN = 'pattern';
 }

@@ -10,13 +10,12 @@
 namespace FlexPHP\Schema\Validators;
 
 use FlexPHP\Schema\Constants\Rule;
+use FlexPHP\Schema\Validators\Constraints\BooleanConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\FkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
-use FlexPHP\Schema\Validators\Constraints\PkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RangeConstraintValidator;
-use FlexPHP\Schema\Validators\Constraints\RequiredConstraintValidator;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -41,13 +40,14 @@ class PropertyConstraintsValidator
         Rule::TYPE,
         Rule::FK,
         Rule::PK,
+        Rule::AI,
     ];
 
     /**
      * @var array
      */
     private $validators = [
-        Rule::REQUIRED => RequiredConstraintValidator::class,
+        Rule::REQUIRED => BooleanConstraintValidator::class,
         Rule::MAX => MaxConstraintValidator::class,
         Rule::MAXLENGTH => MaxConstraintValidator::class,
         Rule::MAXCHECK => MaxConstraintValidator::class,
@@ -59,7 +59,8 @@ class PropertyConstraintsValidator
         Rule::LENGTH => RangeConstraintValidator::class,
         Rule::CHECK => RangeConstraintValidator::class,
         Rule::FK => FkConstraintValidator::class,
-        Rule::PK => PkConstraintValidator::class,
+        Rule::PK => BooleanConstraintValidator::class,
+        Rule::AI => BooleanConstraintValidator::class,
     ];
 
     /**

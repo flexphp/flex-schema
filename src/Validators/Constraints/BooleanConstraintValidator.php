@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * @Annotation
  */
-class PkConstraintValidator
+class BooleanConstraintValidator
 {
     /**
      * @param bool $bool

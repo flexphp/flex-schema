@@ -319,6 +319,10 @@ class SchemaAttributeValidationTest extends TestCase
             [['fk' => 'table']],
             [['fk' => 'table,name']],
             [['fk' => 'table,name,id']],
+            [['ai' => true]],
+            [['ai' => false]],
+            [['ai' => 'true']],
+            [['ai' => 'false']],
         ];
     }
 }
