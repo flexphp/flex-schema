@@ -21,7 +21,6 @@ class FkConstraintValidator
 {
     /**
      * @param string $string
-     * @return ConstraintViolationListInterface
      */
     public function validate($string): ConstraintViolationListInterface
     {
@@ -31,7 +30,7 @@ class FkConstraintValidator
             return $errors;
         }
 
-        return $validator->validate(explode(',', $string), [
+        return $validator->validate(\explode(',', $string), [
             new Count([
                 'min' => 1,
                 'max' => 3,

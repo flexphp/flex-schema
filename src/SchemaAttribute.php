@@ -102,6 +102,26 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $this->constraints[Rule::EQUALTO] ?? null;
     }
 
+    public function isFk(): bool
+    {
+        return (bool)($this->constraints[Rule::FK] ?? null);
+    }
+
+    public function fkTable(): ?string
+    {
+        return $this->constraints[Rule::FK]['table'] ?? null;
+    }
+
+    public function fkId(): ?string
+    {
+        return $this->constraints[Rule::FK]['id'] ?? null;
+    }
+
+    public function fkName(): ?string
+    {
+        return $this->constraints[Rule::FK]['name'] ?? null;
+    }
+
     public function properties(): array
     {
         return [
@@ -161,7 +181,9 @@ final class SchemaAttribute implements SchemaAttributeInterface
             if (\count($_rule) === 2) {
                 [$_name, $_options] = $_rule;
 
-                if (\strpos($_options, ',') !== false) { // Range
+                if (Rule::FK === $_name) { // Fk
+                    $_options = $this->getFkOptions($_options);
+                } elseif (\strpos($_options, ',') !== false) { // Range
                     [$min, $max] = \explode(',', $_options);
                     $_options = \compact('min', 'max');
                 } elseif (\preg_match('/^false$/i', $_options)) { // False as string
@@ -187,15 +209,41 @@ final class SchemaAttribute implements SchemaAttributeInterface
             if (\is_int($name)) {
                 $constraints[$value] = true;
                 unset($constraints[$name]);
-            } elseif ($name === 'check' || $name === 'length') {
+            } elseif ($name === Rule::CHECK || $name === Rule::LENGTH) {
                 $constraints['min' . $name] = (int)$value['min'];
                 $constraints['max' . $name] = (int)$value['max'];
                 unset($constraints[$name]);
+            } elseif ($name === Rule::FK && \is_string($value)) {
+                $constraints[$name] = $this->getFkOptions($value);
             } else {
                 $constraints[$name] = \is_numeric($value) ? (int)$value : $value;
             }
         }
 
         return $constraints;
+    }
+
+    private function getFkOptions(string $constraint)
+    {
+        $_vars = \explode(',', $constraint);
+        $name = 'name';
+        $id = 'id';
+
+        switch (\count($_vars)) {
+            case 3:
+                [$table, $name, $id] = $_vars;
+
+                break;
+            case 2:
+                [$table, $name] = $_vars;
+
+                break;
+            default:
+                [$table] = $_vars;
+
+                break;
+        }
+
+        return \compact('table', 'name', 'id');
     }
 }

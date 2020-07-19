@@ -242,6 +242,29 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame($expected, $schemaAttribute->type());
     }
 
+    /**
+     * @dataProvider getFkConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $fkTable
+     * @param mixed $fkId
+     * @param mixed $fkName
+     */
+    public function testItSchemaAttributeFkConstraints($constraint, $fkTable, $fkId, $fkName): void
+    {
+        $name = 'foreing';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertTrue($schemaAttribute->isFk());
+        $this->assertSame($fkTable, $schemaAttribute->fkTable());
+        $this->assertSame($fkId, $schemaAttribute->fkId());
+        $this->assertSame($fkName, $schemaAttribute->fkName());
+    }
+
     public function testItSchemaAttributeConstraintsAsString(): void
     {
         $name = 'foo';
@@ -262,6 +285,10 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#bar', $schemaAttribute->equalTo());
         $this->assertSame('number', $schemaAttribute->type());
+        $this->assertFalse($schemaAttribute->isFk());
+        $this->assertNull($schemaAttribute->fkTable());
+        $this->assertNull($schemaAttribute->fkId());
+        $this->assertNull($schemaAttribute->fkName());
     }
 
     public function testItSchemaAttributeConstraintsAsArray(): void
@@ -278,6 +305,7 @@ class SchemaAttributeTest extends TestCase
             'maxcheck' => 4,
             'equalto' => '#id',
             'type' => 'text',
+            'fk' => 'table,name,id',
         ];
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraints);
@@ -294,6 +322,10 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#id', $schemaAttribute->equalTo());
         $this->assertSame('text', $schemaAttribute->type());
+        $this->assertTrue($schemaAttribute->isFk());
+        $this->assertSame('table', $schemaAttribute->fkTable());
+        $this->assertSame('id', $schemaAttribute->fkId());
+        $this->assertSame('name', $schemaAttribute->fkName());
     }
 
     public function testItSchemaAttributeConstraintsAsArrayCast(): void
@@ -440,6 +472,18 @@ class SchemaAttributeTest extends TestCase
             ['', null],
             ['type:number', 'number'],
             [['type' => 'text'], 'text'],
+        ];
+    }
+
+    public function getFkConstraint(): array
+    {
+        return [
+            ['fk:table', 'table', 'id', 'name'],
+            ['fk:table2,username', 'table2', 'id', 'username'],
+            ['fk:table3,description,uuid', 'table3', 'uuid', 'description'],
+            [['fk' => 'table5'], 'table5', 'id', 'name'],
+            [['fk' => 'table6,username'], 'table6', 'id', 'username'],
+            [['fk' => 'table7,description,uuid'], 'table7', 'uuid', 'description'],
         ];
     }
 }

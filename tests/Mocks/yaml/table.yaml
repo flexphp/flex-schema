@@ -26,3 +26,7 @@ table:
       Name: DateTimeColumn2
       DataType: datetime
       Constraints: ''
+    column7:
+      Name: FkColumn
+      DataType: integer
+      Constraints: fk:table,name
