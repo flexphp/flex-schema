@@ -21,7 +21,6 @@ class MaxConstraintValidator
 {
     /**
      * @param int $max
-     * @return ConstraintViolationListInterface
      */
     public function validate($max): ConstraintViolationListInterface
     {

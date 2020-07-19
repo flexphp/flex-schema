@@ -14,6 +14,7 @@ use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\FkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
+use FlexPHP\Schema\Validators\Constraints\PkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RangeConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RequiredConstraintValidator;
 use Symfony\Component\Validator\Constraints\Choice;
@@ -39,6 +40,7 @@ class PropertyConstraintsValidator
         Rule::EQUALTO,
         Rule::TYPE,
         Rule::FK,
+        Rule::PK,
     ];
 
     /**
@@ -57,6 +59,7 @@ class PropertyConstraintsValidator
         Rule::LENGTH => RangeConstraintValidator::class,
         Rule::CHECK => RangeConstraintValidator::class,
         Rule::FK => FkConstraintValidator::class,
+        Rule::PK => PkConstraintValidator::class,
     ];
 
     /**

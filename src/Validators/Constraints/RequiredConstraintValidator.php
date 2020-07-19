@@ -21,7 +21,6 @@ class RequiredConstraintValidator
 {
     /**
      * @param bool $bool
-     * @return ConstraintViolationListInterface
      */
     public function validate($bool): ConstraintViolationListInterface
     {

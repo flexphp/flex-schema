@@ -9,26 +9,26 @@
  */
 namespace FlexPHP\Schema\Validators\Constraints;
 
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
  * @Annotation
  */
-class MinConstraintValidator
+class PkConstraintValidator
 {
     /**
-     * @param int $min
+     * @param bool $bool
      */
-    public function validate($min): ConstraintViolationListInterface
+    public function validate($bool): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
-        return $validator->validate($min, [
-            new NotBlank(),
-            new PositiveOrZero(),
+        return $validator->validate($bool, [
+            new NotNull(),
+            new Choice([true, false, 'true', 'false']),
         ]);
     }
 }

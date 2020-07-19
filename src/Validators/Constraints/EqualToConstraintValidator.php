@@ -20,7 +20,6 @@ class EqualToConstraintValidator
 {
     /**
      * @param string $string
-     * @return ConstraintViolationListInterface
      */
     public function validate($string): ConstraintViolationListInterface
     {
