@@ -102,6 +102,11 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $this->constraints[Rule::EQUALTO] ?? null;
     }
 
+    public function isPk(): bool
+    {
+        return (bool)($this->constraints[Rule::PK] ?? null);
+    }
+
     public function isFk(): bool
     {
         return (bool)($this->constraints[Rule::FK] ?? null);
@@ -181,9 +186,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
             if (\count($_rule) === 2) {
                 [$_name, $_options] = $_rule;
 
-                if (Rule::FK === $_name) { // Fk
-                    $_options = $this->getFkOptions($_options);
-                } elseif (\strpos($_options, ',') !== false) { // Range
+                if (Rule::FK !== $_name && \strpos($_options, ',') !== false) { // Range
                     [$min, $max] = \explode(',', $_options);
                     $_options = \compact('min', 'max');
                 } elseif (\preg_match('/^false$/i', $_options)) { // False as string

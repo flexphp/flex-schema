@@ -243,6 +243,24 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getPkConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributePkConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->isPk());
+    }
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -285,6 +303,7 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#bar', $schemaAttribute->equalTo());
         $this->assertSame('number', $schemaAttribute->type());
+        $this->assertFalse($schemaAttribute->isPk());
         $this->assertFalse($schemaAttribute->isFk());
         $this->assertNull($schemaAttribute->fkTable());
         $this->assertNull($schemaAttribute->fkId());
@@ -305,6 +324,7 @@ class SchemaAttributeTest extends TestCase
             'maxcheck' => 4,
             'equalto' => '#id',
             'type' => 'text',
+            'pk' => true,
             'fk' => 'table,name,id',
         ];
 
@@ -322,6 +342,7 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#id', $schemaAttribute->equalTo());
         $this->assertSame('text', $schemaAttribute->type());
+        $this->assertTrue($schemaAttribute->isPk());
         $this->assertTrue($schemaAttribute->isFk());
         $this->assertSame('table', $schemaAttribute->fkTable());
         $this->assertSame('id', $schemaAttribute->fkId());
@@ -472,6 +493,19 @@ class SchemaAttributeTest extends TestCase
             ['', null],
             ['type:number', 'number'],
             [['type' => 'text'], 'text'],
+        ];
+    }
+
+    public function getPkConstraint(): array
+    {
+        return [
+            ['', false],
+            ['pk', true],
+            ['pk:true', true],
+            ['pk:false', false],
+            [['pk'], true],
+            [['pk' => true], true],
+            [['pk' => false], false],
         ];
     }
 
