@@ -20,17 +20,19 @@ use Symfony\Component\Validator\Validation;
 class FkConstraintValidator
 {
     /**
-     * @param string $string
+     * @param mixed $string
      */
     public function validate($string): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
-        if (($errors = $this->notEmpty($string))) {
+        if (($errors = $this->notEmpty($string))->count()) {
             return $errors;
         }
 
-        return $validator->validate(\explode(',', $string), [
+        $_vars = \is_string($string) ? \explode(',', $string) : $string;
+
+        return $validator->validate($_vars, [
             new Count([
                 'min' => 1,
                 'max' => 3,
@@ -38,6 +40,9 @@ class FkConstraintValidator
         ]);
     }
 
+    /**
+     * @param mixed $string
+     */
     private function notEmpty($string): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();

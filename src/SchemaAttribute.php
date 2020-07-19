@@ -223,27 +223,31 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $constraints;
     }
 
-    private function getFkOptions(string $constraint)
+    private function getFkOptions(string $constraint): array
     {
         $_vars = \explode(',', $constraint);
-        $name = 'name';
-        $id = 'id';
+        $fkName = 'name';
+        $fkId = 'id';
 
         switch (\count($_vars)) {
             case 3:
-                [$table, $name, $id] = $_vars;
+                [$fkTable, $fkName, $fkId] = $_vars;
 
                 break;
             case 2:
-                [$table, $name] = $_vars;
+                [$fkTable, $fkName] = $_vars;
 
                 break;
             default:
-                [$table] = $_vars;
+                [$fkTable] = $_vars;
 
                 break;
         }
 
-        return \compact('table', 'name', 'id');
+        return [
+            'table' => $fkTable,
+            'name' => $fkName,
+            'id' => $fkId,
+        ];
     }
 }
