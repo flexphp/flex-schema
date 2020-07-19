@@ -11,6 +11,7 @@ namespace FlexPHP\Schema\Validators;
 
 use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
+use FlexPHP\Schema\Validators\Constraints\FkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\RangeConstraintValidator;
@@ -37,6 +38,7 @@ class PropertyConstraintsValidator
         Rule::MAX,
         Rule::EQUALTO,
         Rule::TYPE,
+        Rule::FK,
     ];
 
     /**
@@ -54,6 +56,7 @@ class PropertyConstraintsValidator
         Rule::TYPE => PropertyTypeValidator::class,
         Rule::LENGTH => RangeConstraintValidator::class,
         Rule::CHECK => RangeConstraintValidator::class,
+        Rule::FK => FkConstraintValidator::class,
     ];
 
     /**

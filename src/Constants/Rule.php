@@ -33,5 +33,7 @@ interface Rule
 
     public const TYPE = 'type';
 
+    public const FK = 'fk';
+
     public const PATTERN = 'pattern';
 }

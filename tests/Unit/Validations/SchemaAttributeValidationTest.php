@@ -280,6 +280,8 @@ class SchemaAttributeValidationTest extends TestCase
             [['length' => [
                 'min' => \rand(5, 10),
             ]]],
+            [['fk' => null]],
+            [['fk' => '']],
         ];
     }
 
@@ -310,6 +312,9 @@ class SchemaAttributeValidationTest extends TestCase
                 'min' => \rand(0, 4),
                 'max' => \rand(5, 10),
             ]]],
+            [['fk' => 'table']],
+            [['fk' => 'table,name']],
+            [['fk' => 'table,name,id']],
         ];
     }
 }
