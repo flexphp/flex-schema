@@ -24,6 +24,7 @@ class PropertyDataTypeValidator
         'bigint',
         'decimal',
         'float',
+        'double',
         'string',
         'text',
         'guid',
