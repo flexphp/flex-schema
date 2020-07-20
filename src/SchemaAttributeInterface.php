@@ -47,4 +47,16 @@ interface SchemaAttributeInterface
     public function max(): ?int;
 
     public function equalTo(): ?string;
+
+    public function isPk(): bool;
+
+    public function isAi(): bool;
+
+    public function isFk(): bool;
+
+    public function fkTable(): ?string;
+
+    public function fkId(): ?string;
+
+    public function fkName(): ?string;
 }
