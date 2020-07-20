@@ -49,4 +49,24 @@ interface SchemaInterface
      * @return array<SchemaAttributeInterface>
      */
     public function attributes(): array;
+
+    /**
+     * Get primary key name
+     */
+    public function pkName(): string;
+
+    /**
+     * Get primary key typehint for PHP
+     */
+    // public function pkTypeHint(): string;
+
+    /**
+     * Get foreing key relations
+     */
+    // public function fkRelations(): array;
+
+    /**
+     * Get language of labes
+     */
+    // public function language(): string;
 }

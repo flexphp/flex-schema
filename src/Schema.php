@@ -88,6 +88,19 @@ final class Schema implements SchemaInterface
         return $this->attributes;
     }
 
+    public function pkName(): string
+    {
+        $pkName = 'id';
+
+        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkName): void {
+            if ($property->isPk()) {
+                $pkName = $property->name();
+            }
+        });
+
+        return $pkName;
+    }
+
     private function setName(string $name): void
     {
         if (empty(\trim($name))) {

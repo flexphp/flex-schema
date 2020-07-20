@@ -78,6 +78,7 @@ class SchemaTest extends TestCase
         $this->assertEquals($title, $schema->title());
         $this->assertIsArray($schema->attributes());
         $this->assertSame(2, \count($schema->attributes()));
+        $this->assertEquals('id', $schema->pkName());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
@@ -180,7 +181,11 @@ class SchemaTest extends TestCase
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('fas fa-icon', $schema->icon());
         $this->assertEquals('Table Name', $schema->title());
+        $this->assertEquals('PrimaryColumn', $schema->pkName());
+        // $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
+        // $this->assertIsArray($schema->fkRelations());
+        // $this->assertEquals($schema->language());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
@@ -208,7 +213,11 @@ class SchemaTest extends TestCase
         $this->assertEquals('table', $schema->name());
         $this->assertEquals('fas fa-icon', $schema->icon());
         $this->assertEquals('Table Name', $schema->title());
+        $this->assertEquals('PrimaryColumn', $schema->pkName());
+        // $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
+        // $this->assertIsArray($schema->fkRelations());
+        // $this->assertEquals($schema->language());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
