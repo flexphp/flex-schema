@@ -63,10 +63,10 @@ interface SchemaInterface
     /**
      * Get foreing key relations
      */
-    // public function fkRelations(): array;
+    public function fkRelations(): array;
 
     /**
-     * Get language of labes
+     * Get language by default in used in labels
      */
     // public function language(): string;
 }

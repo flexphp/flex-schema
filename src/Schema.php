@@ -114,6 +114,23 @@ final class Schema implements SchemaInterface
         return $pkTypeHint;
     }
 
+    public function fkRelations(): array
+    {
+        $fkRelations = \array_reduce($this->attributes(), function (array $result, SchemaAttributeInterface $property): array {
+            if ($property->isfk()) {
+                $result[$property->name()] = [
+                    'table' => $property->fkTable(),
+                    'id' => $property->fkId(),
+                    'name' => $property->fkName(),
+                ];
+            }
+
+            return $result;
+        }, []);
+
+        return $fkRelations;
+    }
+
     private function setName(string $name): void
     {
         if (empty(\trim($name))) {

@@ -171,7 +171,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('PrimaryColumn', $schema->pkName());
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
-        // $this->assertIsArray($schema->fkRelations());
+        $this->assertIsArray($schema->fkRelations());
         // $this->assertEquals($schema->language());
 
         foreach ($schema->attributes() as $attribute) {
@@ -203,7 +203,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('PrimaryColumn', $schema->pkName());
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
-        // $this->assertIsArray($schema->fkRelations());
+        $this->assertIsArray($schema->fkRelations());
         // $this->assertEquals($schema->language());
 
         foreach ($schema->attributes() as $attribute) {
