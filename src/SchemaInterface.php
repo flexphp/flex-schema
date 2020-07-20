@@ -66,7 +66,7 @@ interface SchemaInterface
     public function fkRelations(): array;
 
     /**
-     * Get language by default in used in labels
+     * Get language by default used in labels
      */
-    // public function language(): string;
+    public function language(): string;
 }

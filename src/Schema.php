@@ -23,11 +23,6 @@ final class Schema implements SchemaInterface
     private $name;
 
     /**
-     * @var null|string
-     */
-    private $icon;
-
-    /**
      * @var string
      */
     private $title;
@@ -37,6 +32,16 @@ final class Schema implements SchemaInterface
      */
     private $attributes;
 
+    /**
+     * @var null|string
+     */
+    private $icon;
+
+    /**
+     * @var string
+     */
+    private $language;
+
     public static function fromArray(array $schema): SchemaInterface
     {
         /** @var string $name */
@@ -44,8 +49,9 @@ final class Schema implements SchemaInterface
         $title = $schema[$name][Keyword::TITLE] ?? '';
         $attributes = $schema[$name][Keyword::ATTRIBUTES] ?? [];
         $icon = $schema[$name][Keyword::ICON] ?? null;
+        $language = $schema[$name][Keyword::LANGUAGE] ?? null;
 
-        return new self($name, $title, $attributes, $icon);
+        return new self($name, $title, $attributes, $icon, $language);
     }
 
     public static function fromFile(string $schemafile): SchemaInterface
@@ -60,22 +66,23 @@ final class Schema implements SchemaInterface
         return self::fromArray($schema);
     }
 
-    public function __construct(string $name, string $title, array $attributes, ?string $icon = null)
-    {
+    public function __construct(
+        string $name,
+        string $title,
+        array $attributes,
+        ?string $icon = null,
+        ?string $language = null
+    ) {
         $this->setName($name);
         $this->setTitle($title);
         $this->setAttributes($attributes);
         $this->setIcon($icon);
+        $this->setLanguage($language);
     }
 
     public function name(): string
     {
         return $this->name;
-    }
-
-    public function icon(): ?string
-    {
-        return $this->icon;
     }
 
     public function title(): string
@@ -88,14 +95,26 @@ final class Schema implements SchemaInterface
         return $this->attributes;
     }
 
+    public function icon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function language(): string
+    {
+        return $this->language;
+    }
+
     public function pkName(): string
     {
         $pkName = 'id';
 
-        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkName): void {
+        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkName) {
             if ($property->isPk()) {
                 $pkName = $property->name();
             }
+
+            return true;
         });
 
         return $pkName;
@@ -105,10 +124,12 @@ final class Schema implements SchemaInterface
     {
         $pkTypeHint = 'string';
 
-        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkTypeHint): void {
+        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkTypeHint) {
             if ($property->isPk()) {
                 $pkTypeHint = $property->typeHint();
             }
+
+            return true;
         });
 
         return $pkTypeHint;
@@ -116,17 +137,21 @@ final class Schema implements SchemaInterface
 
     public function fkRelations(): array
     {
-        $fkRelations = \array_reduce($this->attributes(), function (array $result, SchemaAttributeInterface $property): array {
-            if ($property->isfk()) {
-                $result[$property->name()] = [
-                    'table' => $property->fkTable(),
-                    'id' => $property->fkId(),
-                    'name' => $property->fkName(),
-                ];
-            }
+        $fkRelations = \array_reduce(
+            $this->attributes(),
+            function (array $result, SchemaAttributeInterface $property): array {
+                if ($property->isfk()) {
+                    $result[$property->name()] = [
+                        'table' => $property->fkTable(),
+                        'id' => $property->fkId(),
+                        'name' => $property->fkName(),
+                    ];
+                }
 
-            return $result;
-        }, []);
+                return $result;
+            },
+            []
+        );
 
         return $fkRelations;
     }
@@ -167,5 +192,14 @@ final class Schema implements SchemaInterface
     private function setIcon(?string $icon): void
     {
         $this->icon = $icon;
+    }
+
+    private function setLanguage(?string $language): void
+    {
+        if (empty($language)) {
+            $language = 'en';
+        }
+
+        $this->language = $language;
     }
 }

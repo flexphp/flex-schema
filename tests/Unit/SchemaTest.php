@@ -172,7 +172,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
         $this->assertIsArray($schema->fkRelations());
-        // $this->assertEquals($schema->language());
+        $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
@@ -204,7 +204,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
         $this->assertIsArray($schema->fkRelations());
-        // $this->assertEquals($schema->language());
+        $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);

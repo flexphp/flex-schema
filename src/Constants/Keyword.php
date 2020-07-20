@@ -20,6 +20,8 @@ interface Keyword
 
     public const ATTRIBUTES = 'Attributes';
 
+    public const LANGUAGE = 'Language';
+
     /**
      * Attribute properties
      */
