@@ -20,6 +20,8 @@ interface SchemaAttributeInterface
 
     public function dataType(): string;
 
+    public function typeHint(): string;
+
     /**
      * @return array<string, mixed>
      */

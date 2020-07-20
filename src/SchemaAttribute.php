@@ -258,4 +258,33 @@ final class SchemaAttribute implements SchemaAttributeInterface
             'id' => $fkId,
         ];
     }
+
+    public function typeHint(): string
+    {
+        $typeHintByDataType = [
+            'smallint' => 'int',
+            'integer' => 'int',
+            'float' => 'float',
+            'double' => 'float',
+            'bool' => 'bool',
+            'boolean' => 'bool',
+            'date' => '\DateTime',
+            'date_immutable' => '\DateTimeImmutable',
+            'datetime' => '\DateTime',
+            'datetime_immutable' => '\DateTimeImmutable',
+            'datetimetz' => '\DateTime',
+            'datetimetz_immutable' => '\DateTimeImmutable',
+            'time' => '\DateTime',
+            'time_immutable' => '\DateTimeImmutable',
+            'array' => 'array',
+            'simple_array' => 'array',
+            'json_array' => 'array',
+        ];
+
+        if (isset($typeHintByDataType[$this->dataType()])) {
+            return $typeHintByDataType[$this->dataType()];
+        }
+
+        return 'string';
+    }
 }

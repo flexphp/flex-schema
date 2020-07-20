@@ -295,6 +295,7 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals('int', $schemaAttribute->typeHint());
         $this->assertTrue($schemaAttribute->isFk());
         $this->assertSame($fkTable, $schemaAttribute->fkTable());
         $this->assertSame($fkId, $schemaAttribute->fkId());
@@ -311,6 +312,7 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals('string', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
         $this->assertSame(1, $schemaAttribute->min());
@@ -352,6 +354,7 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals('string', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
         $this->assertSame(1, $schemaAttribute->min());
@@ -390,6 +393,7 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals('string', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
         $this->assertSame(1, $schemaAttribute->min());
