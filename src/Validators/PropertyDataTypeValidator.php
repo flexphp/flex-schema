@@ -34,7 +34,7 @@ class PropertyDataTypeValidator
         'date',
         'date_immutable',
         'datetime',
-        'datetime_inmutable',
+        'datetime_immutable',
         'datetimetz',
         'datetimetz_immutable',
         'time',
