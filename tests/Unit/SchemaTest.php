@@ -182,7 +182,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('fas fa-icon', $schema->icon());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertEquals('PrimaryColumn', $schema->pkName());
-        // $this->assertEquals('int', $schema->pkTypeHint());
+        $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
         // $this->assertIsArray($schema->fkRelations());
         // $this->assertEquals($schema->language());
@@ -214,7 +214,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('fas fa-icon', $schema->icon());
         $this->assertEquals('Table Name', $schema->title());
         $this->assertEquals('PrimaryColumn', $schema->pkName());
-        // $this->assertEquals('int', $schema->pkTypeHint());
+        $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
         // $this->assertIsArray($schema->fkRelations());
         // $this->assertEquals($schema->language());

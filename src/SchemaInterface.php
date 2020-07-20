@@ -58,7 +58,7 @@ interface SchemaInterface
     /**
      * Get primary key typehint for PHP
      */
-    // public function pkTypeHint(): string;
+    public function pkTypeHint(): string;
 
     /**
      * Get foreing key relations

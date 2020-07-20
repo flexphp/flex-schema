@@ -101,6 +101,19 @@ final class Schema implements SchemaInterface
         return $pkName;
     }
 
+    public function pkTypeHint(): string
+    {
+        $pkTypeHint = 'string';
+
+        \array_filter($this->attributes(), function (SchemaAttributeInterface $property) use (&$pkTypeHint): void {
+            if ($property->isPk()) {
+                $pkTypeHint = $property->typeHint();
+            }
+        });
+
+        return $pkTypeHint;
+    }
+
     private function setName(string $name): void
     {
         if (empty(\trim($name))) {
