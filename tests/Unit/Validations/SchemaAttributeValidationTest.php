@@ -202,7 +202,6 @@ class SchemaAttributeValidationTest extends TestCase
     {
         return [
             ['unknow'],
-            ['bool'],
             ['barchar'],
             ['interger'],
             ['int'],
