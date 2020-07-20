@@ -11,6 +11,7 @@ namespace FlexPHP\Schema\Tests;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
+use FlexPHP\Schema\SchemaAttribute;
 use FlexPHP\Schema\SchemaAttributeInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -143,6 +144,16 @@ class SchemaTest extends TestCase
     {
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         $array['table'][Keyword::ATTRIBUTES] = [];
+
+        Schema::fromArray($array);
+
+        $this->assertTrue(true);
+    }
+
+    public function testItSchemaFromArrayAttributesWithInterfaceOk(): void
+    {
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array['table'][Keyword::ATTRIBUTES] = [new SchemaAttribute('foo', 'integer')];
 
         Schema::fromArray($array);
 

@@ -179,6 +179,12 @@ final class Schema implements SchemaInterface
         $schemaAttributes = [];
 
         foreach ($attributes as $attribute) {
+            if ($attribute instanceof SchemaAttributeInterface) {
+                $schemaAttributes[] = $attribute;
+
+                continue;
+            }
+
             $name = $attribute[Keyword::NAME] ?? '';
             $dataType = $attribute[Keyword::DATATYPE] ?? '';
             $constraints = $attribute[Keyword::CONSTRAINTS] ?? '';
