@@ -42,17 +42,11 @@ class SchemaTest extends TestCase
         new Schema('name', $title, []);
     }
 
-    /**
-     * @dataProvider getAttributesInvalid
-     *
-     * @param mixed $attributes
-     */
-    public function testItSchemaAttributesInvalidThrowException($attributes): void
+    public function testItSchemaAttributesEmptyOk(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes are');
+        new Schema('name', 'title', []);
 
-        new Schema('name', 'title', $attributes);
+        $this->assertTrue(true);
     }
 
     public function testItSchemaSetOk(): void
@@ -135,31 +129,24 @@ class SchemaTest extends TestCase
         Schema::fromArray($array);
     }
 
-    public function testItSchemaFromArrayWithoutTableAttributesThrowException(): void
+    public function testItSchemaFromArrayWithoutTableAttributesOk(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes are');
-
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]);
 
         Schema::fromArray($array);
+
+        $this->assertTrue(true);
     }
 
-    /**
-     * @dataProvider getAttributesInvalid
-     *
-     * @param mixed $attributes
-     */
-    public function testItSchemaFromArrayAttributesInvalidThrowException($attributes): void
+    public function testItSchemaFromArrayAttributesEmptyOk(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
-        $this->expectExceptionMessage(':attributes are');
-
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
-        $array['table'][Keyword::ATTRIBUTES] = $attributes;
+        $array['table'][Keyword::ATTRIBUTES] = [];
 
         Schema::fromArray($array);
+
+        $this->assertTrue(true);
     }
 
     public function testItSchemaFromArrayWithTableAttributesInvalidThrowException(): void
@@ -237,13 +224,6 @@ class SchemaTest extends TestCase
         return [
             [''],
             [' '],
-        ];
-    }
-
-    public function getAttributesInvalid(): array
-    {
-        return [
-            [[]],
         ];
     }
 }

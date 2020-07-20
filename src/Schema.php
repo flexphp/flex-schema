@@ -123,11 +123,6 @@ final class Schema implements SchemaInterface
         $this->name = $name;
     }
 
-    private function setIcon(?string $icon): void
-    {
-        $this->icon = $icon;
-    }
-
     private function setTitle(string $title): void
     {
         if (empty(\trim($title))) {
@@ -139,10 +134,6 @@ final class Schema implements SchemaInterface
 
     private function setAttributes(array $attributes): void
     {
-        if (empty($attributes)) {
-            throw new InvalidSchemaException(\sprintf('Schema %s:attributes are required', $this->name()));
-        }
-
         $schemaAttributes = [];
 
         foreach ($attributes as $attribute) {
@@ -154,5 +145,10 @@ final class Schema implements SchemaInterface
         }
 
         $this->attributes = $schemaAttributes;
+    }
+
+    private function setIcon(?string $icon): void
+    {
+        $this->icon = $icon;
     }
 }
