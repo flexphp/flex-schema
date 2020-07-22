@@ -182,7 +182,14 @@ class SchemaTest extends TestCase
         $this->assertEquals('PrimaryColumn', $schema->pkName());
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
+        $this->assertEquals(7, \count($schema->attributes()));
         $this->assertIsArray($schema->fkRelations());
+        $this->assertEquals('table', $schema->fkRelations()['FkColumn']['pkTable']);
+        $this->assertEquals('FkColumn', $schema->fkRelations()['FkColumn']['pkId']);
+        $this->assertEquals('integer', $schema->fkRelations()['FkColumn']['pkDataType']);
+        $this->assertEquals('int', $schema->fkRelations()['FkColumn']['pkTypeHint']);
+        $this->assertEquals('id', $schema->fkRelations()['FkColumn']['fkId']);
+        $this->assertEquals('name', $schema->fkRelations()['FkColumn']['fkName']);
         $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {
@@ -214,7 +221,14 @@ class SchemaTest extends TestCase
         $this->assertEquals('PrimaryColumn', $schema->pkName());
         $this->assertEquals('int', $schema->pkTypeHint());
         $this->assertIsArray($schema->attributes());
+        $this->assertEquals(7, \count($schema->attributes()));
         $this->assertIsArray($schema->fkRelations());
+        $this->assertEquals('table', $schema->fkRelations()['FkColumn']['pkTable']);
+        $this->assertEquals('FkColumn', $schema->fkRelations()['FkColumn']['pkId']);
+        $this->assertEquals('integer', $schema->fkRelations()['FkColumn']['pkDataType']);
+        $this->assertEquals('int', $schema->fkRelations()['FkColumn']['pkTypeHint']);
+        $this->assertEquals('id', $schema->fkRelations()['FkColumn']['fkId']);
+        $this->assertEquals('name', $schema->fkRelations()['FkColumn']['fkName']);
         $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {

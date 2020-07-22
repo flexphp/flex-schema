@@ -142,9 +142,12 @@ final class Schema implements SchemaInterface
             function (array $result, SchemaAttributeInterface $property): array {
                 if ($property->isfk()) {
                     $result[$property->name()] = [
-                        'table' => $property->fkTable(),
-                        'id' => $property->fkId(),
-                        'name' => $property->fkName(),
+                        'pkTable' => $property->fkTable(),
+                        'pkId' => $property->name(),
+                        'pkDataType' => $property->dataType(),
+                        'pkTypeHint' => $property->typeHint(),
+                        'fkId' => $property->fkId(),
+                        'fkName' => $property->fkName(),
                     ];
                 }
 
