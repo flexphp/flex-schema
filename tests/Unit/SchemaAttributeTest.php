@@ -279,6 +279,44 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getCaConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeCaConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->isCa());
+        $this->assertSame($expected, $schemaAttribute->isBlame());
+    }
+
+    /**
+     * @dataProvider getUaConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeUaConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->isUa());
+        $this->assertSame($expected, $schemaAttribute->isBlame());
+    }
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -544,6 +582,32 @@ class SchemaAttributeTest extends TestCase
             [['ai'], true],
             [['ai' => true], true],
             [['ai' => false], false],
+        ];
+    }
+
+    public function getCaConstraint(): array
+    {
+        return [
+            ['', false],
+            ['ca', true],
+            ['ca:true', true],
+            ['ca:false', false],
+            [['ca'], true],
+            [['ca' => true], true],
+            [['ca' => false], false],
+        ];
+    }
+
+    public function getUaConstraint(): array
+    {
+        return [
+            ['', false],
+            ['ua', true],
+            ['ua:true', true],
+            ['ua:false', false],
+            [['ua'], true],
+            [['ua' => true], true],
+            [['ua' => false], false],
         ];
     }
 

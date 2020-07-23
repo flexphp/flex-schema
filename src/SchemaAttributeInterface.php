@@ -61,4 +61,10 @@ interface SchemaAttributeInterface
     public function fkId(): ?string;
 
     public function fkName(): ?string;
+
+    public function isCa(): bool;
+
+    public function isUa(): bool;
+
+    public function isBlame(): bool;
 }
