@@ -38,9 +38,11 @@ class PropertyConstraintsValidator
         Rule::MAX,
         Rule::EQUALTO,
         Rule::TYPE,
-        Rule::FK,
-        Rule::PK,
-        Rule::AI,
+        Rule::PRIMARYKEY,
+        Rule::FOREIGNKEY,
+        Rule::AUTOINCREMENT,
+        Rule::CREATEDAT,
+        Rule::UPDATEDAT,
     ];
 
     /**
@@ -58,9 +60,11 @@ class PropertyConstraintsValidator
         Rule::TYPE => PropertyTypeValidator::class,
         Rule::LENGTH => RangeConstraintValidator::class,
         Rule::CHECK => RangeConstraintValidator::class,
-        Rule::FK => FkConstraintValidator::class,
-        Rule::PK => BooleanConstraintValidator::class,
-        Rule::AI => BooleanConstraintValidator::class,
+        Rule::PRIMARYKEY => BooleanConstraintValidator::class,
+        Rule::FOREIGNKEY => FkConstraintValidator::class,
+        Rule::AUTOINCREMENT => BooleanConstraintValidator::class,
+        Rule::CREATEDAT => BooleanConstraintValidator::class,
+        Rule::UPDATEDAT => BooleanConstraintValidator::class,
     ];
 
     /**

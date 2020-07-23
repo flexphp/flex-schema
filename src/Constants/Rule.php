@@ -33,11 +33,15 @@ interface Rule
 
     public const TYPE = 'type';
 
-    public const FK = 'fk';
+    public const PRIMARYKEY = 'pk';
 
-    public const PK = 'pk';
+    public const FOREIGNKEY = 'fk';
 
-    public const AI = 'ai';
+    public const AUTOINCREMENT = 'ai';
+
+    public const CREATEDAT = 'ca';
+
+    public const UPDATEDAT = 'ua';
 
     public const PATTERN = 'pattern';
 }

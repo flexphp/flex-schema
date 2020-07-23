@@ -104,32 +104,32 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     public function isPk(): bool
     {
-        return (bool)($this->constraints[Rule::PK] ?? false);
+        return (bool)($this->constraints[Rule::PRIMARYKEY] ?? false);
     }
 
     public function isAi(): bool
     {
-        return (bool)($this->constraints[Rule::AI] ?? false);
+        return (bool)($this->constraints[Rule::AUTOINCREMENT] ?? false);
     }
 
     public function isFk(): bool
     {
-        return (bool)($this->constraints[Rule::FK] ?? false);
+        return (bool)($this->constraints[Rule::FOREIGNKEY] ?? false);
     }
 
     public function fkTable(): ?string
     {
-        return $this->constraints[Rule::FK]['table'] ?? null;
+        return $this->constraints[Rule::FOREIGNKEY]['table'] ?? null;
     }
 
     public function fkId(): ?string
     {
-        return $this->constraints[Rule::FK]['id'] ?? null;
+        return $this->constraints[Rule::FOREIGNKEY]['id'] ?? null;
     }
 
     public function fkName(): ?string
     {
-        return $this->constraints[Rule::FK]['name'] ?? null;
+        return $this->constraints[Rule::FOREIGNKEY]['name'] ?? null;
     }
 
     public function properties(): array
@@ -191,7 +191,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
             if (\count($_rule) === 2) {
                 [$_name, $_options] = $_rule;
 
-                if (Rule::FK !== $_name && \strpos($_options, ',') !== false) { // Range
+                if (Rule::FOREIGNKEY !== $_name && \strpos($_options, ',') !== false) { // Range
                     [$min, $max] = \explode(',', $_options);
                     $_options = \compact('min', 'max');
                 } elseif (\preg_match('/^false$/i', $_options)) { // False as string
@@ -221,7 +221,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
                 $constraints['min' . $name] = (int)$value['min'];
                 $constraints['max' . $name] = (int)$value['max'];
                 unset($constraints[$name]);
-            } elseif ($name === Rule::FK && \is_string($value)) {
+            } elseif ($name === Rule::FOREIGNKEY && \is_string($value)) {
                 $constraints[$name] = $this->getFkOptions($value);
             } else {
                 $constraints[$name] = \is_numeric($value) ? (int)$value : $value;

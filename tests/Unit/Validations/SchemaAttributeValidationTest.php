@@ -322,6 +322,14 @@ class SchemaAttributeValidationTest extends TestCase
             [['ai' => false]],
             [['ai' => 'true']],
             [['ai' => 'false']],
+            [['ca' => true]],
+            [['ca' => false]],
+            [['ca' => 'true']],
+            [['ca' => 'false']],
+            [['ua' => true]],
+            [['ua' => false]],
+            [['ua' => 'true']],
+            [['ua' => 'false']],
         ];
     }
 }
