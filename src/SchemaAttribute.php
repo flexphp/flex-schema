@@ -11,6 +11,7 @@ namespace FlexPHP\Schema;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
+use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
 final class SchemaAttribute implements SchemaAttributeInterface
@@ -40,6 +41,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
         $this->setConstraints($constraints);
 
         $this->validate();
+        $this->validateLogic();
     }
 
     public function name(): string
@@ -188,6 +190,56 @@ final class SchemaAttribute implements SchemaAttributeInterface
     private function validate(): void
     {
         (new SchemaAttributeValidation($this->properties()))->validate();
+    }
+
+    private function validateLogic(): void
+    {
+        if (empty($this->constraints())) {
+            return;
+        }
+
+        $name = 'Logic: [' . $this->name() . '] ';
+
+        if ($this->isPk() && !$this->isRequired()) {
+            throw new InvalidSchemaAttributeException($name . 'Primary Key must be required.');
+        }
+
+        if ($this->isAi() && !$this->isPk()) {
+            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be Primary Key too.');
+        }
+
+        if ($this->isAi() && !\in_array($this->dataType(), ['smallint', 'integer', 'bigint'])) {
+            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be a numeric value.');
+        }
+
+        if ($this->isAi() && $this->isFk()) {
+            throw new InvalidSchemaAttributeException($name . 'Foreign Key cannot be autoincrement.');
+        }
+
+        if ($this->isBlame() && \strpos($this->typeHint(), '\Date') === false) {
+            throw new InvalidSchemaAttributeException($name . 'Blame property must be date datetype valid.');
+        }
+
+        if ($this->isCa() && $this->isUa()) {
+            throw new InvalidSchemaAttributeException($name . 'Created and Updated At in same property is not valid.');
+        }
+
+        if (\in_array($this->dataType(), ['smallint', 'integer', 'bigint', 'double', 'float'])
+            && ($this->minLength() || $this->maxLength())
+        ) {
+            throw new InvalidSchemaAttributeException($name . 'Numeric property use: min, max.');
+        }
+
+        if ($this->dataType() !== 'bigint' && $this->typeHint() === 'string' && ($this->min() || $this->max())) {
+            throw new InvalidSchemaAttributeException($name . 'String properties use minlength, maxlength.');
+        }
+
+        if ((\strpos($this->typeHint(), '\Date') !== false || \in_array($this->dataType(), ['bool', 'blob']))
+            && ($this->min() || $this->max() || $this->minLength() || $this->maxLength() || $this->minCheck()
+                || $this->maxCheck()
+        )) {
+            throw new InvalidSchemaAttributeException($name . 'Date, bool, blob properties not use min, max, etc');
+        }
     }
 
     private function setName(string $name): void

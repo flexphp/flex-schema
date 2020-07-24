@@ -29,6 +29,17 @@ class SchemaAttributeTest extends TestCase
         new SchemaAttribute('foo', 'bar');
     }
 
+    /**
+     * @dataProvider getConstraintLogicError
+     */
+    public function testItSchemaAttributeConstraintLogicError(string $dataType, string $constraints): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
+        $this->expectExceptionMessage('Logic:');
+
+        new SchemaAttribute('foo', $dataType, $constraints);
+    }
+
     public function testItSchemaAttributeWithRequiredPropertiesSetValues(): void
     {
         $name = 'foo';
@@ -196,7 +207,7 @@ class SchemaAttributeTest extends TestCase
     public function testItSchemaAttributeLengthConstraints($constraint, $expectedMin, $expectedMax): void
     {
         $name = 'length';
-        $dataType = 'integer';
+        $dataType = 'string';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
 
@@ -269,7 +280,7 @@ class SchemaAttributeTest extends TestCase
     public function testItSchemaAttributeAiConstraints($constraint, $expected): void
     {
         $name = 'foo';
-        $dataType = 'string';
+        $dataType = 'integer';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
 
@@ -287,7 +298,7 @@ class SchemaAttributeTest extends TestCase
     public function testItSchemaAttributeCaConstraints($constraint, $expected): void
     {
         $name = 'foo';
-        $dataType = 'string';
+        $dataType = 'datetime';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
 
@@ -306,7 +317,7 @@ class SchemaAttributeTest extends TestCase
     public function testItSchemaAttributeUaConstraints($constraint, $expected): void
     {
         $name = 'foo';
-        $dataType = 'string';
+        $dataType = 'datetime';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
 
@@ -344,7 +355,7 @@ class SchemaAttributeTest extends TestCase
     {
         $name = 'foo';
         $dataType = 'string';
-        $constraints = 'required|min:1|minlength:8|max:100|maxlength:10|mincheck:3|maxcheck:4|equalto:#bar|type:number';
+        $constraints = 'required|minlength:8|maxlength:10|mincheck:3|maxcheck:4|equalto:#bar|type:number';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraints);
 
@@ -353,10 +364,10 @@ class SchemaAttributeTest extends TestCase
         $this->assertEquals('string', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
-        $this->assertSame(1, $schemaAttribute->min());
+        $this->assertNull($schemaAttribute->min());
         $this->assertSame(8, $schemaAttribute->minLength());
         $this->assertSame(3, $schemaAttribute->minCheck());
-        $this->assertSame(100, $schemaAttribute->max());
+        $this->assertNull($schemaAttribute->max());
         $this->assertSame(10, $schemaAttribute->maxLength());
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#bar', $schemaAttribute->equalTo());
@@ -372,57 +383,45 @@ class SchemaAttributeTest extends TestCase
     public function testItSchemaAttributeConstraintsAsArray(): void
     {
         $name = 'foo';
-        $dataType = 'string';
+        $dataType = 'integer';
         $constraints = [
             'required',
             'min' => 1,
-            'minlength' => 8,
             'max' => 100,
-            'maxlength' => 10,
             'mincheck' => 3,
             'maxcheck' => 4,
             'equalto' => '#id',
             'type' => 'text',
             'pk' => true,
             'ai' => true,
-            'fk' => 'table,name,id',
         ];
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraints);
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
-        $this->assertEquals('string', $schemaAttribute->typeHint());
+        $this->assertEquals('int', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
         $this->assertSame(1, $schemaAttribute->min());
-        $this->assertSame(8, $schemaAttribute->minLength());
+        $this->assertNull($schemaAttribute->minLength());
         $this->assertSame(3, $schemaAttribute->minCheck());
         $this->assertSame(100, $schemaAttribute->max());
-        $this->assertSame(10, $schemaAttribute->maxLength());
+        $this->assertNull($schemaAttribute->maxLength());
         $this->assertSame(4, $schemaAttribute->maxCheck());
         $this->assertSame('#id', $schemaAttribute->equalTo());
         $this->assertSame('text', $schemaAttribute->type());
         $this->assertTrue($schemaAttribute->isPk());
         $this->assertTrue($schemaAttribute->isAi());
-        $this->assertTrue($schemaAttribute->isFk());
-        $this->assertSame('table', $schemaAttribute->fkTable());
-        $this->assertSame('id', $schemaAttribute->fkId());
-        $this->assertSame('name', $schemaAttribute->fkName());
+        $this->assertFalse($schemaAttribute->isFk());
     }
 
     public function testItSchemaAttributeConstraintsAsArrayCast(): void
     {
         $name = 'foo';
-        $dataType = 'string';
+        $dataType = 'datetime';
         $constraints = [
             'required',
-            'min' => '1',
-            'minlength' => '8',
-            'max' => '100',
-            'maxlength' => '10',
-            'mincheck' => '3',
-            'maxcheck' => '4',
             'equalto' => '#bar',
             'type' => 'number',
         ];
@@ -431,15 +430,15 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
-        $this->assertEquals('string', $schemaAttribute->typeHint());
+        $this->assertEquals('\DateTime', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
-        $this->assertSame(1, $schemaAttribute->min());
-        $this->assertSame(8, $schemaAttribute->minLength());
-        $this->assertSame(3, $schemaAttribute->minCheck());
-        $this->assertSame(100, $schemaAttribute->max());
-        $this->assertSame(10, $schemaAttribute->maxLength());
-        $this->assertSame(4, $schemaAttribute->maxCheck());
+        $this->assertNull($schemaAttribute->min());
+        $this->assertNull($schemaAttribute->minLength());
+        $this->assertNull($schemaAttribute->minCheck());
+        $this->assertNull($schemaAttribute->max());
+        $this->assertNull($schemaAttribute->maxLength());
+        $this->assertNull($schemaAttribute->maxCheck());
         $this->assertSame('#bar', $schemaAttribute->equalTo());
         $this->assertSame('number', $schemaAttribute->type());
     }
@@ -563,12 +562,12 @@ class SchemaAttributeTest extends TestCase
     {
         return [
             ['', false],
-            ['pk', true],
-            ['pk:true', true],
-            ['pk:false', false],
-            [['pk'], true],
-            [['pk' => true], true],
-            [['pk' => false], false],
+            ['required|pk', true],
+            ['required|pk:true', true],
+            ['required|pk:false', false],
+            [['required', 'pk'], true],
+            [['required', 'pk' => true], true],
+            [['required', 'pk' => false], false],
         ];
     }
 
@@ -576,12 +575,12 @@ class SchemaAttributeTest extends TestCase
     {
         return [
             ['', false],
-            ['ai', true],
-            ['ai:true', true],
-            ['ai:false', false],
-            [['ai'], true],
-            [['ai' => true], true],
-            [['ai' => false], false],
+            ['required|pk|ai', true],
+            ['required|pk|ai:true', true],
+            ['required|pk|ai:false', false],
+            [['required', 'pk', 'ai'], true],
+            [['required', 'pk', 'ai' => true], true],
+            [['required', 'pk', 'ai' => false], false],
         ];
     }
 
@@ -620,6 +619,39 @@ class SchemaAttributeTest extends TestCase
             [['fk' => 'table5'], 'table5', 'id', 'name'],
             [['fk' => 'table6,username'], 'table6', 'id', 'username'],
             [['fk' => 'table7,description,uuid'], 'table7', 'uuid', 'description'],
+        ];
+    }
+
+    public function getConstraintLogicError(): array
+    {
+        return [
+            ['integer', 'ai'],
+            ['integer', 'ai|pk'],
+            ['string', 'ai|pk|required'],
+            ['string', 'ca'],
+            ['integer', 'ua'],
+            ['datetime', 'ca|ua'],
+            ['integer', 'fk:table|ai|pk|required'],
+            ['integer', 'required:false|ai|pk'],
+            ['integer', 'required:false|pk'],
+            ['smallint', 'maxlength:100'],
+            ['integer', 'maxlength:100'],
+            ['bigint', 'maxlength:100'],
+            ['double', 'maxlength:100'],
+            ['float', 'maxlength:100'],
+            ['smallint', 'minlength:10'],
+            ['integer', 'minlength:10'],
+            ['bigint', 'minlength:10'],
+            ['double', 'minlength:10'],
+            ['float', 'minlength:10'],
+            ['string', 'min:100'],
+            ['text', 'max:10'],
+            ['guid', 'min:10'],
+            ['binary', 'max:10'],
+            ['blob', 'maxlength:1'],
+            ['datetimetz', 'maxlength:1'],
+            ['time', 'mincheck:1'],
+            ['datetime', 'maxcheck:1'],
         ];
     }
 }
