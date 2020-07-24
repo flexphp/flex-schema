@@ -5,7 +5,7 @@ table:
     column1:
       Name: PrimaryColumn
       DataType: integer
-      Constraints: pk|required|type:number
+      Constraints: pk|ai|required|type:number
     column2:
       Name: StringColumn
       DataType: string

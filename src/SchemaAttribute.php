@@ -208,8 +208,16 @@ final class SchemaAttribute implements SchemaAttributeInterface
             throw new InvalidSchemaAttributeException($name . 'Autoincrement must be Primary Key too.');
         }
 
+        if (!$this->isAi() && $this->isPk() && \in_array($this->dataType(), ['smallint', 'integer', 'bigint'])) {
+            throw new InvalidSchemaAttributeException($name . 'Primary Key numeric not autoincrement?. Use string.');
+        }
+
         if ($this->isAi() && !\in_array($this->dataType(), ['smallint', 'integer', 'bigint'])) {
-            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be a numeric value.');
+            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be a numeric datatype.');
+        }
+
+        if ($this->isPk() && $this->isFk()) {
+            throw new InvalidSchemaAttributeException($name . 'Primary Key cannot be Foreing Key too.');
         }
 
         if ($this->isAi() && $this->isFk()) {
@@ -225,19 +233,22 @@ final class SchemaAttribute implements SchemaAttributeInterface
         }
 
         if (\in_array($this->dataType(), ['smallint', 'integer', 'bigint', 'double', 'float'])
-            && ($this->minLength() || $this->maxLength())
+            && ($this->minLength() !== null || $this->maxLength() !== null)
         ) {
             throw new InvalidSchemaAttributeException($name . 'Numeric property use: min, max.');
         }
 
-        if ($this->dataType() !== 'bigint' && $this->typeHint() === 'string' && ($this->min() || $this->max())) {
+        if ($this->dataType() !== 'bigint' && $this->typeHint() === 'string'
+            && ($this->min() !== null || $this->max() !== null)
+        ) {
             throw new InvalidSchemaAttributeException($name . 'String properties use minlength, maxlength.');
         }
 
         if ((\strpos($this->typeHint(), '\Date') !== false || \in_array($this->dataType(), ['bool', 'blob']))
-            && ($this->min() || $this->max() || $this->minLength() || $this->maxLength() || $this->minCheck()
-                || $this->maxCheck()
-        )) {
+            && ($this->min() !== null || $this->max() !== null
+                || $this->minLength() !== null || $this->maxLength() !== null
+                || $this->minCheck() !== null || $this->maxCheck() !== null)
+        ) {
             throw new InvalidSchemaAttributeException($name . 'Date, bool, blob properties not use min, max, etc');
         }
     }

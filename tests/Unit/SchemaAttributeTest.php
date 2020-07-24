@@ -577,10 +577,10 @@ class SchemaAttributeTest extends TestCase
             ['', false],
             ['required|pk|ai', true],
             ['required|pk|ai:true', true],
-            ['required|pk|ai:false', false],
+            // ['required|pk|ai:false', false],
             [['required', 'pk', 'ai'], true],
             [['required', 'pk', 'ai' => true], true],
-            [['required', 'pk', 'ai' => false], false],
+            // [['required', 'pk', 'ai' => false], false],
         ];
     }
 
@@ -625,6 +625,8 @@ class SchemaAttributeTest extends TestCase
     public function getConstraintLogicError(): array
     {
         return [
+            ['integer', 'pk|ai|required|fk:table'],
+            ['integer', 'pk|required'],
             ['integer', 'ai'],
             ['integer', 'ai|pk'],
             ['string', 'ai|pk|required'],
