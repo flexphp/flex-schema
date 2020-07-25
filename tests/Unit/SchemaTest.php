@@ -86,6 +86,34 @@ class SchemaTest extends TestCase
         $this->assertSame(10, $attribute->max());
     }
 
+    public function testItSchemaUsingSchemaAttributeOk(): void
+    {
+        $name = 'name';
+        $title = 'title';
+        $attributes = [
+            new SchemaAttribute('foo', 'string', 'required:true'),
+            new SchemaAttribute('bar', 'integer', 'required:false|min:8|max:10'),
+        ];
+
+        $schema = new Schema($name, $title, $attributes);
+
+        $this->assertEquals($name, $schema->name());
+        $this->assertEquals($title, $schema->title());
+        $this->assertIsArray($schema->attributes());
+        $this->assertSame(2, \count($schema->attributes()));
+        $this->assertEquals('id', $schema->pkName());
+
+        foreach ($schema->attributes() as $attribute) {
+            $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
+        }
+
+        $attribute = $schema->attributes()[1];
+
+        $this->assertSame(false, $attribute->isRequired());
+        $this->assertSame(8, $attribute->min());
+        $this->assertSame(10, $attribute->max());
+    }
+
     /**
      * @dataProvider getNameInvalid
      *

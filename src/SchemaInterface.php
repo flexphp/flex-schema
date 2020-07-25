@@ -24,7 +24,7 @@ interface SchemaInterface
     public static function fromFile(string $schemafile): self;
 
     /**
-     * @param array<int, array> $attributes
+     * @param array<int, array|SchemaAttributeInterface> $attributes
      */
     public function __construct(string $name, string $title, array $attributes);
 
