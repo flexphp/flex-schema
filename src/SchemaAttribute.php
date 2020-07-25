@@ -11,7 +11,7 @@ namespace FlexPHP\Schema;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
-use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
+use FlexPHP\Schema\Validations\SchemaAttributeLogicValidation;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
 final class SchemaAttribute implements SchemaAttributeInterface
@@ -41,7 +41,6 @@ final class SchemaAttribute implements SchemaAttributeInterface
         $this->setConstraints($constraints);
 
         $this->validate();
-        $this->validateLogic();
     }
 
     public function name(): string
@@ -190,67 +189,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
     private function validate(): void
     {
         (new SchemaAttributeValidation($this->properties()))->validate();
-    }
-
-    private function validateLogic(): void
-    {
-        if (empty($this->constraints())) {
-            return;
-        }
-
-        $name = 'Logic: [' . $this->name() . '] ';
-
-        if ($this->isPk() && !$this->isRequired()) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key must be required.');
-        }
-
-        if ($this->isAi() && !$this->isPk()) {
-            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be Primary Key too.');
-        }
-
-        if (!$this->isAi() && $this->isPk() && \in_array($this->dataType(), ['smallint', 'integer', 'bigint'])) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key numeric not autoincrement?. Use string.');
-        }
-
-        if ($this->isAi() && !\in_array($this->dataType(), ['smallint', 'integer', 'bigint'])) {
-            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be a numeric datatype.');
-        }
-
-        if ($this->isPk() && $this->isFk()) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key cannot be Foreing Key too.');
-        }
-
-        if ($this->isAi() && $this->isFk()) {
-            throw new InvalidSchemaAttributeException($name . 'Foreign Key cannot be autoincrement.');
-        }
-
-        if ($this->isBlame() && \strpos($this->typeHint(), '\Date') === false) {
-            throw new InvalidSchemaAttributeException($name . 'Blame property must be date datetype valid.');
-        }
-
-        if ($this->isCa() && $this->isUa()) {
-            throw new InvalidSchemaAttributeException($name . 'Created and Updated At in same property is not valid.');
-        }
-
-        if (\in_array($this->dataType(), ['smallint', 'integer', 'bigint', 'double', 'float'])
-            && ($this->minLength() !== null || $this->maxLength() !== null)
-        ) {
-            throw new InvalidSchemaAttributeException($name . 'Numeric property use: min, max.');
-        }
-
-        if ($this->dataType() !== 'bigint' && $this->typeHint() === 'string'
-            && ($this->min() !== null || $this->max() !== null)
-        ) {
-            throw new InvalidSchemaAttributeException($name . 'String properties use minlength, maxlength.');
-        }
-
-        if ((\strpos($this->typeHint(), '\Date') !== false || \in_array($this->dataType(), ['bool', 'blob']))
-            && ($this->min() !== null || $this->max() !== null
-                || $this->minLength() !== null || $this->maxLength() !== null
-                || $this->minCheck() !== null || $this->maxCheck() !== null)
-        ) {
-            throw new InvalidSchemaAttributeException($name . 'Date, bool, blob properties not use min, max, etc');
-        }
+        (new SchemaAttributeLogicValidation($this))->validate();
     }
 
     private function setName(string $name): void
