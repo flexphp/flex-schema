@@ -386,10 +386,6 @@ class SchemaAttributeTest extends TestCase
         $dataType = 'integer';
         $constraints = [
             'required',
-            'min' => 1,
-            'max' => 100,
-            'mincheck' => 3,
-            'maxcheck' => 4,
             'equalto' => '#id',
             'type' => 'text',
             'pk' => true,
@@ -403,12 +399,12 @@ class SchemaAttributeTest extends TestCase
         $this->assertEquals('int', $schemaAttribute->typeHint());
         $this->assertIsArray($schemaAttribute->constraints());
         $this->assertSame(true, $schemaAttribute->isRequired());
-        $this->assertSame(1, $schemaAttribute->min());
+        $this->assertNull($schemaAttribute->min());
         $this->assertNull($schemaAttribute->minLength());
-        $this->assertSame(3, $schemaAttribute->minCheck());
-        $this->assertSame(100, $schemaAttribute->max());
+        $this->assertNull($schemaAttribute->minCheck());
+        $this->assertNull($schemaAttribute->max());
         $this->assertNull($schemaAttribute->maxLength());
-        $this->assertSame(4, $schemaAttribute->maxCheck());
+        $this->assertNull($schemaAttribute->maxCheck());
         $this->assertSame('#id', $schemaAttribute->equalTo());
         $this->assertSame('text', $schemaAttribute->type());
         $this->assertTrue($schemaAttribute->isPk());
@@ -625,6 +621,7 @@ class SchemaAttributeTest extends TestCase
     public function getConstraintLogicError(): array
     {
         return [
+            ['integer', 'pk|ai|required|min:10'],
             ['integer', 'pk|ai|required|fk:table'],
             ['integer', 'pk|required'],
             ['integer', 'ai'],

@@ -32,28 +32,32 @@ class SchemaAttributeLogicValidation implements ValidationInterface
 
         $name = 'Logic: [' . $this->property->name() . '] ';
 
-        if ($this->property->isPk() && !$this->property->isRequired()) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key must be required.');
+        if ($this->property->isPk()) {
+            if (!$this->property->isRequired()) {
+                throw new InvalidSchemaAttributeException($name . 'Primary Key must be required.');
+            }
+
+            if ($this->property->isFk()) {
+                throw new InvalidSchemaAttributeException($name . 'Primary Key cannot be Foreing Key too.');
+            }
+
+            if ($this->isInt() && !$this->property->isAi()) {
+                throw new InvalidSchemaAttributeException($name . 'Primary Key numeric not autoincrement.');
+            }
+
+            if ($this->property->isAi() && $this->hasSizingConstraint()) {
+                throw new InvalidSchemaAttributeException($name . 'Primary Key autoincrement cannot has sizing.');
+            }
         }
 
-        if ($this->property->isAi() && !$this->property->isPk()) {
-            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be Primary Key too.');
-        }
+        if ($this->property->isAi()) {
+            if (!$this->property->isPk()) {
+                throw new InvalidSchemaAttributeException($name . 'Autoincrement must be Primary Key too.');
+            }
 
-        if (!$this->property->isAi() && $this->property->isPk() && $this->isInt()) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key numeric not autoincrement.');
-        }
-
-        if ($this->property->isAi() && !$this->isInt()) {
-            throw new InvalidSchemaAttributeException($name . 'Autoincrement must be a numeric datatype.');
-        }
-
-        if ($this->property->isPk() && $this->property->isFk()) {
-            throw new InvalidSchemaAttributeException($name . 'Primary Key cannot be Foreing Key too.');
-        }
-
-        if ($this->property->isAi() && $this->property->isFk()) {
-            throw new InvalidSchemaAttributeException($name . 'Foreign Key cannot be autoincrement.');
+            if (!$this->isInt()) {
+                throw new InvalidSchemaAttributeException($name . 'Autoincrement must be numeric.');
+            }
         }
 
         if ($this->property->isBlame() && !$this->isDate()) {
