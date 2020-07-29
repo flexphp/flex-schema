@@ -9,6 +9,7 @@
  */
 namespace FlexPHP\Schema;
 
+use Exception;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Exception\InvalidFileSchemaException;
 use FlexPHP\Schema\Exception\InvalidSchemaException;
@@ -192,7 +193,17 @@ final class Schema implements SchemaInterface
             $dataType = $attribute[Keyword::DATATYPE] ?? '';
             $constraints = $attribute[Keyword::CONSTRAINTS] ?? '';
 
-            $schemaAttributes[] = new SchemaAttribute($name, $dataType, $constraints);
+            try {
+                $schemaAttributes[] = new SchemaAttribute($name, $dataType, $constraints);
+            } catch (Exception $e) {
+                throw new InvalidSchemaException(
+                    \sprintf(
+                        'Schema %s > %s',
+                        $this->name(),
+                        $e->getMessage(),
+                    )
+                );
+            }
         }
 
         $this->attributes = $schemaAttributes;

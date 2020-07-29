@@ -190,7 +190,7 @@ class SchemaTest extends TestCase
 
     public function testItSchemaFromArrayWithTableAttributesInvalidThrowException(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
 
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
         unset($array['table'][Keyword::ATTRIBUTES]['column3'][Keyword::DATATYPE]);
@@ -234,7 +234,7 @@ class SchemaTest extends TestCase
 
     public function testItSchemaFromFileFormatErrorThrowException(): void
     {
-        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaAttributeException::class);
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
 
         Schema::fromFile(\sprintf('%s/../Mocks/yaml/error.yaml', __DIR__));
     }

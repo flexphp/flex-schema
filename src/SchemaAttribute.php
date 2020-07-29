@@ -9,8 +9,10 @@
  */
 namespace FlexPHP\Schema;
 
+use Exception;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
+use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validations\SchemaAttributeLogicValidation;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
 
@@ -188,8 +190,18 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
     private function validate(): void
     {
-        (new SchemaAttributeValidation($this->properties()))->validate();
-        (new SchemaAttributeLogicValidation($this))->validate();
+        try {
+            (new SchemaAttributeValidation($this->properties()))->validate();
+            (new SchemaAttributeLogicValidation($this))->validate();
+        } catch (Exception $e) {
+            throw new InvalidSchemaAttributeException(
+                \sprintf(
+                    'Attribute %s > %s',
+                    $this->name(),
+                    $e->getMessage()
+                )
+            );
+        }
     }
 
     private function setName(string $name): void
