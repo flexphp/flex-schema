@@ -195,11 +195,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
             (new SchemaAttributeLogicValidation($this))->validate();
         } catch (Exception $e) {
             throw new InvalidSchemaAttributeException(
-                \sprintf(
-                    'Attribute %s > %s',
-                    $this->name(),
-                    $e->getMessage()
-                )
+                \sprintf('Attribute %s > %s', $this->name(), $e->getMessage())
             );
         }
     }

@@ -197,11 +197,7 @@ final class Schema implements SchemaInterface
                 $schemaAttributes[] = new SchemaAttribute($name, $dataType, $constraints);
             } catch (Exception $e) {
                 throw new InvalidSchemaException(
-                    \sprintf(
-                        'Schema %s > %s',
-                        $this->name(),
-                        $e->getMessage(),
-                    )
+                    \sprintf('Schema %s > %s', $this->name(), $e->getMessage())
                 );
             }
         }
