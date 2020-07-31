@@ -66,5 +66,13 @@ interface SchemaAttributeInterface
 
     public function isUa(): bool;
 
+    public function isBlameAt(): bool;
+
+    public function isCb(): bool;
+
+    public function isUb(): bool;
+
+    public function isBlameBy(): bool;
+
     public function isBlame(): bool;
 }

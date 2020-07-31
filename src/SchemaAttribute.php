@@ -145,9 +145,29 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return (bool)($this->constraints[Rule::UPDATEDAT] ?? false);
     }
 
-    public function isBlame(): bool
+    public function isCb(): bool
+    {
+        return (bool)($this->constraints[Rule::CREATEDBY] ?? false);
+    }
+
+    public function isUb(): bool
+    {
+        return (bool)($this->constraints[Rule::UPDATEDBY] ?? false);
+    }
+
+    public function isBlameAt(): bool
     {
         return $this->isCa() || $this->isUa();
+    }
+
+    public function isBlameBy(): bool
+    {
+        return $this->isCb() || $this->isUb();
+    }
+
+    public function isBlame(): bool
+    {
+        return $this->isBlameAt() || $this->isBlameBy();
     }
 
     public function properties(): array

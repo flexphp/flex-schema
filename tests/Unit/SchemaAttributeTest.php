@@ -306,6 +306,8 @@ class SchemaAttributeTest extends TestCase
         $this->assertEquals($dataType, $schemaAttribute->dataType());
         $this->assertSame($expected, $schemaAttribute->isCa());
         $this->assertSame($expected, $schemaAttribute->isBlame());
+        $this->assertSame($expected, $schemaAttribute->isBlameAt());
+        $this->assertSame(false, $schemaAttribute->isBlameBy());
     }
 
     /**
@@ -325,6 +327,50 @@ class SchemaAttributeTest extends TestCase
         $this->assertEquals($dataType, $schemaAttribute->dataType());
         $this->assertSame($expected, $schemaAttribute->isUa());
         $this->assertSame($expected, $schemaAttribute->isBlame());
+        $this->assertSame($expected, $schemaAttribute->isBlameAt());
+        $this->assertSame(false, $schemaAttribute->isBlameBy());
+    }
+
+    /**
+     * @dataProvider getCbConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeCbConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->isCb());
+        $this->assertSame($expected, $schemaAttribute->isBlame());
+        $this->assertSame(false, $schemaAttribute->isBlameAt());
+        $this->assertSame($expected, $schemaAttribute->isBlameBy());
+    }
+
+    /**
+     * @dataProvider getUbConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeUbConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->isUb());
+        $this->assertSame($expected, $schemaAttribute->isBlame());
+        $this->assertSame(false, $schemaAttribute->isBlameAt());
+        $this->assertSame($expected, $schemaAttribute->isBlameBy());
     }
 
     /**
@@ -618,6 +664,32 @@ class SchemaAttributeTest extends TestCase
         ];
     }
 
+    public function getCbConstraint(): array
+    {
+        return [
+            ['', false],
+            ['cb', true],
+            ['cb:true', true],
+            ['cb:false', false],
+            [['cb'], true],
+            [['cb' => true], true],
+            [['cb' => false], false],
+        ];
+    }
+
+    public function getUbConstraint(): array
+    {
+        return [
+            ['', false],
+            ['ub', true],
+            ['ub:true', true],
+            ['ub:false', false],
+            [['ub'], true],
+            [['ub' => true], true],
+            [['ub' => false], false],
+        ];
+    }
+
     public function getConstraintLogicError(): array
     {
         return [
@@ -651,6 +723,11 @@ class SchemaAttributeTest extends TestCase
             ['datetimetz', 'maxlength:1'],
             ['time', 'mincheck:1'],
             ['datetime', 'maxcheck:1'],
+            ['datetime', 'cb'],
+            ['bool', 'ub'],
+            ['binary', 'cb'],
+            ['blob', 'ub'],
+            ['integer', 'cb|ub'],
         ];
     }
 }

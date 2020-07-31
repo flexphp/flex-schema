@@ -60,12 +60,20 @@ class SchemaAttributeLogicValidation implements ValidationInterface
             }
         }
 
-        if ($this->property->isBlame() && !$this->isDate()) {
-            throw new InvalidSchemaAttributeException($name . 'Blame property must be date datetype valid.');
+        if ($this->property->isBlameAt() && !$this->isDate()) {
+            throw new InvalidSchemaAttributeException($name . 'Blame At property must be date datatype.');
         }
 
         if ($this->property->isCa() && $this->property->isUa()) {
             throw new InvalidSchemaAttributeException($name . 'Created and Updated At in same property is not valid.');
+        }
+
+        if ($this->property->isBlameBy() && !$this->isInt()) {
+            throw new InvalidSchemaAttributeException($name . 'Blame By property must be integer datatype.');
+        }
+
+        if ($this->property->isCb() && $this->property->isUb()) {
+            throw new InvalidSchemaAttributeException($name . 'Created and Updated By in same property is not valid.');
         }
 
         if ($this->isNumeric() && $this->hasLength()) {
