@@ -279,8 +279,23 @@ class SchemaAttributeValidationTest extends TestCase
             [['length' => [
                 'min' => \rand(5, 10),
             ]]],
+            [['pk' => null]],
+            [['pk' => '']],
             [['fk' => null]],
             [['fk' => '']],
+            [['fk' => 'table.name']],
+            [['fk' => 'table,name.id']],
+            [['fk' => 'table,name,id.dot']],
+            [['ai' => null]],
+            [['ai' => '']],
+            [['ca' => null]],
+            [['ca' => '']],
+            [['ua' => null]],
+            [['ua' => '']],
+            // [['cb' => null]],
+            // [['cb' => '']],
+            // [['ub' => null]],
+            // [['ub' => '']],
         ];
     }
 
@@ -330,6 +345,14 @@ class SchemaAttributeValidationTest extends TestCase
             [['ua' => false]],
             [['ua' => 'true']],
             [['ua' => 'false']],
+            // [['cb' => true]],
+            // [['cb' => false]],
+            // [['cb' => 'true']],
+            // [['cb' => 'false']],
+            // [['ub' => true]],
+            // [['ub' => false]],
+            // [['ub' => 'true']],
+            // [['ub' => 'false']],
         ];
     }
 }

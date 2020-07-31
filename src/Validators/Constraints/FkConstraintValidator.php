@@ -11,6 +11,7 @@ namespace FlexPHP\Schema\Validators\Constraints;
 
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -24,18 +25,44 @@ class FkConstraintValidator
      */
     public function validate($string): ConstraintViolationListInterface
     {
-        $validator = Validation::createValidator();
-
-        if (($errors = $this->notEmpty($string))->count()) {
+        if (($errors = $this->validateNotEmpty($string))->count()) {
             return $errors;
         }
 
-        $_vars = \is_string($string) ? \explode(',', $string) : $string;
+        if (($errors = $this->validateCount($string))->count()) {
+            return $errors;
+        }
 
-        return $validator->validate($_vars, [
+        return $this->validateRegex($string);
+    }
+
+    /**
+     * @param mixed $string
+     */
+    private function validateNotEmpty($string): ConstraintViolationListInterface
+    {
+        $validator = Validation::createValidator();
+
+        return $validator->validate($string, [
+            new NotBlank(),
+        ]);
+    }
+
+    /**
+     * @param mixed $string
+     */
+    private function validateCount($string): ConstraintViolationListInterface
+    {
+        $validator = Validation::createValidator();
+
+        $parts = \is_string($string) ? \explode(',', $string) : $string;
+
+        return $validator->validate($parts, [
             new Count([
                 'min' => 1,
                 'max' => 3,
+                'minMessage' => 'Allow table[,name[,id]]',
+                'maxMessage' => 'Allow table[,name[,id]]',
             ]),
         ]);
     }
@@ -43,12 +70,17 @@ class FkConstraintValidator
     /**
      * @param mixed $string
      */
-    private function notEmpty($string): ConstraintViolationListInterface
+    private function validateRegex($string): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
 
+        $string = \is_array($string) ? \implode(',', $string) : $string;
+
         return $validator->validate($string, [
-            new NotBlank(),
+            new Regex([
+                'pattern' => '/^[a-zA-Z][a-zA-Z0-9_,]*$/',
+                'message' => 'Characters not allowed. Use: a-Z, 0-9 and underscore (except in begin)',
+            ]),
         ]);
     }
 }
