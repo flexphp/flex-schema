@@ -43,5 +43,9 @@ interface Rule
 
     public const UPDATEDAT = 'ua';
 
+    public const CREATEDBY = 'cb';
+
+    public const UPDATEDBY = 'ub';
+
     public const PATTERN = 'pattern';
 }

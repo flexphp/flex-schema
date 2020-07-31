@@ -43,6 +43,8 @@ class PropertyConstraintsValidator
         Rule::AUTOINCREMENT,
         Rule::CREATEDAT,
         Rule::UPDATEDAT,
+        Rule::CREATEDBY,
+        Rule::UPDATEDBY,
     ];
 
     /**
@@ -65,6 +67,8 @@ class PropertyConstraintsValidator
         Rule::AUTOINCREMENT => BooleanConstraintValidator::class,
         Rule::CREATEDAT => BooleanConstraintValidator::class,
         Rule::UPDATEDAT => BooleanConstraintValidator::class,
+        Rule::CREATEDBY => BooleanConstraintValidator::class,
+        Rule::UPDATEDBY => BooleanConstraintValidator::class,
     ];
 
     /**

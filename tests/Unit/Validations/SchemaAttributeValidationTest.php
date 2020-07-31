@@ -292,10 +292,10 @@ class SchemaAttributeValidationTest extends TestCase
             [['ca' => '']],
             [['ua' => null]],
             [['ua' => '']],
-            // [['cb' => null]],
-            // [['cb' => '']],
-            // [['ub' => null]],
-            // [['ub' => '']],
+            [['cb' => null]],
+            [['cb' => '']],
+            [['ub' => null]],
+            [['ub' => '']],
         ];
     }
 
@@ -345,14 +345,14 @@ class SchemaAttributeValidationTest extends TestCase
             [['ua' => false]],
             [['ua' => 'true']],
             [['ua' => 'false']],
-            // [['cb' => true]],
-            // [['cb' => false]],
-            // [['cb' => 'true']],
-            // [['cb' => 'false']],
-            // [['ub' => true]],
-            // [['ub' => false]],
-            // [['ub' => 'true']],
-            // [['ub' => 'false']],
+            [['cb' => true]],
+            [['cb' => false]],
+            [['cb' => 'true']],
+            [['cb' => 'false']],
+            [['ub' => true]],
+            [['ub' => false]],
+            [['ub' => 'true']],
+            [['ub' => 'false']],
         ];
     }
 }
