@@ -149,6 +149,7 @@ final class Schema implements SchemaInterface
                         'pkTypeHint' => $property->typeHint(),
                         'fkId' => $property->fkId(),
                         'fkName' => $property->fkName(),
+                        'fkTable' => $this->name(),
                     ];
                 }
 
@@ -164,6 +165,10 @@ final class Schema implements SchemaInterface
     {
         if (empty(\trim($name))) {
             throw new InvalidSchemaException('Schema name is required');
+        }
+
+        if (\preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $name) === 0) {
+            throw new InvalidSchemaException('Schema name only accept alphanum and underscore');
         }
 
         $this->name = $name;

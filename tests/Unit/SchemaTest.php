@@ -31,6 +31,19 @@ class SchemaTest extends TestCase
     }
 
     /**
+     * @dataProvider getNameErrorInvalid
+     *
+     * @param mixed $name
+     */
+    public function testItSchemaNameErrorThrowException($name): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage('only accept');
+
+        new Schema($name, 'title', []);
+    }
+
+    /**
      * @dataProvider getTitleInvalid
      *
      * @param mixed $title
@@ -269,6 +282,15 @@ class SchemaTest extends TestCase
         return [
             [''],
             [' '],
+        ];
+    }
+
+    public function getNameErrorInvalid(): array
+    {
+        return [
+            ['db-'],
+            ['1234db'],
+            ['jóbs'],
         ];
     }
 
