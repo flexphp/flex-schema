@@ -150,6 +150,8 @@ final class Schema implements SchemaInterface
                         'fkId' => $property->fkId(),
                         'fkName' => $property->fkName(),
                         'fkTable' => $this->name(),
+                        'isBlameBy' => $property->isBlameBy(),
+                        'isRequired' => $property->isRequired(),
                     ];
                 }
 
