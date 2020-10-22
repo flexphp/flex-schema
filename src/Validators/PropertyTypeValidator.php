@@ -29,6 +29,8 @@ class PropertyTypeValidator
         'url',
         'range',
         'pattern',
+        'password',
+        'timezone',
     ];
 
     public function validate(string $type): ConstraintViolationListInterface
