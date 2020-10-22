@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FlexPHP\Schema\Tests;
+namespace FlexPHP\Schema\Tests\Unit;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaAttribute;
 use FlexPHP\Schema\SchemaAttributeInterface;
+use FlexPHP\Schema\Tests\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 class SchemaTest extends TestCase

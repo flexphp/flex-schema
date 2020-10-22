@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FlexPHP\Schema\Tests\Validations;
+namespace FlexPHP\Schema\Tests\Unit\Validations;
 
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
