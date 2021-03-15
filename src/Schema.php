@@ -60,7 +60,7 @@ final class Schema implements SchemaInterface
         try {
             $yaml = new Yaml();
             $schema = $yaml->parseFile($schemafile);
-        } catch (ParseException $e) {
+        } catch (ParseException $exception) {
             throw new InvalidFileSchemaException();
         }
 
@@ -138,7 +138,7 @@ final class Schema implements SchemaInterface
 
     public function fkRelations(): array
     {
-        $fkRelations = \array_reduce(
+        return \array_reduce(
             $this->attributes(),
             function (array $result, SchemaAttributeInterface $property): array {
                 if ($property->isfk()) {
@@ -159,8 +159,6 @@ final class Schema implements SchemaInterface
             },
             []
         );
-
-        return $fkRelations;
     }
 
     private function setName(string $name): void
@@ -202,9 +200,9 @@ final class Schema implements SchemaInterface
 
             try {
                 $schemaAttributes[] = new SchemaAttribute($name, $dataType, $constraints);
-            } catch (Exception $e) {
+            } catch (Exception $exception) {
                 throw new InvalidSchemaException(
-                    \sprintf('Schema %s > %s', $this->name(), $e->getMessage())
+                    \sprintf('Schema %s > %s', $this->name(), $exception->getMessage())
                 );
             }
         }
