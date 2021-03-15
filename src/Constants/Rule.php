@@ -47,5 +47,7 @@ interface Rule
 
     public const UPDATEDBY = 'ub';
 
+    public const FILTER = 'filter';
+
     public const PATTERN = 'pattern';
 }

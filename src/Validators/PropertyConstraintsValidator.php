@@ -12,6 +12,7 @@ namespace FlexPHP\Schema\Validators;
 use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Validators\Constraints\BooleanConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
+use FlexPHP\Schema\Validators\Constraints\FilterConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\FkConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MaxConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\MinConstraintValidator;
@@ -45,6 +46,7 @@ class PropertyConstraintsValidator
         Rule::UPDATEDAT,
         Rule::CREATEDBY,
         Rule::UPDATEDBY,
+        Rule::FILTER,
     ];
 
     /**
@@ -69,6 +71,7 @@ class PropertyConstraintsValidator
         Rule::UPDATEDAT => BooleanConstraintValidator::class,
         Rule::CREATEDBY => BooleanConstraintValidator::class,
         Rule::UPDATEDBY => BooleanConstraintValidator::class,
+        Rule::FILTER => FilterConstraintValidator::class,
     ];
 
     /**

@@ -296,6 +296,9 @@ class SchemaAttributeValidationTest extends TestCase
             [['cb' => '']],
             [['ub' => null]],
             [['ub' => '']],
+            [['filter' => null]],
+            [['filter' => '']],
+            [['filter' => 'x']],
         ];
     }
 
@@ -353,6 +356,21 @@ class SchemaAttributeValidationTest extends TestCase
             [['ub' => false]],
             [['ub' => 'true']],
             [['ub' => 'false']],
+            [['filter' => 'eq']],
+            [['filter' => 'ne']],
+            [['filter' => 'gt']],
+            [['filter' => 'ge']],
+            [['filter' => 'lt']],
+            [['filter' => 'le']],
+            [['filter' => 'nl']],
+            [['filter' => 'nn']],
+            [['filter' => 'in']],
+            [['filter' => 'ni']],
+            [['filter' => 'ss']],
+            [['filter' => 'se']],
+            [['filter' => 'sc']],
+            [['filter' => 'sx']],
+            [['filter' => 'bw']],
         ];
     }
 }
