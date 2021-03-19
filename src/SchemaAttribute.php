@@ -155,6 +155,11 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return (bool)($this->constraints[Rule::UPDATEDBY] ?? false);
     }
 
+    public function filter(): string
+    {
+        return ($this->constraints[Rule::FILTER] ?? '');
+    }
+
     public function isBlameAt(): bool
     {
         return $this->isCa() || $this->isUa();
