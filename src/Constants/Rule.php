@@ -49,5 +49,7 @@ interface Rule
 
     public const FILTER = 'filter';
 
+    public const FORMAT = 'format';
+
     public const PATTERN = 'pattern';
 }
