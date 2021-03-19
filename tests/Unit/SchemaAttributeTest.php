@@ -375,6 +375,24 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getFilterConstraint
+     *
+     * @param mixed $constraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeFilterConstraints($constraint, $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'integer';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->filter());
+    }
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -688,6 +706,15 @@ class SchemaAttributeTest extends TestCase
             [['ub'], true],
             [['ub' => true], true],
             [['ub' => false], false],
+        ];
+    }
+
+    public function getFilterConstraint(): array
+    {
+        return [
+            ['', ''],
+            ['filter:eq', 'eq'],
+            ['filter:nn', 'nn'],
         ];
     }
 
