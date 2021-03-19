@@ -139,14 +139,16 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyConstraintsNotValid
      */
-    public function testItPropertyConstraintsNotValidThrownException(array $constraints): void
-    {
+    public function testItPropertyConstraintsNotValidThrownException(
+        array $constraints,
+        string $datetype = 'string'
+    ): void {
         $this->expectException(InvalidSchemaAttributeException::class);
         $this->expectExceptionMessage('Constraints:');
 
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
+            Keyword::DATATYPE => $datetype,
             Keyword::CONSTRAINTS => $constraints,
         ]);
 
@@ -156,11 +158,13 @@ class SchemaAttributeValidationTest extends TestCase
     /**
      * @dataProvider propertyConstraintsValid
      */
-    public function testItPropertyConstraintsOk(array $constraints): void
-    {
+    public function testItPropertyConstraintsOk(
+        array $constraints,
+        string $datetype = 'string'
+    ): void {
         $validation = new SchemaAttributeValidation([
             Keyword::NAME => 'foo',
-            Keyword::DATATYPE => 'string',
+            Keyword::DATATYPE => $datetype,
             Keyword::CONSTRAINTS => $constraints,
         ]);
 
@@ -298,7 +302,10 @@ class SchemaAttributeValidationTest extends TestCase
             [['ub' => '']],
             [['filter' => null]],
             [['filter' => '']],
-            [['filter' => 'x']],
+            [['filter' => 'notvalid']],
+            [['format' => null]],
+            [['format' => '']],
+            [['format' => 'notvalid']],
         ];
     }
 
@@ -371,6 +378,9 @@ class SchemaAttributeValidationTest extends TestCase
             [['filter' => 'sc']],
             [['filter' => 'sx']],
             [['filter' => 'bw']],
+            [['format' => 'money']],
+            [['format' => 'datetime']],
+            [['format' => 'timeago']],
         ];
     }
 }

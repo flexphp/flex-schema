@@ -75,4 +75,10 @@ interface SchemaAttributeInterface
     public function isBlameBy(): bool;
 
     public function isBlame(): bool;
+
+    public function filter(): ?string;
+
+    public function format(): ?string;
+
+    public function isFormat(string $format): bool;
 }

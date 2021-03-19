@@ -9,6 +9,7 @@
  */
 namespace FlexPHP\Schema\Validations;
 
+use FlexPHP\Schema\Constants\Format;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\SchemaAttributeInterface;
 
@@ -87,6 +88,45 @@ class SchemaAttributeLogicValidation implements ValidationInterface
         if (($this->isDate() || $this->isBinary()) && $this->hasSizingConstraint()) {
             throw new InvalidSchemaAttributeException($name . 'Date, bool, blob properties not use min, max, etc');
         }
+
+        if ($this->hasFormat()) {
+            if ($this->isString()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sString properties not allow format',
+                    $name
+                ));
+            }
+
+            if ($this->isBinary()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sBinary (bool, blob) properties not allow format',
+                    $name
+                ));
+            }
+
+            if ($this->isArray()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sArray (array, simple_array, json) properties not allow format',
+                    $name
+                ));
+            }
+
+            if ($this->isNumeric() && !$this->property->isFormat(Format::MONEY)) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sNumeric properties not allow format: %s',
+                    $name,
+                    $this->property->format()
+                ));
+            }
+
+            if ($this->isDate() && $this->property->isFormat(Format::MONEY)) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sDate property not allow format: %s',
+                    $name,
+                    $this->property->format()
+                ));
+            }
+        }
     }
 
     private function isInt(): bool
@@ -97,6 +137,11 @@ class SchemaAttributeLogicValidation implements ValidationInterface
     private function isDate(): bool
     {
         return \strpos($this->property->typeHint(), '\Date') !== false;
+    }
+
+    private function isArray(): bool
+    {
+        return \in_array($this->property->dataType(), ['array', 'simple_array', 'json']);
     }
 
     private function isNumeric(): bool
@@ -111,7 +156,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
 
     private function isBinary(): bool
     {
-        return \in_array($this->property->dataType(), ['bool', 'blob']);
+        return \in_array($this->property->dataType(), ['bool', 'boolean', 'blob']);
     }
 
     private function hasLength(): bool
@@ -132,5 +177,10 @@ class SchemaAttributeLogicValidation implements ValidationInterface
     private function hasSizingConstraint(): bool
     {
         return $this->hasSize() || $this->hasLength() || $this->hasCheck();
+    }
+
+    private function hasFormat(): bool
+    {
+        return (bool)$this->property->format();
     }
 }

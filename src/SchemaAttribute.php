@@ -155,11 +155,6 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return (bool)($this->constraints[Rule::UPDATEDBY] ?? false);
     }
 
-    public function filter(): string
-    {
-        return ($this->constraints[Rule::FILTER] ?? '');
-    }
-
     public function isBlameAt(): bool
     {
         return $this->isCa() || $this->isUa();
@@ -173,6 +168,21 @@ final class SchemaAttribute implements SchemaAttributeInterface
     public function isBlame(): bool
     {
         return $this->isBlameAt() || $this->isBlameBy();
+    }
+
+    public function filter(): ?string
+    {
+        return $this->constraints[Rule::FILTER] ?? null;
+    }
+
+    public function format(): ?string
+    {
+        return $this->constraints[Rule::FORMAT] ?? null;
+    }
+
+    public function isFormat(string $format): bool
+    {
+        return $this->format() === $format;
     }
 
     public function properties(): array
@@ -203,7 +213,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
             'time_immutable' => '\DateTimeImmutable',
             'array' => 'array',
             'simple_array' => 'array',
-            'json_array' => 'array',
+            'json' => 'array',
         ];
 
         if (isset($typeHintByDataType[$this->dataType()])) {
