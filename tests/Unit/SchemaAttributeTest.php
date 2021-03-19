@@ -393,6 +393,21 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getFormatConstraint
+     */
+    public function testItSchemaAttributeFormatConstraints(string $dataType, string $constraint, ?string $expected): void
+    {
+        $name = 'foo';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->format());
+    }
+
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -712,9 +727,19 @@ class SchemaAttributeTest extends TestCase
     public function getFilterConstraint(): array
     {
         return [
-            ['', ''],
+            ['', null],
             ['filter:eq', 'eq'],
             ['filter:nn', 'nn'],
+        ];
+    }
+
+    public function getFormatConstraint(): array
+    {
+        return [
+            ['string', '', null],
+            ['datetime', 'format:timeago', 'timeago'],
+            ['datetime', 'format:datetime', 'datetime'],
+            ['integer', 'format:money', 'money'],
         ];
     }
 
@@ -757,29 +782,35 @@ class SchemaAttributeTest extends TestCase
             ['blob', 'ub'],
             ['integer', 'cb|ub'],
             ['smallint', 'format:datetime'],
-            // ['integer', 'format:datetime'],
-            // ['float', 'format:datetime'],
-            // ['double', 'format:datetime'],
-            // ['boolean', 'format:datetime'],
-            // ['boolean', 'format:money'],
-            // ['boolean', 'format:timeago'],
-            // ['bool', 'format:datetime'],
-            // ['bool', 'format:money'],
-            // ['bool', 'format:timeago'],
-            // ['datetime', 'format:money'],
-            // ['datetime_immutable', 'format:money'],
-            // ['datetimetz', 'format:money'],
-            // ['datetimetz_immutable', 'format:money'],
-            // ['time', 'format:money'],
-            // ['time_immutable', 'format:money'],
-            // ['array', 'format:money'],
-            // ['array', 'format:datetime'],
-            // ['array', 'format:timeago'],
-            // ['simple_array', 'format:money'],
-            // ['simple_array', 'format:datetime'],
-            // ['simple_array', 'format:timeago'],
-            // ['string', 'format:datetime'],
-            // ['string', 'format:timeago'],
+            ['integer', 'format:datetime'],
+            ['float', 'format:datetime'],
+            ['double', 'format:datetime'],
+            ['blob', 'format:datetime'],
+            ['blob', 'format:money'],
+            ['blob', 'format:timeago'],
+            ['boolean', 'format:datetime'],
+            ['boolean', 'format:money'],
+            ['boolean', 'format:timeago'],
+            ['bool', 'format:datetime'],
+            ['bool', 'format:money'],
+            ['bool', 'format:timeago'],
+            ['datetime', 'format:money'],
+            ['datetime_immutable', 'format:money'],
+            ['datetimetz', 'format:money'],
+            ['datetimetz_immutable', 'format:money'],
+            ['time', 'format:money'],
+            ['time_immutable', 'format:money'],
+            ['array', 'format:money'],
+            ['array', 'format:datetime'],
+            ['array', 'format:timeago'],
+            ['simple_array', 'format:money'],
+            ['simple_array', 'format:datetime'],
+            ['simple_array', 'format:timeago'],
+            ['json', 'format:money'],
+            ['json', 'format:datetime'],
+            ['json', 'format:timeago'],
+            ['string', 'format:datetime'],
+            ['string', 'format:timeago'],
         ];
     }
 }

@@ -41,7 +41,8 @@ class PropertyDataTypeValidator
         'time',
         'time_immutable',
         'array',
-        'json_array',
+        'simple_array',
+        'json',
         'object',
     ];
 
