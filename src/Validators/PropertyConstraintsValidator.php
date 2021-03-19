@@ -49,6 +49,7 @@ class PropertyConstraintsValidator
         Rule::UPDATEDBY,
         Rule::FILTER,
         Rule::FORMAT,
+        Rule::TRIM,
     ];
 
     /**
@@ -75,6 +76,7 @@ class PropertyConstraintsValidator
         Rule::UPDATEDBY => BooleanConstraintValidator::class,
         Rule::FILTER => FilterConstraintValidator::class,
         Rule::FORMAT => FormatConstraintValidator::class,
+        Rule::TRIM => BooleanConstraintValidator::class,
     ];
 
     /**

@@ -285,6 +285,7 @@ class SchemaAttributeValidationTest extends TestCase
             ]]],
             [['pk' => null]],
             [['pk' => '']],
+            [['pk' => 'notvalid']],
             [['fk' => null]],
             [['fk' => '']],
             [['fk' => 'table.name']],
@@ -292,20 +293,27 @@ class SchemaAttributeValidationTest extends TestCase
             [['fk' => 'table,name,id.dot']],
             [['ai' => null]],
             [['ai' => '']],
+            [['ai' => 'notvalid']],
             [['ca' => null]],
             [['ca' => '']],
             [['ua' => null]],
             [['ua' => '']],
+            [['ua' => 'notvalid']],
             [['cb' => null]],
             [['cb' => '']],
+            [['cb' => 'notvalid']],
             [['ub' => null]],
             [['ub' => '']],
+            [['ub' => 'notvalid']],
             [['filter' => null]],
             [['filter' => '']],
             [['filter' => 'notvalid']],
             [['format' => null]],
             [['format' => '']],
             [['format' => 'notvalid']],
+            [['trim' => null]],
+            [['trim' => '']],
+            [['trim' => 'notvalid']],
         ];
     }
 
@@ -381,6 +389,10 @@ class SchemaAttributeValidationTest extends TestCase
             [['format' => 'money']],
             [['format' => 'datetime']],
             [['format' => 'timeago']],
+            [['trim' => true]],
+            [['trim' => false]],
+            [['trim' => 'true']],
+            [['trim' => 'false']],
         ];
     }
 }

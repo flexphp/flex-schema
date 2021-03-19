@@ -51,5 +51,7 @@ interface Rule
 
     public const FORMAT = 'format';
 
+    public const TRIM = 'trim';
+
     public const PATTERN = 'pattern';
 }
