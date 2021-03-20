@@ -83,4 +83,6 @@ interface SchemaAttributeInterface
     public function isFormat(string $format): bool;
 
     public function trim(): bool;
+
+    public function fchars(): int;
 }
