@@ -254,8 +254,15 @@ class SchemaAttributeValidationTest extends TestCase
             [['maxlength' => []]],
             [['mincheck' => -1]],
             [['maxcheck' => 0]],
+            [['min' => null]],
             [['min' => '']],
-            [['max' => 'null']],
+            [['min' => 'notvalid']],
+            [['min' => -1]],
+            [['max' => null]],
+            [['max' => '']],
+            [['max' => 'notvalid']],
+            [['max' => 0]],
+            [['max' => -1]],
             [['equalto' => null]],
             [['type' => 'unknow']],
             [['check' => [
@@ -314,6 +321,9 @@ class SchemaAttributeValidationTest extends TestCase
             [['trim' => null]],
             [['trim' => '']],
             [['trim' => 'notvalid']],
+            [['fchars' => null]],
+            [['fchars' => '']],
+            [['fchars' => 'notvalid']],
         ];
     }
 
@@ -393,6 +403,9 @@ class SchemaAttributeValidationTest extends TestCase
             [['trim' => false]],
             [['trim' => 'true']],
             [['trim' => 'false']],
+            [['fchars' => 0]],
+            [['fchars' => 2]],
+            [['fchars' => '2']],
         ];
     }
 }

@@ -50,6 +50,7 @@ class PropertyConstraintsValidator
         Rule::FILTER,
         Rule::FORMAT,
         Rule::TRIM,
+        Rule::FCHARS,
     ];
 
     /**
@@ -77,6 +78,7 @@ class PropertyConstraintsValidator
         Rule::FILTER => FilterConstraintValidator::class,
         Rule::FORMAT => FormatConstraintValidator::class,
         Rule::TRIM => BooleanConstraintValidator::class,
+        Rule::FCHARS => MinConstraintValidator::class,
     ];
 
     /**

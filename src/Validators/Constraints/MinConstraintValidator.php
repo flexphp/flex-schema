@@ -11,6 +11,7 @@ namespace FlexPHP\Schema\Validators\Constraints;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
@@ -28,6 +29,7 @@ class MinConstraintValidator
 
         return $validator->validate($min, [
             new NotBlank(),
+            new Type('numeric'),
             new PositiveOrZero(),
         ]);
     }

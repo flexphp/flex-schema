@@ -53,5 +53,7 @@ interface Rule
 
     public const TRIM = 'trim';
 
+    public const FCHARS = 'fchars';
+
     public const PATTERN = 'pattern';
 }
