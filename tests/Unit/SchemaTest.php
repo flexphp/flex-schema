@@ -235,6 +235,7 @@ class SchemaTest extends TestCase
         $this->assertEquals('table', $schema->fkRelations()['FkColumn']['fkTable']);
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isBlameBy']);
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
+        $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
         $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {
@@ -274,6 +275,10 @@ class SchemaTest extends TestCase
         $this->assertEquals('int', $schema->fkRelations()['FkColumn']['pkTypeHint']);
         $this->assertEquals('id', $schema->fkRelations()['FkColumn']['fkId']);
         $this->assertEquals('name', $schema->fkRelations()['FkColumn']['fkName']);
+        $this->assertEquals('table', $schema->fkRelations()['FkColumn']['fkTable']);
+        $this->assertSame(false, $schema->fkRelations()['FkColumn']['isBlameBy']);
+        $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
+        $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
         $this->assertEquals('en', $schema->language());
 
         foreach ($schema->attributes() as $attribute) {

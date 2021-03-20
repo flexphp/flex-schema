@@ -29,4 +29,4 @@ table:
     column7:
       Name: FkColumn
       DataType: integer
-      Constraints: fk:table,name
+      Constraints: fk:table,name|fchars:10

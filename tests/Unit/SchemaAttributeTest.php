@@ -395,8 +395,11 @@ class SchemaAttributeTest extends TestCase
     /**
      * @dataProvider getFormatConstraint
      */
-    public function testItSchemaAttributeFormatConstraints(string $dataType, string $constraint, ?string $expected): void
-    {
+    public function testItSchemaAttributeFormatConstraints(
+        string $dataType,
+        string $constraint,
+        ?string $expected
+    ): void {
         $name = 'foo';
 
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
@@ -425,8 +428,6 @@ class SchemaAttributeTest extends TestCase
 
     /**
      * @dataProvider getFcharsConstraint
-     *
-     * @param mixed $constraint
      */
     public function testItSchemaAttributeFcharsConstraints(string $constraint, int $expected): void
     {

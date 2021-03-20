@@ -152,6 +152,7 @@ final class Schema implements SchemaInterface
                         'fkTable' => $this->name(),
                         'isBlameBy' => $property->isBlameBy(),
                         'isRequired' => $property->isRequired(),
+                        'minChars' => $property->fchars(),
                     ];
                 }
 
