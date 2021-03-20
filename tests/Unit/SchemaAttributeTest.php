@@ -433,6 +433,10 @@ class SchemaAttributeTest extends TestCase
         $name = 'foo';
         $dataType = 'string';
 
+        if (!empty($constraint)) {
+            $constraint = 'fk:fkTable,fkName|' . $constraint;
+        }
+
         $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
 
         $this->assertEquals($name, $schemaAttribute->name());
@@ -868,6 +872,11 @@ class SchemaAttributeTest extends TestCase
             ['json', 'format:timeago'],
             ['string', 'format:datetime'],
             ['string', 'format:timeago'],
+            ['string', 'fchars:1'],
+            ['integer', 'fchars:2'],
+            ['datetime', 'fchars:3'],
+            ['bool', 'fchars:4'],
+            ['array', 'fchars:5'],
         ];
     }
 }
