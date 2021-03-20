@@ -406,6 +406,43 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame($expected, $schemaAttribute->format());
     }
 
+    /**
+     * @dataProvider getTrimConstraint
+     *
+     * @param mixed $constraint
+     */
+    public function testItSchemaAttributeTrimConstraints($constraint, bool $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->trim());
+    }
+
+    /**
+     * @dataProvider getFcharsConstraint
+     *
+     * @param mixed $constraint
+     */
+    public function testItSchemaAttributeFcharsConstraints(string $constraint, int $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        if (!empty($constraint)) {
+            $constraint = 'fk:fkTable,fkName|' . $constraint;
+        }
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->fchars());
+    }
 
     /**
      * @dataProvider getFkConstraint
@@ -743,6 +780,30 @@ class SchemaAttributeTest extends TestCase
         ];
     }
 
+    public function getTrimConstraint(): array
+    {
+        return [
+            ['', false],
+            ['trim', true],
+            ['trim:true', true],
+            ['trim:false', false],
+            [['trim'], true],
+            [['trim' => true], true],
+            [['trim' => false], false],
+        ];
+    }
+
+    public function getFcharsConstraint(): array
+    {
+        return [
+            ['', 0],
+            ['fchars:0', 0],
+            ['fchars:1', 1],
+            ['fchars:2', 2],
+            ['fchars:90', 90],
+        ];
+    }
+
     public function getConstraintLogicError(): array
     {
         return [
@@ -811,6 +872,11 @@ class SchemaAttributeTest extends TestCase
             ['json', 'format:timeago'],
             ['string', 'format:datetime'],
             ['string', 'format:timeago'],
+            ['string', 'fchars:1'],
+            ['integer', 'fchars:2'],
+            ['datetime', 'fchars:3'],
+            ['bool', 'fchars:4'],
+            ['array', 'fchars:5'],
         ];
     }
 }
