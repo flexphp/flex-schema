@@ -84,5 +84,5 @@ interface SchemaAttributeInterface
 
     public function trim(): bool;
 
-    public function fchars(): int;
+    public function fchars(): ?int;
 }

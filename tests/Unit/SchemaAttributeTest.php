@@ -429,7 +429,7 @@ class SchemaAttributeTest extends TestCase
     /**
      * @dataProvider getFcharsConstraint
      */
-    public function testItSchemaAttributeFcharsConstraints(string $constraint, int $expected): void
+    public function testItSchemaAttributeFcharsConstraints(string $constraint, ?int $expected): void
     {
         $name = 'foo';
         $dataType = 'string';
@@ -797,7 +797,7 @@ class SchemaAttributeTest extends TestCase
     public function getFcharsConstraint(): array
     {
         return [
-            ['', 0],
+            ['', null],
             ['fchars:0', 0],
             ['fchars:1', 1],
             ['fchars:2', 2],

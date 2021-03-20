@@ -128,7 +128,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
             }
         }
 
-        if ($this->property->fchars() > 0 && !$this->property->isFk()) {
+        if ($this->property->fchars() && !$this->property->isFk()) {
             throw new InvalidSchemaAttributeException(\sprintf(
                 '%sOnly property with Foreing Key allow fchars option',
                 $name,

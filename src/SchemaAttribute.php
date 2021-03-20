@@ -190,9 +190,9 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return (bool)($this->constraints[Rule::TRIM] ?? false);
     }
 
-    public function fchars(): int
+    public function fchars(): ?int
     {
-        return $this->constraints[Rule::FCHARS] ?? 0;
+        return $this->constraints[Rule::FCHARS] ?? null;
     }
 
     public function properties(): array
