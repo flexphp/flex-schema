@@ -406,6 +406,22 @@ class SchemaAttributeTest extends TestCase
         $this->assertSame($expected, $schemaAttribute->format());
     }
 
+    /**
+     * @dataProvider getTrimConstraint
+     *
+     * @param mixed $constraint
+     */
+    public function testItSchemaAttributeTrimConstraints($constraint, bool $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->trim());
+    }
 
     /**
      * @dataProvider getFkConstraint
@@ -740,6 +756,19 @@ class SchemaAttributeTest extends TestCase
             ['datetime', 'format:timeago', 'timeago'],
             ['datetime', 'format:datetime', 'datetime'],
             ['integer', 'format:money', 'money'],
+        ];
+    }
+
+    public function getTrimConstraint(): array
+    {
+        return [
+            ['', false],
+            ['trim', true],
+            ['trim:true', true],
+            ['trim:false', false],
+            [['trim'], true],
+            [['trim' => true], true],
+            [['trim' => false], false],
         ];
     }
 

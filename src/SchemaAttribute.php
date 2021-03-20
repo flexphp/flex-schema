@@ -185,6 +185,11 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $this->format() === $format;
     }
 
+    public function trim(): bool
+    {
+        return (bool)($this->constraints[Rule::TRIM] ?? false);
+    }
+
     public function properties(): array
     {
         return [
