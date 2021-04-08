@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Validation;
  */
 class PropertyTypeValidator
 {
+    /**
+     * @see https://www.w3schools.com/tags/att_input_type.asp
+     * @see https://symfony.com/doc/current/reference/forms/types.html
+     */
     public const ALLOWED_TYPES = [
         'text',
         'textarea',
@@ -31,6 +35,9 @@ class PropertyTypeValidator
         'pattern',
         'password',
         'timezone',
+        'tel',
+        'currency',
+        'date',
     ];
 
     public function validate(string $type): ConstraintViolationListInterface
