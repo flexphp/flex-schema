@@ -446,6 +446,23 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getLinkConstraint
+     *
+     * @param mixed $constraint
+     */
+    public function testItSchemaAttributeLinkConstraints($constraint, ?bool $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->link());
+    }
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -802,6 +819,19 @@ class SchemaAttributeTest extends TestCase
             ['fchars:1', 1],
             ['fchars:2', 2],
             ['fchars:90', 90],
+        ];
+    }
+
+    public function getLinkConstraint(): array
+    {
+        return [
+            ['', false],
+            ['link', true],
+            ['link:true', true],
+            ['link:false', false],
+            [['link'], true],
+            [['link' => true], true],
+            [['link' => false], false],
         ];
     }
 

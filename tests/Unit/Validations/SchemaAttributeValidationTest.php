@@ -324,6 +324,7 @@ class SchemaAttributeValidationTest extends TestCase
             [['fchars' => null]],
             [['fchars' => '']],
             [['fchars' => 'notvalid']],
+            [['link']],
         ];
     }
 
@@ -406,6 +407,8 @@ class SchemaAttributeValidationTest extends TestCase
             [['fchars' => 0]],
             [['fchars' => 2]],
             [['fchars' => '2']],
+            [['link' => true]],
+            [['link' => false]],
         ];
     }
 }

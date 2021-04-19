@@ -55,5 +55,7 @@ interface Rule
 
     public const FCHARS = 'fchars';
 
+    public const LINK = 'link';
+
     public const PATTERN = 'pattern';
 }
