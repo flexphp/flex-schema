@@ -464,6 +464,23 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getFkCheckConstraint
+     *
+     * @param mixed $constraint
+     */
+    public function testItSchemaAttributeFkCheckConstraints($constraint, ?bool $expected): void
+    {
+        $name = 'foo';
+        $dataType = 'string';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->fkcheck());
+    }
+
+    /**
      * @dataProvider getShowConstraint
      */
     public function testItSchemaAttributeShowConstraints(string $dataType, string $constraint, string $expected): void
@@ -866,6 +883,19 @@ class SchemaAttributeTest extends TestCase
         ];
     }
 
+    public function getFkCheckConstraint(): array
+    {
+        return [
+            ['', false],
+            ['fk:fkTable,fkName|fkcheck', true],
+            ['fk:fkTable,fkName|fkcheck:true', true],
+            ['fk:fkTable,fkName|fkcheck:false', false],
+            [['fk' => 'fkTable,fkName', 'fkcheck'], true],
+            [['fk' => 'fkTable,fkName', 'fkcheck' => true], true],
+            [['fk' => 'fkTable,fkName', 'fkcheck' => false], false],
+        ];
+    }
+
     public function getShowConstraint(): array
     {
         return [
@@ -999,6 +1029,7 @@ class SchemaAttributeTest extends TestCase
             ['string', 'show:u|hide:u'],
             ['string', 'show:d|hide:d'],
             ['string', 'show:i,d|hide:i,c'],
+            ['string', 'fkcheck'],
         ];
     }
 }

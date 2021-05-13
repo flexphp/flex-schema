@@ -196,6 +196,11 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return $this->constraints[Rule::FCHARS] ?? null;
     }
 
+    public function fkcheck(): bool
+    {
+        return (bool)($this->constraints[Rule::FKCHECK] ?? false);
+    }
+
     public function link(): bool
     {
         return (bool)($this->constraints[Rule::LINK] ?? false);

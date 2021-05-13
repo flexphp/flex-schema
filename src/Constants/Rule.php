@@ -55,6 +55,8 @@ interface Rule
 
     public const FCHARS = 'fchars';
 
+    public const FKCHECK = 'fkcheck';
+
     public const LINK = 'link';
 
     public const SHOW = 'show';

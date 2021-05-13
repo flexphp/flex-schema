@@ -145,6 +145,13 @@ class SchemaAttributeLogicValidation implements ValidationInterface
             ));
         }
 
+        if ($this->property->fkcheck() && !$this->property->isFk()) {
+            throw new InvalidSchemaAttributeException(\sprintf(
+                '%sOnly property with Foreing Key allow fkcheck option',
+                $name,
+            ));
+        }
+
         if ($this->property->usedInAll() && \count($this->property->show()) > 1) {
             throw new InvalidSchemaAttributeException(\sprintf(
                 '%sShow constraint miss-configuration: ALL (a) option is exclusive',

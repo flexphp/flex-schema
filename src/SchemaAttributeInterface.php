@@ -86,6 +86,8 @@ interface SchemaAttributeInterface
 
     public function fchars(): ?int;
 
+    public function fkcheck(): bool;
+
     public function link(): bool;
 
     public function show(): array;
