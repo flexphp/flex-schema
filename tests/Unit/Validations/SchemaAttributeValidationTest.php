@@ -325,6 +325,14 @@ class SchemaAttributeValidationTest extends TestCase
             [['fchars' => '']],
             [['fchars' => 'notvalid']],
             [['link']],
+            [['show' => false]],
+            [['show' => true]],
+            [['show' => 'notvalid']],
+            // [['show' => 'a,i']],
+            [['hide' => false]],
+            [['hide' => true]],
+            [['hide' => 'notvalid']],
+            // [['hide' => 'a,i']],
         ];
     }
 
@@ -409,6 +417,20 @@ class SchemaAttributeValidationTest extends TestCase
             [['fchars' => '2']],
             [['link' => true]],
             [['link' => false]],
+            [['show' => 'a']],
+            [['show' => 'i']],
+            [['show' => 'c']],
+            [['show' => 'r']],
+            [['show' => 'u']],
+            [['show' => 'd']],
+            [['show' => 'i,c,r,u,d']],
+            [['hide' => 'a']],
+            [['hide' => 'i']],
+            [['hide' => 'c']],
+            [['hide' => 'r']],
+            [['hide' => 'u']],
+            [['hide' => 'd']],
+            [['hide' => 'i,c,r,u,d']],
         ];
     }
 }

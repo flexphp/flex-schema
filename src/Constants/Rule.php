@@ -57,5 +57,9 @@ interface Rule
 
     public const LINK = 'link';
 
+    public const SHOW = 'show';
+
+    public const HIDE = 'hide';
+
     public const PATTERN = 'pattern';
 }

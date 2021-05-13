@@ -10,6 +10,7 @@
 namespace FlexPHP\Schema;
 
 use Exception;
+use FlexPHP\Schema\Constants\Action;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
@@ -198,6 +199,69 @@ final class SchemaAttribute implements SchemaAttributeInterface
     public function link(): bool
     {
         return (bool)($this->constraints[Rule::LINK] ?? false);
+    }
+
+    public function show(): array
+    {
+        $default = $this->isBlame()
+            ? Action::READ
+            : Action::ALL;
+
+        $hideConstraint = $this->constraints[Rule::HIDE] ?? '';
+
+        if (\strpos($hideConstraint, Action::ALL) !== false) {
+            $default = \str_replace(Action::ALL, '', $default);
+        }
+
+        if (\strpos($hideConstraint, Action::READ) !== false) {
+            $default = \str_replace(Action::READ, '', $default);
+        }
+
+        return \explode(',', $this->constraints[Rule::SHOW] ?? $default);
+    }
+
+    public function hide(): array
+    {
+        $default = $this->isBlame()
+            ? Action::INDEX . Action::CREATE . Action::UPDATE . Action::DELETE
+            : '';
+
+        return \explode(',', $this->constraints[Rule::HIDE] ?? $default);
+    }
+
+    public function usedIn(string $action): bool
+    {
+        return \in_array($action, $this->show(), true);
+    }
+
+    public function usedInAll(): bool
+    {
+        return $this->usedIn(Action::ALL);
+    }
+
+    public function usedInIndex(): bool
+    {
+        return $this->usedIn(Action::INDEX);
+    }
+
+    public function usedInCreate(): bool
+    {
+        return $this->usedIn(Action::CREATE);
+    }
+
+    public function usedInRead(): bool
+    {
+        return $this->usedIn(Action::READ);
+    }
+
+    public function usedInUpdate(): bool
+    {
+        return $this->usedIn(Action::UPDATE);
+    }
+
+    public function usedInDelete(): bool
+    {
+        return $this->usedIn(Action::DELETE);
     }
 
     public function properties(): array

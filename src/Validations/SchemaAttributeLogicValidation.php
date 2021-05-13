@@ -9,12 +9,22 @@
  */
 namespace FlexPHP\Schema\Validations;
 
+use FlexPHP\Schema\Constants\Action;
 use FlexPHP\Schema\Constants\Format;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\SchemaAttributeInterface;
 
 class SchemaAttributeLogicValidation implements ValidationInterface
 {
+    private const ACTIONS = [
+        Action::ALL,
+        Action::INDEX,
+        Action::CREATE,
+        Action::READ,
+        Action::UPDATE,
+        Action::DELETE,
+    ];
+
     /**
      * @var SchemaAttributeInterface
      */
@@ -133,6 +143,29 @@ class SchemaAttributeLogicValidation implements ValidationInterface
                 '%sOnly property with Foreing Key allow fchars option',
                 $name,
             ));
+        }
+
+        if ($this->property->usedInAll() && \count($this->property->show()) > 1) {
+            throw new InvalidSchemaAttributeException(\sprintf(
+                '%sShow constraint miss-configuration: ALL (a) option is exclusive',
+                $name,
+            ));
+        }
+
+        if ($this->property->usedInAll() && \count($this->property->hide()) > 1) {
+            throw new InvalidSchemaAttributeException(\sprintf(
+                '%sHide constraint miss-configuration: ALL (a) option is exclusive',
+                $name,
+            ));
+        }
+
+        foreach (self::ACTIONS as $action) {
+            if (\in_array($action, $this->property->show()) && \in_array($action, $this->property->hide())) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sShow/Hide constraint miss-configuration: (' . $action . ') option is present in both',
+                    $name,
+                ));
+            }
         }
     }
 
