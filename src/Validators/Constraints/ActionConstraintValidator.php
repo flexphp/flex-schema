@@ -55,6 +55,9 @@ class ActionConstraintValidator
         ]);
     }
 
+    /**
+     * @param mixed $value
+     */
     private function validateType($value): ConstraintViolationListInterface
     {
         $validator = Validation::createValidator();
@@ -67,7 +70,7 @@ class ActionConstraintValidator
         ]);
     }
 
-    private function getInvalidActions($value): array
+    private function getInvalidActions(string $value): array
     {
         $invalid = [];
         $actions = \explode(',', $value);

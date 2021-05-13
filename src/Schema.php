@@ -271,7 +271,7 @@ final class Schema implements SchemaInterface
 
         if (\count($invalidActions) > 0) {
             throw new InvalidSchemaException(
-                \sprintf('Schema %s:action are invalid', $this->name(), \implode(',', $invalidActions))
+                \sprintf('Schema %s:action are invalid: %s', $this->name(), \implode(',', $invalidActions))
             );
         }
 
