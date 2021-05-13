@@ -22,6 +22,8 @@ interface Keyword
 
     public const LANGUAGE = 'Language';
 
+    public const ACTIONS = 'Actions';
+
     /**
      * Attribute properties
      */

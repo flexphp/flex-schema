@@ -10,6 +10,7 @@
 namespace FlexPHP\Schema;
 
 use Exception;
+use FlexPHP\Schema\Constants\Action;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Exception\InvalidFileSchemaException;
 use FlexPHP\Schema\Exception\InvalidSchemaException;
@@ -43,6 +44,11 @@ final class Schema implements SchemaInterface
      */
     private $language;
 
+    /**
+     * @var array
+     */
+    private $actions = [];
+
     public static function fromArray(array $schema): SchemaInterface
     {
         /** @var string $name */
@@ -51,8 +57,13 @@ final class Schema implements SchemaInterface
         $attributes = $schema[$name][Keyword::ATTRIBUTES] ?? [];
         $icon = $schema[$name][Keyword::ICON] ?? null;
         $language = $schema[$name][Keyword::LANGUAGE] ?? null;
+        $actions = $schema[$name][Keyword::ACTIONS] ?? [];
 
-        return new self($name, $title, $attributes, $icon, $language);
+        if (\is_string($actions)) {
+            $actions = \str_split($actions);
+        }
+
+        return new self($name, $title, $attributes, $icon, $language, $actions);
     }
 
     public static function fromFile(string $schemafile): SchemaInterface
@@ -72,13 +83,15 @@ final class Schema implements SchemaInterface
         string $title,
         array $attributes,
         ?string $icon = null,
-        ?string $language = null
+        ?string $language = null,
+        array $actions = []
     ) {
         $this->setName($name);
         $this->setTitle($title);
         $this->setAttributes($attributes);
         $this->setIcon($icon);
         $this->setLanguage($language);
+        $this->setActions($actions);
     }
 
     public function name(): string
@@ -104,6 +117,16 @@ final class Schema implements SchemaInterface
     public function language(): string
     {
         return $this->language;
+    }
+
+    public function actions(): array
+    {
+        return $this->actions;
+    }
+
+    public function hasAction(string $action): bool
+    {
+        return \in_array($action, $this->actions(), true);
     }
 
     public function pkName(): string
@@ -223,5 +246,35 @@ final class Schema implements SchemaInterface
         }
 
         $this->language = $language;
+    }
+
+    private function setActions(array $actions): void
+    {
+        $invalidActions = [];
+
+        if (empty($actions)) {
+            $actions = [Action::INDEX, Action::CREATE, Action::READ, Action::UPDATE, Action::DELETE];
+        }
+
+        foreach ($actions as $action) {
+            if (!\in_array($action, [
+                Action::INDEX,
+                Action::CREATE,
+                Action::READ,
+                Action::UPDATE,
+                Action::DELETE,
+                Action::FILTER,
+            ])) {
+                $invalidActions[] = $action;
+            }
+        }
+
+        if (\count($invalidActions) > 0) {
+            throw new InvalidSchemaException(
+                \sprintf('Schema %s:action are invalid', $this->name(), \implode(',', $invalidActions))
+            );
+        }
+
+        $this->actions = $actions;
     }
 }

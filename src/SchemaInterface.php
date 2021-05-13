@@ -69,4 +69,14 @@ interface SchemaInterface
      * Get language by default used in labels
      */
     public function language(): string;
+
+    /**
+     * Get enable actions in schema
+     */
+    public function actions(): array;
+
+    /**
+     * Check if action is present in schema
+     */
+    public function hasAction(string $action): bool;
 }

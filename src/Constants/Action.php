@@ -22,4 +22,6 @@ interface Action
     public const UPDATE = 'u';
 
     public const DELETE = 'd';
+
+    public const FILTER = 'f';
 }

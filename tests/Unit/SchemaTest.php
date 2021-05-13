@@ -9,6 +9,7 @@
  */
 namespace FlexPHP\Schema\Tests\Unit;
 
+use FlexPHP\Schema\Constants\Action;
 use FlexPHP\Schema\Constants\Keyword;
 use FlexPHP\Schema\Schema;
 use FlexPHP\Schema\SchemaAttribute;
@@ -57,11 +58,54 @@ class SchemaTest extends TestCase
         new Schema('name', $title, []);
     }
 
+    /**
+     * @dataProvider getActionInvalid
+     *
+     * @param mixed $action
+     */
+    public function testItSchemaActionInvalidThrowException($action): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+        $this->expectExceptionMessage(':action');
+
+        new Schema('name', 'title', [], '', '', [
+            $action,
+        ]);
+    }
+
     public function testItSchemaAttributesEmptyOk(): void
     {
         new Schema('name', 'title', []);
 
         $this->assertTrue(true);
+    }
+
+    public function testItSchemaActionsEmptySetDefaultsOk(): void
+    {
+        $schema = new Schema('name', 'title', []);
+
+        $this->assertTrue($schema->hasAction(Action::INDEX));
+        $this->assertTrue($schema->hasAction(Action::CREATE));
+        $this->assertTrue($schema->hasAction(Action::READ));
+        $this->assertTrue($schema->hasAction(Action::UPDATE));
+        $this->assertTrue($schema->hasAction(Action::DELETE));
+
+        $this->assertFalse($schema->hasAction(Action::ALL));
+        $this->assertFalse($schema->hasAction(Action::FILTER));
+    }
+
+    /**
+     * @dataProvider getAction
+     */
+    public function testItSchemaActionsSetupOk(string $action, string $noActions): void
+    {
+        $schema = new Schema('name', 'title', [], '', '', [$action]);
+
+        $this->assertTrue($schema->hasAction($action));
+
+        foreach (str_split($noActions) as $noAction) {
+            $this->assertFalse($schema->hasAction($noAction));
+        }
     }
 
     public function testItSchemaSetOk(): void
@@ -192,6 +236,16 @@ class SchemaTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testItSchemaFromArrayActionsEmptyOk(): void
+    {
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array['table'][Keyword::ACTIONS] = [];
+
+        Schema::fromArray($array);
+
+        $this->assertTrue(true);
+    }
+
     public function testItSchemaFromArrayAttributesWithInterfaceOk(): void
     {
         $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
@@ -211,6 +265,20 @@ class SchemaTest extends TestCase
 
         Schema::fromArray($array);
     }
+
+    /**
+     * @dataProvider getActionInvalid
+     */
+    public function testItSchemaFromArrayWithTableActionsInvalidThrowException(string $action): void
+    {
+        $this->expectException(\FlexPHP\Schema\Exception\InvalidSchemaException::class);
+
+        $array = (new Yaml())->parseFile(\sprintf('%s/../Mocks/yaml/table.yaml', __DIR__));
+        $array['table'][Keyword::ACTIONS] = $action;
+
+        Schema::fromArray($array);
+    }
+
 
     public function testItSchemaFromArrayOk(): void
     {
@@ -237,6 +305,7 @@ class SchemaTest extends TestCase
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
         $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
         $this->assertEquals('en', $schema->language());
+        $this->assertIsArray($schema->actions());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
@@ -280,6 +349,7 @@ class SchemaTest extends TestCase
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
         $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
         $this->assertEquals('en', $schema->language());
+        $this->assertIsArray($schema->actions());
 
         foreach ($schema->attributes() as $attribute) {
             $this->assertInstanceOf(SchemaAttributeInterface::class, $attribute);
@@ -308,6 +378,32 @@ class SchemaTest extends TestCase
         return [
             [''],
             [' '],
+        ];
+    }
+
+    public function getAction(): array
+    {
+        return [
+            ['i', 'crudfl'],
+            ['c', 'irudfl'],
+            ['r', 'ciudfl'],
+            ['u', 'cridfl'],
+            ['d', 'cruifl'],
+            ['f', 'crudil'],
+        ];
+    }
+
+    public function getActionInvalid(): array
+    {
+        return [
+            ['a'],
+            ['A'],
+            ['I'],
+            ['C'],
+            ['R'],
+            ['U'],
+            ['D'],
+            ['F'],
         ];
     }
 }
