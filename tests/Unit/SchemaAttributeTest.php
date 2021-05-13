@@ -9,6 +9,7 @@
  */
 namespace FlexPHP\Schema\Tests\Unit;
 
+use FlexPHP\Schema\Constants\Action;
 use FlexPHP\Schema\SchemaAttribute;
 use FlexPHP\Schema\Tests\TestCase;
 
@@ -463,6 +464,38 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getShowConstraint
+     */
+    public function testItSchemaAttributeShowConstraints(string $dataType, string $constraint, string $expected): void
+    {
+        $name = 'foo';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertTrue($schemaAttribute->usedIn($expected));
+    }
+
+    /**
+     * @dataProvider getHideConstraint
+     */
+    public function testItSchemaAttributeHideConstraints(
+        string $dataType,
+        string $constraint,
+        string $action,
+        bool $expected
+    ): void {
+        $name = 'foo';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertSame($expected, $schemaAttribute->usedIn($action));
+    }
+
+    /**
      * @dataProvider getFkConstraint
      *
      * @param mixed $constraint
@@ -708,10 +741,8 @@ class SchemaAttributeTest extends TestCase
             ['', false],
             ['required|pk|ai', true],
             ['required|pk|ai:true', true],
-            // ['required|pk|ai:false', false],
             [['required', 'pk', 'ai'], true],
             [['required', 'pk', 'ai' => true], true],
-            // [['required', 'pk', 'ai' => false], false],
         ];
     }
 
@@ -835,6 +866,56 @@ class SchemaAttributeTest extends TestCase
         ];
     }
 
+    public function getShowConstraint(): array
+    {
+        return [
+            ['string', '', Action::ALL],
+            ['datetime', 'ca', Action::READ],
+            ['integer', 'cb', Action::READ],
+            ['datetime', 'ua', Action::READ],
+            ['integer', 'ub', Action::READ],
+            ['string', 'show:a', Action::ALL],
+            ['string', 'show:i', Action::INDEX],
+            ['string', 'show:c', Action::CREATE],
+            ['string', 'show:r', Action::READ],
+            ['string', 'show:u', Action::UPDATE],
+            ['string', 'show:d', Action::DELETE],
+            ['datetime', 'ca|show:a', Action::ALL],
+            ['integer', 'cb|show:i', Action::INDEX],
+            ['datetime', 'ua|show:c', Action::CREATE],
+            ['integer', 'ub|show:r', Action::READ],
+        ];
+    }
+
+    public function getHideConstraint(): array
+    {
+        return [
+            ['string', '', '', false],
+            ['datetime', 'ca', Action::ALL, false],
+            ['datetime', 'ca', Action::INDEX, false],
+            ['datetime', 'ca', Action::CREATE, false],
+            ['datetime', 'ca', Action::READ, true],
+            ['datetime', 'ca', Action::UPDATE, false],
+            ['datetime', 'ca', Action::DELETE, false],
+            ['integer', 'cb', Action::ALL, false],
+            ['integer', 'cb', Action::INDEX, false],
+            ['integer', 'cb', Action::CREATE, false],
+            ['integer', 'cb', Action::READ, true],
+            ['integer', 'cb', Action::UPDATE, false],
+            ['integer', 'cb', Action::DELETE, false],
+            ['string', 'hide:a', Action::ALL, false],
+            ['string', 'hide:i', Action::INDEX, false],
+            ['string', 'hide:c', Action::CREATE, false],
+            ['string', 'hide:r', Action::READ, false],
+            ['string', 'hide:u', Action::UPDATE, false],
+            ['string', 'hide:d', Action::DELETE, false],
+            ['datetime', 'ca|hide:r', Action::READ, false],
+            ['integer', 'cb|hide:r', Action::READ, false],
+            ['datetime', 'ua|hide:r', Action::READ, false],
+            ['integer', 'ub|hide:r', Action::READ, false],
+        ];
+    }
+
     public function getConstraintLogicError(): array
     {
         return [
@@ -908,6 +989,16 @@ class SchemaAttributeTest extends TestCase
             ['datetime', 'fchars:3'],
             ['bool', 'fchars:4'],
             ['array', 'fchars:5'],
+            ['string', 'show|hide'],
+            ['string', 'show:a|hide'],
+            ['string', 'show|hide:a'],
+            ['string', 'show:a|hide:a'],
+            ['string', 'show:i|hide:i'],
+            ['string', 'show:c|hide:c'],
+            ['string', 'show:r|hide:r'],
+            ['string', 'show:u|hide:u'],
+            ['string', 'show:d|hide:d'],
+            ['string', 'show:i,d|hide:i,c'],
         ];
     }
 }

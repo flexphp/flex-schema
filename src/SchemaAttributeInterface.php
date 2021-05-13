@@ -87,4 +87,22 @@ interface SchemaAttributeInterface
     public function fchars(): ?int;
 
     public function link(): bool;
+
+    public function show(): array;
+
+    public function hide(): array;
+
+    public function usedIn(string $action): bool;
+
+    public function usedInAll(): bool;
+
+    public function usedInIndex(): bool;
+
+    public function usedInCreate(): bool;
+
+    public function usedInRead(): bool;
+
+    public function usedInUpdate(): bool;
+
+    public function usedInDelete(): bool;
 }

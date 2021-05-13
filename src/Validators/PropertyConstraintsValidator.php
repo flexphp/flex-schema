@@ -10,6 +10,7 @@
 namespace FlexPHP\Schema\Validators;
 
 use FlexPHP\Schema\Constants\Rule;
+use FlexPHP\Schema\Validators\Constraints\ActionConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\BooleanConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\EqualToConstraintValidator;
 use FlexPHP\Schema\Validators\Constraints\FilterConstraintValidator;
@@ -52,6 +53,8 @@ class PropertyConstraintsValidator
         Rule::TRIM,
         Rule::FCHARS,
         Rule::LINK,
+        Rule::SHOW,
+        Rule::HIDE,
     ];
 
     /**
@@ -81,6 +84,8 @@ class PropertyConstraintsValidator
         Rule::TRIM => BooleanConstraintValidator::class,
         Rule::FCHARS => MinConstraintValidator::class,
         Rule::LINK => BooleanConstraintValidator::class,
+        Rule::SHOW => ActionConstraintValidator::class,
+        Rule::HIDE => ActionConstraintValidator::class,
     ];
 
     /**
