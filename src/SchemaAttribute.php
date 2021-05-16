@@ -20,20 +20,14 @@ use function is_bool;
 
 final class SchemaAttribute implements SchemaAttributeInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * @var string
-     */
-    private $dataType;
+    private ?string $dataType = null;
 
     /**
      * @var array<string, mixed>
      */
-    private $constraints = [];
+    private array $constraints = [];
 
     /**
      * @param mixed $constraints

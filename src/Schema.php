@@ -19,35 +19,20 @@ use Symfony\Component\Yaml\Yaml;
 
 final class Schema implements SchemaInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @var array<int,SchemaAttributeInterface>
      */
-    private $attributes;
+    private ?array $attributes = null;
 
-    /**
-     * @var null|string
-     */
-    private $icon;
+    private ?string $icon = null;
 
-    /**
-     * @var string
-     */
-    private $language;
+    private ?string $language = null;
 
-    /**
-     * @var array
-     */
-    private $actions = [];
+    private array $actions = [];
 
     public static function fromArray(array $schema): SchemaInterface
     {

@@ -59,10 +59,7 @@ class PropertyConstraintsValidator
         Rule::DEFAULT,
     ];
 
-    /**
-     * @var array
-     */
-    private $validators = [
+    private array $validators = [
         Rule::REQUIRED => BooleanConstraintValidator::class,
         Rule::MAX => MaxConstraintValidator::class,
         Rule::MAXLENGTH => MaxConstraintValidator::class,

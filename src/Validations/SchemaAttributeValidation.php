@@ -19,23 +19,14 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class SchemaAttributeValidation implements ValidationInterface
 {
-    /**
-     * @var array
-     */
-    protected $properties;
+    protected array $properties;
 
-    /**
-     * @var array
-     */
-    protected $requiredProperties = [
+    protected array $requiredProperties = [
         Keyword::NAME,
         Keyword::DATATYPE,
     ];
 
-    /**
-     * @var array
-     */
-    private $allowedProperties = [
+    private array $allowedProperties = [
         Keyword::NAME,
         Keyword::DATATYPE,
         Keyword::TYPE,
@@ -45,7 +36,7 @@ class SchemaAttributeValidation implements ValidationInterface
     /**
      * @var array<string>
      */
-    private $validators = [
+    private array $validators = [
         Keyword::NAME => PropertyNameValidator::class,
         Keyword::DATATYPE => PropertyDataTypeValidator::class,
         Keyword::TYPE => PropertyTypeValidator::class,
