@@ -25,10 +25,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
         Action::DELETE,
     ];
 
-    /**
-     * @var SchemaAttributeInterface
-     */
-    private $property;
+    private \FlexPHP\Schema\SchemaAttributeInterface $property;
 
     public function __construct(SchemaAttributeInterface $property)
     {

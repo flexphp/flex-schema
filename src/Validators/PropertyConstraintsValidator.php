@@ -59,10 +59,7 @@ class PropertyConstraintsValidator
         Rule::DEFAULT,
     ];
 
-    /**
-     * @var array
-     */
-    private $validators = [
+    private array $validators = [
         Rule::REQUIRED => BooleanConstraintValidator::class,
         Rule::MAX => MaxConstraintValidator::class,
         Rule::MAXLENGTH => MaxConstraintValidator::class,
@@ -108,7 +105,7 @@ class PropertyConstraintsValidator
                 ]),
             ]);
 
-            if (!\count($errors)) {
+            if (\count($errors) === 0) {
                 $errors = $this->validateRule($rule, $options);
             }
 

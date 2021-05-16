@@ -19,15 +19,9 @@ use Symfony\Component\Validator\Validation;
  */
 class PropertyNameValidator
 {
-    /**
-     * @var int
-     */
-    private $minLength = 1;
+    private int $minLength = 1;
 
-    /**
-     * @var int
-     */
-    private $maxLength = 64;
+    private int $maxLength = 64;
 
     public function validate(string $name): ConstraintViolationListInterface
     {
