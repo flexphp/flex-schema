@@ -373,7 +373,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
 
                 if (Rule::FOREIGNKEY !== $_name && \strpos($_options, ',') !== false) { // Range
                     [$min, $max] = \explode(',', $_options);
-                    $_options = \compact('min', 'max');
+                    $_options = ['min' => $min, 'max' => $max];
                 } elseif (\preg_match('/^false$/i', $_options)) { // False as string
                     $_options = false;
                 } elseif (\preg_match('/^true$/i', $_options)) { // True as string

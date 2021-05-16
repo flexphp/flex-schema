@@ -71,7 +71,7 @@ class SchemaAttributeValidation implements ValidationInterface
     private function validateRequiredProperties(): void
     {
         $requiredProperties = \array_filter($this->requiredProperties, function ($requiredProperty) {
-            return !\in_array($requiredProperty, \array_keys($this->properties));
+            return !array_key_exists($requiredProperty, $this->properties);
         });
 
         if (!empty($requiredProperties)) {
@@ -84,10 +84,10 @@ class SchemaAttributeValidation implements ValidationInterface
     private function validateRulesProperties(): void
     {
         foreach ($this->properties as $property => $value) {
-            if (\in_array($property, \array_keys($this->validators))) {
+            if (array_key_exists($property, $this->validators)) {
                 $violations = $this->validateProperty($property, $value);
 
-                if (\count($violations)) {
+                if (\count($violations) > 0) {
                     $valueProperty = \is_array($value) ? \json_encode($value) : $value;
 
                     throw new InvalidSchemaAttributeException(

@@ -84,7 +84,7 @@ class ActionConstraintValidator
                 ]),
             ]);
 
-            if (\count($errors)) {
+            if (\count($errors) > 0) {
                 $invalid[] = $action;
             }
         }

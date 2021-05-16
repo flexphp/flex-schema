@@ -105,7 +105,7 @@ class PropertyConstraintsValidator
                 ]),
             ]);
 
-            if (!\count($errors)) {
+            if (\count($errors) === 0) {
                 $errors = $this->validateRule($rule, $options);
             }
 
