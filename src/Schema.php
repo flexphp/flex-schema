@@ -56,7 +56,7 @@ final class Schema implements SchemaInterface
         try {
             $yaml = new Yaml();
             $schema = $yaml->parseFile($schemafile);
-        } catch (ParseException $exception) {
+        } catch (ParseException $parseException) {
             throw new InvalidFileSchemaException();
         }
 
@@ -176,7 +176,7 @@ final class Schema implements SchemaInterface
             throw new InvalidSchemaException('Schema name is required');
         }
 
-        if (\preg_match('/^[a-zA-Z]\w*$/', $name) === 0) {
+        if (\preg_match('#^[a-zA-Z]\w*$#', $name) === 0) {
             throw new InvalidSchemaException('Schema name only accept alphanum and underscore');
         }
 

@@ -319,9 +319,9 @@ final class SchemaAttribute implements SchemaAttributeInterface
         try {
             (new SchemaAttributeValidation($this->properties()))->validate();
             (new SchemaAttributeLogicValidation($this))->validate();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             throw new InvalidSchemaAttributeException(
-                \sprintf('Attribute %s > %s', $this->name(), $e->getMessage())
+                \sprintf('Attribute %s > %s', $this->name(), $exception->getMessage())
             );
         }
     }
@@ -374,9 +374,9 @@ final class SchemaAttribute implements SchemaAttributeInterface
                 if (Rule::FOREIGNKEY !== $_name && \strpos($_options, ',') !== false) { // Range
                     [$min, $max] = \explode(',', $_options);
                     $_options = ['min' => $min, 'max' => $max];
-                } elseif (\preg_match('/^false$/i', $_options)) { // False as string
+                } elseif (\preg_match('#^false$#i', $_options)) { // False as string
                     $_options = false;
-                } elseif (\preg_match('/^true$/i', $_options)) { // True as string
+                } elseif (\preg_match('#^true$#i', $_options)) { // True as string
                     $_options = true;
                 }
 
