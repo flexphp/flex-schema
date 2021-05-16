@@ -94,6 +94,11 @@ interface SchemaAttributeInterface
 
     public function hide(): array;
 
+    /**
+     * @return mixed
+     */
+    public function default();
+
     public function usedIn(string $action): bool;
 
     public function usedInAll(): bool;

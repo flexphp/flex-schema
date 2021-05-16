@@ -16,6 +16,7 @@ use FlexPHP\Schema\Constants\Rule;
 use FlexPHP\Schema\Exception\InvalidSchemaAttributeException;
 use FlexPHP\Schema\Validations\SchemaAttributeLogicValidation;
 use FlexPHP\Schema\Validations\SchemaAttributeValidation;
+use function is_bool;
 
 final class SchemaAttribute implements SchemaAttributeInterface
 {
@@ -232,6 +233,18 @@ final class SchemaAttribute implements SchemaAttributeInterface
             : '';
 
         return \explode(',', $this->constraints[Rule::HIDE] ?? $default);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function default()
+    {
+        if (!isset($this->constraints[Rule::DEFAULT])) {
+            return null;
+        }
+
+        return $this->constraints[Rule::DEFAULT];
     }
 
     public function usedIn(string $action): bool

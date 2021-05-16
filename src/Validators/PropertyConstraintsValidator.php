@@ -56,6 +56,7 @@ class PropertyConstraintsValidator
         Rule::LINK,
         Rule::SHOW,
         Rule::HIDE,
+        Rule::DEFAULT,
     ];
 
     /**
@@ -122,6 +123,10 @@ class PropertyConstraintsValidator
      */
     private function validateRule(string $rule, $options): ConstraintViolationListInterface
     {
+        if (!isset($this->validators[$rule])) {
+            return new ConstraintViolationList;
+        }
+
         return (new $this->validators[$rule])->validate($options);
     }
 }

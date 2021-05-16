@@ -107,9 +107,23 @@ class SchemaAttributeLogicValidation implements ValidationInterface
                 ));
             }
 
+            if ($this->isText()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sText properties not allow default',
+                    $name
+                ));
+            }
+
+            if ($this->isObject()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sObject properties not allow format',
+                    $name
+                ));
+            }
+
             if ($this->isBinary()) {
                 throw new InvalidSchemaAttributeException(\sprintf(
-                    '%sBinary (bool, blob) properties not allow format',
+                    '%sBinary (binary, bool, blob) properties not allow format',
                     $name
                 ));
             }
@@ -174,6 +188,60 @@ class SchemaAttributeLogicValidation implements ValidationInterface
                 ));
             }
         }
+
+        if (($default = $this->property->default()) !== null) {
+            if ($this->isString() && (is_bool($default))) {
+            // if ($this->isString() && ($default === 'NOW' || is_bool($default))) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sString properties not allow default: NOW or boolean, used string or int values',
+                    $name
+                ));
+            }
+
+            if ($this->isText()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sText properties not allow default',
+                    $name
+                ));
+            }
+
+            if ($this->isObject()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sObject properties not allow default',
+                    $name
+                ));
+            }
+
+            if ($this->isBinary()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sBinary (bool, blob) properties not allow default',
+                    $name
+                ));
+            }
+
+            if ($this->isArray()) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sArray (array, simple_array, json) properties not allow default',
+                    $name
+                ));
+            }
+
+            if ($this->isNumeric() && !is_numeric($default)) {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sNumeric properties not allow default: %s, use numeric values',
+                    $name,
+                    $default
+                ));
+            }
+
+            if ($this->isDate() && $default !== 'NOW') {
+                throw new InvalidSchemaAttributeException(\sprintf(
+                    '%sDate property not allow default: %s, use null or "NOW" string',
+                    $name,
+                    $default
+                ));
+            }
+        }
     }
 
     private function isInt(): bool
@@ -196,6 +264,16 @@ class SchemaAttributeLogicValidation implements ValidationInterface
         return \in_array($this->property->dataType(), ['smallint', 'integer', 'bigint', 'double', 'float']);
     }
 
+    private function isText(): bool
+    {
+        return $this->property->dataType() === 'text';
+    }
+
+    private function isObject(): bool
+    {
+        return $this->property->dataType() === 'object';
+    }
+
     private function isString(): bool
     {
         return $this->property->dataType() !== 'bigint' && $this->property->typeHint() === 'string';
@@ -203,7 +281,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
 
     private function isBinary(): bool
     {
-        return \in_array($this->property->dataType(), ['bool', 'boolean', 'blob']);
+        return \in_array($this->property->dataType(), ['binary', 'bool', 'boolean', 'blob']);
     }
 
     private function hasLength(): bool

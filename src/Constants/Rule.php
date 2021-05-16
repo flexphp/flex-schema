@@ -63,5 +63,7 @@ interface Rule
 
     public const HIDE = 'hide';
 
+    public const DEFAULT = 'default';
+
     public const PATTERN = 'pattern';
 }

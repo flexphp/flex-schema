@@ -495,6 +495,21 @@ class SchemaAttributeTest extends TestCase
     }
 
     /**
+     * @dataProvider getDefaultConstraint
+     * @param mixed $expected
+     */
+    public function testItSchemaAttributeDefaultConstraints(string $dataType, string $constraint, $expected): void
+    {
+        $name = 'foo';
+
+        $schemaAttribute = new SchemaAttribute($name, $dataType, $constraint);
+
+        $this->assertEquals($name, $schemaAttribute->name());
+        $this->assertEquals($dataType, $schemaAttribute->dataType());
+        $this->assertEquals($expected, $schemaAttribute->default());
+    }
+
+    /**
      * @dataProvider getHideConstraint
      */
     public function testItSchemaAttributeHideConstraints(
@@ -946,6 +961,18 @@ class SchemaAttributeTest extends TestCase
         ];
     }
 
+    public function getDefaultConstraint(): array
+    {
+        return [
+            ['string', '', null],
+            ['string', 'default:', ''],
+            ['string', 'default:A', 'A'],
+            ['integer', 'default:-1', -1],
+            ['double', 'default:0.0', 0.0],
+            ['datetime', 'default:NOW', 'NOW'],
+        ];
+    }
+
     public function getConstraintLogicError(): array
     {
         return [
@@ -1014,6 +1041,8 @@ class SchemaAttributeTest extends TestCase
             ['json', 'format:timeago'],
             ['string', 'format:datetime'],
             ['string', 'format:timeago'],
+            ['object', 'format:timeago'],
+            ['text', 'format:timeago'],
             ['string', 'fchars:1'],
             ['integer', 'fchars:2'],
             ['datetime', 'fchars:3'],
@@ -1030,6 +1059,19 @@ class SchemaAttributeTest extends TestCase
             ['string', 'show:d|hide:d'],
             ['string', 'show:i,d|hide:i,c'],
             ['string', 'fkcheck'],
+            ['string', 'default:false'],
+            ['string', 'default:true'],
+            ['bool', 'default:ERROR'],
+            ['integer', 'default:ERROR'],
+            ['double', 'default:ERROR'],
+            ['date', 'default:ERROR'],
+            ['datetime', 'default:ERROR'],
+            ['text', 'default:ERROR'],
+            ['binary', 'default:ERROR'],
+            ['array', 'default:ERROR'],
+            ['simple_array', 'default:ERROR'],
+            ['json', 'default:ERROR'],
+            ['object', 'default:ERROR'],
         ];
     }
 }
