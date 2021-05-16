@@ -19,18 +19,18 @@ use Symfony\Component\Yaml\Yaml;
 
 final class Schema implements SchemaInterface
 {
-    private ?string $name = null;
+    private string $name;
 
-    private ?string $title = null;
+    private string $title;
 
     /**
      * @var array<int,SchemaAttributeInterface>
      */
-    private ?array $attributes = null;
+    private array $attributes = [];
 
     private ?string $icon = null;
 
-    private ?string $language = null;
+    private string $language = 'en';
 
     private array $actions = [];
 
@@ -226,11 +226,9 @@ final class Schema implements SchemaInterface
 
     private function setLanguage(?string $language): void
     {
-        if (empty($language)) {
-            $language = 'en';
+        if (!empty($language)) {
+            $this->language = $language;
         }
-
-        $this->language = $language;
     }
 
     private function setActions(array $actions): void

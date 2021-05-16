@@ -20,9 +20,9 @@ use function is_bool;
 
 final class SchemaAttribute implements SchemaAttributeInterface
 {
-    private ?string $name = null;
+    private string $name;
 
-    private ?string $dataType = null;
+    private string $dataType;
 
     /**
      * @var array<string, mixed>
