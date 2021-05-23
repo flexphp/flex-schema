@@ -506,7 +506,7 @@ class SchemaAttributeTest extends TestCase
 
         $this->assertEquals($name, $schemaAttribute->name());
         $this->assertEquals($dataType, $schemaAttribute->dataType());
-        $this->assertEquals($expected, $schemaAttribute->default());
+        $this->assertSame($expected, $schemaAttribute->default());
     }
 
     /**
@@ -969,6 +969,7 @@ class SchemaAttributeTest extends TestCase
             ['string', 'default:A', 'A'],
             ['integer', 'default:-1', -1],
             ['double', 'default:0.0', 0.0],
+            ['float', 'default:0.1', 0.1],
             ['datetime', 'default:NOW', 'NOW'],
         ];
     }

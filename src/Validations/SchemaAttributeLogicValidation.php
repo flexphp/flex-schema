@@ -187,8 +187,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
         }
 
         if (($default = $this->property->default()) !== null) {
-            if ($this->isString() && (is_bool($default))) {
-            // if ($this->isString() && ($default === 'NOW' || is_bool($default))) {
+            if ($this->isString() && \is_bool($default)) {
                 throw new InvalidSchemaAttributeException(\sprintf(
                     '%sString properties not allow default: NOW or boolean, used string or int values',
                     $name
@@ -223,7 +222,7 @@ class SchemaAttributeLogicValidation implements ValidationInterface
                 ));
             }
 
-            if ($this->isNumeric() && !is_numeric($default)) {
+            if ($this->isNumeric() && !\is_numeric($default)) {
                 throw new InvalidSchemaAttributeException(\sprintf(
                     '%sNumeric properties not allow default: %s, use numeric values',
                     $name,
