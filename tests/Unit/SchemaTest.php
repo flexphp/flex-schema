@@ -90,6 +90,7 @@ class SchemaTest extends TestCase
         $this->assertTrue($schema->hasAction(Action::UPDATE));
         $this->assertTrue($schema->hasAction(Action::DELETE));
 
+        $this->assertFalse($schema->hasAction(Action::PATCH));
         $this->assertFalse($schema->hasAction(Action::ALL));
         $this->assertFalse($schema->hasAction(Action::FILTER));
     }

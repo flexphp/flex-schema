@@ -245,6 +245,7 @@ final class Schema implements SchemaInterface
                 Action::CREATE,
                 Action::READ,
                 Action::UPDATE,
+                Action::PATCH,
                 Action::DELETE,
                 Action::FILTER,
             ])) {

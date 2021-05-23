@@ -21,6 +21,8 @@ interface Action
 
     public const UPDATE = 'u';
 
+    public const PATCH = 'p';
+
     public const DELETE = 'd';
 
     public const FILTER = 'f';

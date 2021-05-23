@@ -27,6 +27,7 @@ class ActionConstraintValidator
         Action::CREATE,
         Action::READ,
         Action::UPDATE,
+        Action::PATCH,
         Action::DELETE,
     ];
 
