@@ -245,36 +245,6 @@ final class SchemaAttribute implements SchemaAttributeInterface
         return \in_array($action, $this->show(), true);
     }
 
-    public function usedInAll(): bool
-    {
-        return $this->usedIn(Action::ALL);
-    }
-
-    public function usedInIndex(): bool
-    {
-        return $this->usedIn(Action::INDEX);
-    }
-
-    public function usedInCreate(): bool
-    {
-        return $this->usedIn(Action::CREATE);
-    }
-
-    public function usedInRead(): bool
-    {
-        return $this->usedIn(Action::READ);
-    }
-
-    public function usedInUpdate(): bool
-    {
-        return $this->usedIn(Action::UPDATE);
-    }
-
-    public function usedInDelete(): bool
-    {
-        return $this->usedIn(Action::DELETE);
-    }
-
     public function properties(): array
     {
         return [

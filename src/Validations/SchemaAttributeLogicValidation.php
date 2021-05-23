@@ -163,14 +163,14 @@ class SchemaAttributeLogicValidation implements ValidationInterface
             ));
         }
 
-        if ($this->property->usedInAll() && \count($this->property->show()) > 1) {
+        if ($this->property->usedIn(Action::ALL) && \count($this->property->show()) > 1) {
             throw new InvalidSchemaAttributeException(\sprintf(
                 '%sShow constraint miss-configuration: ALL (a) option is exclusive',
                 $name,
             ));
         }
 
-        if ($this->property->usedInAll() && \count($this->property->hide()) > 1) {
+        if ($this->property->usedIn(Action::ALL) && \count($this->property->hide()) > 1) {
             throw new InvalidSchemaAttributeException(\sprintf(
                 '%sHide constraint miss-configuration: ALL (a) option is exclusive',
                 $name,
