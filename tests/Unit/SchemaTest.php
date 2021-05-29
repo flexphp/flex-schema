@@ -305,6 +305,7 @@ class SchemaTest extends TestCase
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isBlameBy']);
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
         $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
+        $this->assertSame(false, $schema->fkRelations()['FkColumn']['check']);
         $this->assertEquals('en', $schema->language());
         $this->assertIsArray($schema->actions());
 
@@ -349,6 +350,7 @@ class SchemaTest extends TestCase
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isBlameBy']);
         $this->assertSame(false, $schema->fkRelations()['FkColumn']['isRequired']);
         $this->assertSame(10, $schema->fkRelations()['FkColumn']['minChars']);
+        $this->assertSame(false, $schema->fkRelations()['FkColumn']['check']);
         $this->assertEquals('en', $schema->language());
         $this->assertIsArray($schema->actions());
 

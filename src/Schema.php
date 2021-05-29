@@ -161,6 +161,7 @@ final class Schema implements SchemaInterface
                         'isBlameBy' => $property->isBlameBy(),
                         'isRequired' => $property->isRequired(),
                         'minChars' => $property->fchars(),
+                        'check' => $property->fkcheck(),
                     ];
                 }
 
