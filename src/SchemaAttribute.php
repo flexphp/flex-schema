@@ -372,7 +372,7 @@ final class SchemaAttribute implements SchemaAttributeInterface
                 unset($constraints[$name]);
             } elseif ($name === Rule::FOREIGNKEY && \is_string($value)) {
                 $constraints[$name] = $this->getFkOptions($value);
-            } elseif ($name === Rule::DEFAULT && !\is_bool($value) && \preg_match('#^\d.\d#', $value)) {
+            } elseif ($name === Rule::DEFAULT && \is_string($value) && \preg_match('#^\d.\d#', $value)) {
                 $constraints[$name] = (float)$value;
             } else {
                 $constraints[$name] = \is_numeric($value) ? (int)$value : $value;

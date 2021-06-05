@@ -496,9 +496,11 @@ class SchemaAttributeTest extends TestCase
 
     /**
      * @dataProvider getDefaultConstraint
+     *
+     * @param mixed $constraint
      * @param mixed $expected
      */
-    public function testItSchemaAttributeDefaultConstraints(string $dataType, string $constraint, $expected): void
+    public function testItSchemaAttributeDefaultConstraints(string $dataType, $constraint, $expected): void
     {
         $name = 'foo';
 
@@ -969,6 +971,7 @@ class SchemaAttributeTest extends TestCase
     {
         return [
             ['string', '', null],
+            ['string', ['default' => null], null],
             ['string', 'default:', ''],
             ['string', 'default:A', 'A'],
             ['integer', 'default:-1', -1],
