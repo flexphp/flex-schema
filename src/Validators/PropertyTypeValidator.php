@@ -38,6 +38,7 @@ class PropertyTypeValidator
         'tel',
         'currency',
         'date',
+        'file',
     ];
 
     public function validate(string $type): ConstraintViolationListInterface
